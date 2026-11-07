@@ -1738,12 +1738,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.UI.HudController
   _game: {fileID: 0}
   _afterimages: {fileID: 0}
+  _input: {fileID: 0}
+  _rebinder: {fileID: 0}
   _pulseTriggers:
   - {fileID: 0}
   _cloneButton: {fileID: 6826910270525430951}
+  _cloneKeyLabel: {fileID: 200508552732569453}
   _cloneButtonFrame: {fileID: 7250395324131736639}
   _cloneCaption: {fileID: 9188876596521453748}
   _retryButton: {fileID: 4533698697004390160}
+  _retryKeyLabel: {fileID: 6935023192858986649}
   _retryCaption: {fileID: 43739685622300404}
   _completePanel: {fileID: 6436976146358719445}
   _pulseSpeed: 6
@@ -4800,6 +4804,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.UI.CloneColumn
   _game: {fileID: 0}
   _afterimages: {fileID: 0}
+  _input: {fileID: 0}
+  _rebinder: {fileID: 0}
   _icons:
   - {fileID: 5495131617422107078}
   - {fileID: 1089552497111121597}

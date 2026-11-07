@@ -110,12 +110,17 @@ namespace GameJam.UI
             _content.anchoredPosition = new Vector2(offset, 0f);
         }
 
-        /// <summary>Binds the icon to a slot: its number key label and colour.</summary>
+        /// <summary>Binds the icon to a slot and its colour.</summary>
         public void Init(int slot, Color slotColour)
         {
             _slot = slot;
             _slotColour = slotColour;
-            _keyLabel.text = (slot + 1).ToString();
+        }
+
+        /// <summary>Shows the key that picks this clone on the badge (1-5 unless the player rebinds it).</summary>
+        public void SetKeyLabel(string key)
+        {
+            _keyLabel.text = key;
         }
 
         /// <summary>

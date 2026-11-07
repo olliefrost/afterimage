@@ -1,7 +1,8 @@
-// GameStateController: owns the level's flow (Playing, Resetting, LevelComplete).
+// GameStateController: owns the level's flow (Playing, Paused, Resetting, LevelComplete).
 // It listens for the clone/retry/select input, saves or discards the run, resets the room,
 // respawns the clones and restarts the tick clock. One per level scene. The HUD buttons and
-// clone icons call the same Request methods as the keys.
+// clone icons call the same Request methods as the keys; PauseMenu calls Pause and Resume.
+// On start it saves this chamber as the Continue point.
 using System;
 using System.Collections;
 using GameJam.Afterimage;
@@ -15,6 +16,7 @@ namespace GameJam.Core
     public enum GameState
     {
         Playing,
+        Paused,
         Resetting,
         LevelComplete
     }
@@ -57,7 +59,46 @@ namespace GameJam.Core
 
         private void Start()
         {
+            SaveProgress.SaveChamber(SceneManager.GetActiveScene().buildIndex);
             _clock.Restart();
+            SetState(GameState.Playing);
+        }
+
+        private void OnDestroy()
+        {
+            // Never leave the game frozen if the scene unloads while paused.
+            if (State == GameState.Paused)
+            {
+                Time.timeScale = 1f;
+            }
+        }
+
+        /// <summary>
+        /// Freezes the attempt: time stops, so the tick clock, the player and every clone hold their
+        /// tick, and gameplay keys are ignored until <see cref="Resume"/>. Used by the pause menu.
+        /// </summary>
+        public void Pause()
+        {
+            if (State != GameState.Playing)
+            {
+                return;
+            }
+
+            Time.timeScale = 0f;
+            _input.SetGameplayEnabled(false);
+            SetState(GameState.Paused);
+        }
+
+        /// <summary>Continues a paused attempt from the tick it stopped on.</summary>
+        public void Resume()
+        {
+            if (State != GameState.Paused)
+            {
+                return;
+            }
+
+            Time.timeScale = 1f;
+            _input.SetGameplayEnabled(true);
             SetState(GameState.Playing);
         }
 
