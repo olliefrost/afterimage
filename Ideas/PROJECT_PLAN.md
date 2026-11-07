@@ -37,10 +37,18 @@
 - **Inspiration (not copying but general style):** Portal 2 (world and puzzle chamber concept), Stardew Valley (¾ view)
 
 ## Lore
+
 - What - Rugged female character, escaped lab rat sort of look, arm implant (ark esque)
 - Where - Modern/dungeon fusion, evil lab
 - Why - Rescuing sibling from deep within the lab. Evil parents owns the evil corp and experiments on you/sibling. Turns out they were just walking into their own cage/pan out at the end with scientists watching you.
 - When - post technology world, potentially this is all an illusion created by the lab?
+
+## Detailed character description
+
+- Long black hair, somewhat scruffy, white, shadow of hair obscures facial features
+- Dark greyish tank top, baggy almost construction worker like trousers, but in a muted colour.
+- Shoulder/upper arm implant, central diamond-ish shaped main part, geometric lines veining out around, if this isn't obvious enough with the low res, just a general glowing bit with some occasional particle effect.
+
 
 ## Tech
 
