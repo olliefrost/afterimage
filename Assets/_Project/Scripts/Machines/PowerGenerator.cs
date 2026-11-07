@@ -9,7 +9,7 @@ using UnityEngine.Events;
 namespace GameJam.Machines
 {
     /// <summary>Powers the room while fuel keeps arriving, on the shared tick clock.</summary>
-    public class PowerGenerator : MonoBehaviour, IResettable
+    public class PowerGenerator : MonoBehaviour, IResettable, ISignalSource
     {
         [Header("References")]
         [SerializeField] private TickClock _clock;
@@ -27,6 +27,9 @@ namespace GameJam.Machines
 
         /// <summary>True while the room has power.</summary>
         public bool IsPowered { get; private set; }
+
+        /// <inheritdoc />
+        public bool IsOn => IsPowered;
 
         /// <summary>Raised when power turns on (true) or off (false).</summary>
         public event Action<bool> PoweredChanged;

@@ -1,6 +1,7 @@
 // HoldPlate: a pressure plate that is active only while a living actor stands on it (and, if it has
 // a generator, only while the room is powered). Unlike PressButton it does not latch, so a clone has
-// to keep standing on it. Chamber 3's hover stairs read IsActive from three of these.
+// to keep standing on it. Chamber 3's hover stairs read IsActive from three of these, the hydraulic
+// block from its pedal, and SignalCable shows it through ISignalSource.
 using System;
 using GameJam.Actors;
 using GameJam.Core;
@@ -11,7 +12,7 @@ using UnityEngine.Events;
 namespace GameJam.Interactables
 {
     /// <summary>A plate that stays down only while someone stands on it.</summary>
-    public class HoldPlate : MonoBehaviour, IResettable
+    public class HoldPlate : MonoBehaviour, IResettable, ISignalSource
     {
         [Header("References")]
         [Tooltip("The plate's area; anyone inside counts as standing on it.")]
@@ -31,6 +32,9 @@ namespace GameJam.Interactables
 
         /// <summary>True while someone stands on the plate and it has power.</summary>
         public bool IsActive { get; private set; }
+
+        /// <inheritdoc />
+        public bool IsOn => IsActive;
 
         /// <summary>Raised when the plate goes down (true) or comes back up (false).</summary>
         public event Action<bool> ActiveChanged;
