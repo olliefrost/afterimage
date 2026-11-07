@@ -62,6 +62,9 @@ namespace GameJam.Afterimage
         /// <summary>Slot the player picked to control from the next restart, or <see cref="NoSlot"/>.</summary>
         public int PendingSlot { get; private set; } = NoSlot;
 
+        /// <summary>This attempt's clones, indexed by slot; the controlled slot's entry is null.</summary>
+        public IReadOnlyList<AfterimageReplayer> Clones => _clones;
+
         /// <summary>Raised when a run ends, the pick changes or the clones respawn.</summary>
         public event Action Changed;
 

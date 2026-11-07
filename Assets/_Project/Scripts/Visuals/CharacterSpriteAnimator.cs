@@ -30,6 +30,12 @@ namespace GameJam.Visuals
         private const float MinMoveSqr = 0.000001f;
         private const float DegreesPerDirection = 360f / CharacterSpriteSet.DirectionCount;
 
+        /// <summary>
+        /// While true (the rewind between attempts) the character faces against its motion and its run
+        /// plays backwards, so it looks like a tape running in reverse rather than running away.
+        /// </summary>
+        public bool FaceAgainstMotion { get; set; }
+
         private Transform _body;
         private Vector3 _lastBodyPosition;
         private Vector3 _restLocalPosition;
@@ -59,7 +65,7 @@ namespace GameJam.Visuals
             // 2. Face the way we moved; keep the last facing when standing still.
             if (isMoving)
             {
-                _direction = DirectionFromDelta(delta);
+                _direction = DirectionFromDelta(FaceAgainstMotion ? -delta : delta);
                 _walkTime += Time.deltaTime;
             }
             else
@@ -73,6 +79,11 @@ namespace GameJam.Visuals
             if (isMoving && hasRun)
             {
                 int frame = (int)(_walkTime * _sprites.RunFramesPerSecond) % sprites.Run.Length;
+                if (FaceAgainstMotion)
+                {
+                    frame = sprites.Run.Length - 1 - frame;
+                }
+
                 _renderer.sprite = sprites.Run[frame];
             }
             else
