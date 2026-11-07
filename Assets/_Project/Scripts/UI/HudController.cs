@@ -1,6 +1,8 @@
-// HudController: the minimal uGUI HUD. Shows the clone count, owns the on-screen clone button
-// (which pulses after the player presses a hinted button, until they make their first clone)
-// and shows the level complete panel.
+// HudController: the restart buttons in the bottom right and the level complete panel.
+// The R (save) button is framed in the colour of the clone the player controls, its caption says
+// which clone the run is saved into (and which one is next if a switch is picked), and it pulses
+// after the player presses a hinted button until they make their first clone. The T (retry)
+// button restarts without saving. The clone icons are handled by CloneColumn.
 using GameJam.Afterimage;
 using GameJam.Core;
 using GameJam.Interactables;
@@ -9,7 +11,7 @@ using UnityEngine.UI;
 
 namespace GameJam.UI
 {
-    /// <summary>Clone counter, pulsing clone button and level complete panel.</summary>
+    /// <summary>Save and retry buttons with their captions, the save button's pulse, and the level complete panel.</summary>
     public class HudController : MonoBehaviour
     {
         [Header("Game references")]
@@ -19,8 +21,14 @@ namespace GameJam.UI
         [SerializeField] private PressButton[] _pulseTriggers;
 
         [Header("UI references")]
-        [SerializeField] private Text _cloneCountText;
         [SerializeField] private Button _cloneButton;
+        [Tooltip("Frame image of the clone button, tinted with the controlled clone's colour.")]
+        [SerializeField] private Image _cloneButtonFrame;
+        [Tooltip("Small text under R: which clone the run is saved into, and the next one if a switch is picked.")]
+        [SerializeField] private Text _cloneCaption;
+        [SerializeField] private Button _retryButton;
+        [Tooltip("Small text under T: retry, and the next clone if a switch is picked.")]
+        [SerializeField] private Text _retryCaption;
         [SerializeField] private GameObject _completePanel;
 
         [Header("Pulse")]
@@ -39,21 +47,23 @@ namespace GameJam.UI
         private void OnEnable()
         {
             _cloneButton.onClick.AddListener(_game.RequestClone);
-            _afterimages.CloneCountChanged += HandleCloneCountChanged;
+            _retryButton.onClick.AddListener(_game.RequestRetry);
+            _afterimages.Changed += HandleClonesChanged;
             _game.StateChanged += HandleStateChanged;
             for (int i = 0; i < _pulseTriggers.Length; i++)
             {
                 _pulseTriggers[i].Pressed += HandleTriggerPressed;
             }
 
-            HandleCloneCountChanged(_afterimages.CloneCount);
+            HandleClonesChanged();
             _completePanel.SetActive(false);
         }
 
         private void OnDisable()
         {
             _cloneButton.onClick.RemoveListener(_game.RequestClone);
-            _afterimages.CloneCountChanged -= HandleCloneCountChanged;
+            _retryButton.onClick.RemoveListener(_game.RequestRetry);
+            _afterimages.Changed -= HandleClonesChanged;
             _game.StateChanged -= HandleStateChanged;
             for (int i = 0; i < _pulseTriggers.Length; i++)
             {
@@ -77,13 +87,21 @@ namespace GameJam.UI
             }
         }
 
-        private void HandleCloneCountChanged(int count)
+        /// <summary>Stops the pulse once a clone exists, and shows which clone R saves into and what comes next.</summary>
+        private void HandleClonesChanged()
         {
-            _cloneCountText.text = $"Clones: {count}";
-            if (count > 0)
+            if (_afterimages.CloneCount > 0)
             {
                 _isPulsing = false;
             }
+
+            int controlled = _afterimages.ControlledSlot;
+            int pending = _afterimages.PendingSlot;
+            bool hasPending = pending != AfterimageManager.NoSlot;
+
+            _cloneButtonFrame.color = _afterimages.GetSlotColour(controlled);
+            _cloneCaption.text = hasPending ? $"SAVE {controlled + 1} → PLAY {pending + 1}" : $"SAVE CLONE {controlled + 1}";
+            _retryCaption.text = hasPending ? $"RETRY → {pending + 1}" : "RETRY";
         }
 
         private void HandleStateChanged(GameState state)

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3594046362547572682}
   - component: {fileID: 4232109951486561509}
   - component: {fileID: 5291575494339755315}
+  - component: {fileID: 640825233531787264}
   m_Layer: 0
   m_Name: Clone
   m_TagString: Untagged
@@ -138,6 +139,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Afterimage.AfterimageReplayer
   _interactor: {fileID: 4232109951486561509}
+--- !u!114 &640825233531787264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349804375299011067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29459c86f39d49e4ebdf150203fe2d93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.CloneTint
+  _replayer: {fileID: 5291575494339755315}
+  _sprite: {fileID: 5603025798857344726}
+  _glow: {fileID: 550566660558142230}
+  _spriteWhiteness: 0.35
+  _deadColour: {r: 1, g: 0.15, b: 0.1, a: 1}
 --- !u!1 &3125175121937554461
 GameObject:
   m_ObjectHideFlags: 0
