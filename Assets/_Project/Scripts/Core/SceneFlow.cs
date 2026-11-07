@@ -1,5 +1,5 @@
 // SceneFlow: the one place that moves between the title screen and the chambers, and quits the
-// game. TitleMenu and PauseMenu call it. Scene order follows Build Settings: the title is first,
+// game. A new game also flags the first chamber's intro to play (IntroSequence consumes it). TitleMenu and PauseMenu call it. Scene order follows Build Settings: the title is first,
 // then the chambers in the order of Ideas/PROJECT_PLAN.md (GameStateController loads the next
 // chamber itself when one is completed).
 using UnityEngine;
@@ -16,17 +16,30 @@ namespace GameJam.Core
         /// <summary>Build index of the first chamber, where a new game starts.</summary>
         public const int FirstChamberIndex = 1;
 
-        /// <summary>Forgets the saved progress and starts the first chamber. Used by New Game and Restart Game.</summary>
+        // Set by a new game, read once by the first chamber's IntroSequence.
+        private static bool _introPending;
+
+        /// <summary>Forgets the saved progress and starts the first chamber with its intro. Used by New Game and Restart Game.</summary>
         public static void NewGame()
         {
             SaveProgress.Clear();
+            _introPending = true;
             LoadScene(FirstChamberIndex);
         }
 
-        /// <summary>Starts the saved chamber fresh, or the first chamber if nothing is saved.</summary>
+        /// <summary>Starts the saved chamber fresh, or the first chamber if nothing is saved. Never plays the intro.</summary>
         public static void ContinueGame()
         {
+            _introPending = false;
             LoadScene(SaveProgress.HasSave ? SaveProgress.Chamber : FirstChamberIndex);
+        }
+
+        /// <summary>True once after a new game started, then false, so the intro plays a single time.</summary>
+        public static bool ConsumeIntro()
+        {
+            bool pending = _introPending;
+            _introPending = false;
+            return pending;
         }
 
         /// <summary>Closes the game. In the editor it stops Play mode instead.</summary>

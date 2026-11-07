@@ -57,6 +57,13 @@ namespace GameJam.Visuals
             Show(_frames.Length - 1);
         }
 
+        /// <summary>Stops and shows the frame a fraction of the way through (0 first, 1 last), for scripted scrubbing.</summary>
+        public void ShowAt(float fraction)
+        {
+            _step = 0;
+            Show(Mathf.Round(Mathf.Clamp01(fraction) * (_frames.Length - 1)));
+        }
+
         private void Update()
         {
             if (_step == 0 || _frames.Length == 0)

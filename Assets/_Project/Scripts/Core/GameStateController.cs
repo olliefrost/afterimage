@@ -1,4 +1,4 @@
-// GameStateController: owns the level's flow (Playing, Paused, Resetting, LevelComplete).
+// GameStateController: owns the level's flow (Intro, Playing, Paused, Resetting, LevelComplete).
 // It listens for the clone/retry/select input, saves or discards the run, resets the room,
 // respawns the clones and restarts the tick clock. One per level scene. The HUD buttons and
 // clone icons call the same Request methods as the keys; PauseMenu calls Pause and Resume.
@@ -16,6 +16,7 @@ namespace GameJam.Core
     /// <summary>The states a level can be in.</summary>
     public enum GameState
     {
+        Intro,
         Playing,
         Paused,
         Resetting,
@@ -76,6 +77,36 @@ namespace GameJam.Core
         private void Start()
         {
             SaveProgress.SaveChamber(SceneManager.GetActiveScene().buildIndex);
+
+            // An intro claimed the start in Awake: the attempt begins when it calls FinishIntro.
+            if (State == GameState.Intro)
+            {
+                return;
+            }
+
+            _clock.Restart();
+            SetState(GameState.Playing);
+        }
+
+        /// <summary>
+        /// Holds the chamber in the Intro state: no clock, no recording, no gameplay keys. Called by
+        /// IntroSequence in Awake, before this script's Start would begin play.
+        /// </summary>
+        public void BeginIntro()
+        {
+            _input.SetGameplayEnabled(false);
+            SetState(GameState.Intro);
+        }
+
+        /// <summary>Ends the intro and starts the first attempt from tick 0, as a normal chamber start would.</summary>
+        public void FinishIntro()
+        {
+            if (State != GameState.Intro)
+            {
+                return;
+            }
+
+            _input.SetGameplayEnabled(true);
             _clock.Restart();
             SetState(GameState.Playing);
         }
