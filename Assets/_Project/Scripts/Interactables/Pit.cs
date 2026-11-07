@@ -1,6 +1,8 @@
 // Pit: a one-way drop. When the live player walks onto the hole they land at the bottom and a
 // cage of edge colliders stops them climbing out; the clone key is the only way out.
 // Clones need no handling: their recorded positions already include the drop.
+// It also reports every actor entering and leaving, so visuals (PitVisuals) can react.
+using System;
 using GameJam.Core;
 using UnityEngine;
 
@@ -17,6 +19,12 @@ namespace GameJam.Interactables
 
         private bool _isOccupied;
 
+        /// <summary>Raised when the player or a clone enters the pit.</summary>
+        public event Action<IActor> ActorEntered;
+
+        /// <summary>Raised when the player or a clone leaves the pit (for example on a reset).</summary>
+        public event Action<IActor> ActorExited;
+
         private void OnEnable()
         {
             LevelReset.Register(this);
@@ -32,25 +40,40 @@ namespace GameJam.Interactables
         private void OnTriggerEnter2D(Collider2D other)
         {
             IActor actor = other.GetComponentInParent<IActor>();
-            if (actor == null || actor.IsClone || _isOccupied)
+            if (actor == null)
             {
                 return;
             }
 
-            // 1. Move the player straight to the bottom of the pit.
-            Vector2 landing = _landingPoint.position;
-            Rigidbody2D body = other.attachedRigidbody;
-            if (body != null)
+            if (!actor.IsClone && !_isOccupied)
             {
-                body.position = landing;
-                body.linearVelocity = Vector2.zero;
+                // 1. Move the player straight to the bottom of the pit.
+                Vector2 landing = _landingPoint.position;
+                Rigidbody2D body = other.attachedRigidbody;
+                if (body != null)
+                {
+                    body.position = landing;
+                    body.linearVelocity = Vector2.zero;
+                }
+
+                actor.Transform.position = landing;
+
+                // 2. Close the cage so the only way out is a new attempt.
+                _isOccupied = true;
+                _cage.enabled = true;
             }
 
-            actor.Transform.position = landing;
+            ActorEntered?.Invoke(actor);
+        }
 
-            // 2. Close the cage so the only way out is a new attempt.
-            _isOccupied = true;
-            _cage.enabled = true;
+        /// <summary>Reports an actor leaving, which happens when it is moved back to spawn.</summary>
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            IActor actor = other.GetComponentInParent<IActor>();
+            if (actor != null)
+            {
+                ActorExited?.Invoke(actor);
+            }
         }
 
         /// <summary>Opens the pit again for the next attempt.</summary>

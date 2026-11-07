@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3594046362547572682}
   - component: {fileID: 4232109951486561509}
   - component: {fileID: 5291575494339755315}
+  - component: {fileID: 640825233531787264}
   m_Layer: 0
   m_Name: Clone
   m_TagString: Untagged
@@ -33,9 +34,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8448934882642470015}
-  - {fileID: 1818146865985821952}
-  - {fileID: 7118174043233481508}
+  - {fileID: 3023553792282620277}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &2853319399530376961
@@ -140,6 +139,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Afterimage.AfterimageReplayer
   _interactor: {fileID: 4232109951486561509}
+--- !u!114 &640825233531787264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349804375299011067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29459c86f39d49e4ebdf150203fe2d93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.CloneTint
+  _replayer: {fileID: 5291575494339755315}
+  _sprite: {fileID: 5603025798857344726}
+  _glow: {fileID: 550566660558142230}
+  _spriteWhiteness: 0.35
+  _deadColour: {r: 1, g: 0.15, b: 0.1, a: 1}
 --- !u!1 &3125175121937554461
 GameObject:
   m_ObjectHideFlags: 0
@@ -171,7 +187,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4617695499736171953}
+  m_Father: {fileID: 3023553792282620277}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5603025798857344726
 SpriteRenderer:
@@ -281,7 +297,7 @@ Transform:
   m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4617695499736171953}
+  m_Father: {fileID: 3023553792282620277}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3431643407054502168
 SpriteRenderer:
@@ -343,6 +359,68 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 1
   m_BlendShapeWeights: []
+--- !u!1 &8035805306648619682
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3023553792282620277}
+  - component: {fileID: 6689137956474937029}
+  - component: {fileID: 7072565253021681736}
+  m_Layer: 0
+  m_Name: Body
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3023553792282620277
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8035805306648619682}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8448934882642470015}
+  - {fileID: 1818146865985821952}
+  - {fileID: 7118174043233481508}
+  m_Father: {fileID: 4617695499736171953}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &6689137956474937029
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8035805306648619682}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &7072565253021681736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8035805306648619682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1da94c4e10964441a37d97d15dd032d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.ActorPitDepth
+  _fallDuration: 0.3
 --- !u!1 &8415648772349188032
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,7 +451,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4617695499736171953}
+  m_Father: {fileID: 3023553792282620277}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &550566660558142230
 MonoBehaviour:

@@ -1,6 +1,6 @@
 // PlayerInputReader: the only script that reads raw input (Input System package).
 // It turns keys into plain data and events: PlayerMovement reads MoveInput, PlayerActor consumes
-// interact presses, GameStateController listens for clone (R) and retry (T).
+// interact presses, GameStateController listens for clone (R), retry (T) and clone select (1-5).
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,7 +9,7 @@ namespace GameJam.Player
 {
     /// <summary>
     /// Reads keyboard input and exposes it as data. Bindings can be changed in the inspector;
-    /// any action left without bindings gets the default keys (WASD/arrows, E, R, T).
+    /// any action left without bindings gets the default keys (WASD/arrows, E, R, T, 1-5).
     /// </summary>
     public class PlayerInputReader : MonoBehaviour
     {
@@ -18,6 +18,15 @@ namespace GameJam.Player
         [SerializeField] private InputAction _interact = new InputAction("Interact", InputActionType.Button);
         [SerializeField] private InputAction _clone = new InputAction("Clone", InputActionType.Button);
         [SerializeField] private InputAction _retry = new InputAction("Retry", InputActionType.Button);
+        [Tooltip("One action per clone slot; element 0 selects clone 1. Defaults to the number keys 1-5.")]
+        [SerializeField] private InputAction[] _selectClone =
+        {
+            new InputAction("Select Clone 1", InputActionType.Button),
+            new InputAction("Select Clone 2", InputActionType.Button),
+            new InputAction("Select Clone 3", InputActionType.Button),
+            new InputAction("Select Clone 4", InputActionType.Button),
+            new InputAction("Select Clone 5", InputActionType.Button)
+        };
 
         // Set in Update, cleared when consumed in FixedUpdate, so a press between two physics steps is never lost.
         private bool _interactQueued;
@@ -31,6 +40,9 @@ namespace GameJam.Player
         /// <summary>Raised when the retry key is pressed: restart without keeping the run.</summary>
         public event Action RetryRequested;
 
+        /// <summary>Raised with the slot index (0 = clone 1) when a clone select key is pressed.</summary>
+        public event Action<int> SelectCloneRequested;
+
         private void Awake()
         {
             AddDefaultBindings();
@@ -42,6 +54,10 @@ namespace GameJam.Player
             _interact.Enable();
             _clone.Enable();
             _retry.Enable();
+            for (int i = 0; i < _selectClone.Length; i++)
+            {
+                _selectClone[i].Enable();
+            }
         }
 
         private void OnDisable()
@@ -50,6 +66,10 @@ namespace GameJam.Player
             _interact.Disable();
             _clone.Disable();
             _retry.Disable();
+            for (int i = 0; i < _selectClone.Length; i++)
+            {
+                _selectClone[i].Disable();
+            }
         }
 
         private void Update()
@@ -69,6 +89,14 @@ namespace GameJam.Player
             if (_retry.WasPressedThisFrame())
             {
                 RetryRequested?.Invoke();
+            }
+
+            for (int i = 0; i < _selectClone.Length; i++)
+            {
+                if (_selectClone[i].WasPressedThisFrame())
+                {
+                    SelectCloneRequested?.Invoke(i);
+                }
             }
         }
 
@@ -110,6 +138,15 @@ namespace GameJam.Player
             if (_retry.bindings.Count == 0)
             {
                 _retry.AddBinding("<Keyboard>/t");
+            }
+
+            // Number row keys are named "1", "2" and so on, so element i defaults to key i + 1.
+            for (int i = 0; i < _selectClone.Length; i++)
+            {
+                if (_selectClone[i].bindings.Count == 0)
+                {
+                    _selectClone[i].AddBinding($"<Keyboard>/{i + 1}");
+                }
             }
         }
     }

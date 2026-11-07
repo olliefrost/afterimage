@@ -1,6 +1,7 @@
 // GameStateController: owns the level's flow (Playing, Resetting, LevelComplete).
-// It listens for the clone/retry input, saves or discards the run, resets the room, respawns
-// the clones and restarts the tick clock. One per level scene.
+// It listens for the clone/retry/select input, saves or discards the run, resets the room,
+// respawns the clones and restarts the tick clock. One per level scene. The HUD buttons and
+// clone icons call the same Request methods as the keys.
 using System;
 using System.Collections;
 using GameJam.Afterimage;
@@ -44,12 +45,14 @@ namespace GameJam.Core
         {
             _input.CloneRequested += RequestClone;
             _input.RetryRequested += RequestRetry;
+            _input.SelectCloneRequested += RequestSelect;
         }
 
         private void OnDisable()
         {
             _input.CloneRequested -= RequestClone;
             _input.RetryRequested -= RequestRetry;
+            _input.SelectCloneRequested -= RequestSelect;
         }
 
         private void Start()
@@ -58,16 +61,33 @@ namespace GameJam.Core
             SetState(GameState.Playing);
         }
 
-        /// <summary>Ends the run, keeps it as a new clone and starts the next attempt. Used by R and the HUD button.</summary>
+        /// <summary>
+        /// Ends the run, saves it into the clone the player is controlling, switches to the picked
+        /// clone if any, and starts the next attempt. Used by R and the HUD button.
+        /// </summary>
         public void RequestClone()
         {
             StartNewAttempt(true);
         }
 
-        /// <summary>Ends the run without keeping it and starts the next attempt. Used by T.</summary>
+        /// <summary>
+        /// Ends the run without keeping it, switches to the picked clone if any, and starts the next
+        /// attempt. Used by T and the HUD button.
+        /// </summary>
         public void RequestRetry()
         {
             StartNewAttempt(false);
+        }
+
+        /// <summary>Picks (or un-picks) the clone to control from the next restart. Used by keys 1-5 and the HUD icons.</summary>
+        public void RequestSelect(int slot)
+        {
+            if (State != GameState.Playing)
+            {
+                return;
+            }
+
+            _afterimages.SelectSlot(slot);
         }
 
         /// <summary>Ends the level: freezes play, shows the complete screen and moves on if a next scene exists.</summary>
@@ -94,17 +114,13 @@ namespace GameJam.Core
             SetState(GameState.Resetting);
             _clock.Stop();
 
-            // 1. Take the finished run out of the recorder, and keep it only if asked.
-            Recording finishedRun = _recorder.TakeRecording();
-            if (saveRun)
-            {
-                _afterimages.AddRecording(finishedRun);
-            }
+            // 1. Hand the finished run to the clone slots: saved into the controlled slot only if asked.
+            _afterimages.EndRun(_recorder.TakeRecording(), saveRun);
 
             // 2. Return the room and the player to their starting state.
             LevelReset.ResetAll();
 
-            // 3. Spawn a fresh clone for every saved run, then count again from tick 0.
+            // 3. Spawn a clone for every saved run except the one now controlled, then count again from tick 0.
             _afterimages.RespawnClones();
             _clock.Restart();
             SetState(GameState.Playing);
