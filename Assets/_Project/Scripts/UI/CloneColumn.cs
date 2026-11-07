@@ -25,8 +25,8 @@ namespace GameJam.UI
 
         private void OnEnable()
         {
-            // 1. Bind each icon to its slot and listen for clicks.
-            int count = Mathf.Min(_icons.Length, _afterimages.MaxClones);
+            // 1. Bind each icon to its slot and listen for clicks (icons past the limit can show as locked).
+            int count = Mathf.Min(_icons.Length, _afterimages.SlotCount);
             for (int i = 0; i < count; i++)
             {
                 _icons[i].Init(i, _afterimages.GetSlotColour(i));
@@ -56,7 +56,7 @@ namespace GameJam.UI
         /// <summary>Shows each clone's current select key on its badge.</summary>
         private void RefreshKeyLabels()
         {
-            int count = Mathf.Min(_icons.Length, _afterimages.MaxClones);
+            int count = Mathf.Min(_icons.Length, _afterimages.SlotCount);
             for (int i = 0; i < count; i++)
             {
                 _icons[i].SetKeyLabel(_input.GetSelectTarget(i).KeyName.ToUpperInvariant());
@@ -66,18 +66,24 @@ namespace GameJam.UI
         /// <summary>
         /// Shows every saved slot with its current markers. The ghost for the next new clone only
         /// shows while the player is recording it or has picked it, never just because it is free.
+        /// Once the chamber's clone limit is reached, the icon just past it shows a lock.
         /// </summary>
         private void Refresh()
         {
             int controlled = _afterimages.ControlledSlot;
             int pending = _afterimages.PendingSlot;
+            bool atLimit = _afterimages.CloneCount >= _afterimages.MaxClones;
             for (int i = 0; i < _icons.Length; i++)
             {
                 bool isSaved = i < _afterimages.CloneCount;
                 bool isUsedNewSlot = _afterimages.IsNewSlot(i) && (i == controlled || i == pending);
-                bool isVisible = isSaved || isUsedNewSlot;
-                _icons[i].gameObject.SetActive(isVisible);
-                if (isVisible)
+                bool isLocked = atLimit && i == _afterimages.MaxClones;
+                _icons[i].gameObject.SetActive(isSaved || isUsedNewSlot || isLocked);
+                if (isLocked)
+                {
+                    _icons[i].ShowLocked();
+                }
+                else if (isSaved || isUsedNewSlot)
                 {
                     _icons[i].Show(isSaved, _afterimages.IsSlotDead(i), i == controlled, i == pending);
                 }
