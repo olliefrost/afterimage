@@ -18,6 +18,8 @@ namespace GameJam.UI
         [SerializeField] private Image _glow;
         [SerializeField] private Image _outline;
         [SerializeField] private Image _skull;
+        [Tooltip("Padlock shown on the slot just past the chamber's clone limit.")]
+        [SerializeField] private Image _lock;
         [SerializeField] private Text _keyLabel;
         [SerializeField] private Button _button;
         [Tooltip("Framed panel behind the whole row, shown on the controlled clone.")]
@@ -33,6 +35,8 @@ namespace GameJam.UI
         [Tooltip("Opacity of the empty new-clone slot's icon.")]
         [Range(0f, 1f)]
         [SerializeField] private float _ghostAlpha = 0.3f;
+        [Tooltip("Body colour of a locked slot (past the chamber's clone limit).")]
+        [SerializeField] private Color _lockedColour = new Color(0.5f, 0.55f, 0.6f, 0.25f);
 
         [Header("Controlled")]
         [SerializeField] private float _pulseSpeed = 4f;
@@ -110,12 +114,17 @@ namespace GameJam.UI
             _content.anchoredPosition = new Vector2(offset, 0f);
         }
 
-        /// <summary>Binds the icon to a slot: its number key label and colour.</summary>
+        /// <summary>Binds the icon to a slot and its colour.</summary>
         public void Init(int slot, Color slotColour)
         {
             _slot = slot;
             _slotColour = slotColour;
-            _keyLabel.text = (slot + 1).ToString();
+        }
+
+        /// <summary>Shows the key that picks this clone on the badge (1-5 unless the player rebinds it).</summary>
+        public void SetKeyLabel(string key)
+        {
+            _keyLabel.text = key;
         }
 
         /// <summary>
@@ -133,6 +142,7 @@ namespace GameJam.UI
             body.a = isSaved ? 1f : _ghostAlpha;
             _body.color = body;
             _skull.enabled = isDead;
+            _lock.enabled = false;
 
             Color glow = _bodyColour;
             glow.a = isSaved ? _glowAlpha : _glowAlpha * _ghostAlpha;
@@ -147,6 +157,23 @@ namespace GameJam.UI
             // 3. Picked next: outline (blinking in Update).
             _outline.enabled = isPending;
             _outline.color = Color.Lerp(_slotColour, Color.white, 0.5f);
+        }
+
+        /// <summary>
+        /// Shows the slot as locked: a faint grey body with a padlock and no markers, telling the
+        /// player this chamber allows no more clones.
+        /// </summary>
+        public void ShowLocked()
+        {
+            _isControlled = false;
+            _isPending = false;
+            _body.color = _lockedColour;
+            _glow.color = Color.clear;
+            _skull.enabled = false;
+            _lock.enabled = true;
+            _rowFrame.enabled = false;
+            _pointer.gameObject.SetActive(false);
+            _outline.enabled = false;
         }
 
         /// <summary>Shakes the icon briefly, used the moment its clone dies.</summary>

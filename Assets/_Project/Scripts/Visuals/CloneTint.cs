@@ -1,4 +1,4 @@
-// CloneTint: colours a clone in its slot colour (sprite tint and AfterimageGlow light) so each
+// CloneTint: colours a clone in its slot colour (sprite tint, AfterimageGlow light and map dot) so each
 // clone matches its HUD icon, and turns it red when it dies. Sits on the Clone prefab root.
 // Visual only: it reads the slot colour from AfterimageReplayer, which AfterimageManager sets on spawn.
 using GameJam.Afterimage;
@@ -14,6 +14,8 @@ namespace GameJam.Visuals
         [SerializeField] private AfterimageReplayer _replayer;
         [SerializeField] private SpriteRenderer _sprite;
         [SerializeField] private Light2D _glow;
+        [Tooltip("Optional dot shown on the chamber map, coloured like the HUD icon.")]
+        [SerializeField] private SpriteRenderer _mapMarker;
 
         [Header("Look")]
         [Tooltip("How far the sprite tint is pulled towards white, so the character stays readable (0 = pure slot colour).")]
@@ -50,13 +52,17 @@ namespace GameJam.Visuals
             Apply(_deadColour);
         }
 
-        /// <summary>Sets the sprite tint (lightened, alpha kept) and the glow colour.</summary>
+        /// <summary>Sets the sprite tint (lightened, alpha kept), the glow colour and the map dot.</summary>
         private void Apply(Color colour)
         {
             Color tint = Color.Lerp(colour, Color.white, _spriteWhiteness);
             tint.a = _spriteAlpha;
             _sprite.color = tint;
             _glow.color = colour;
+            if (_mapMarker != null)
+            {
+                _mapMarker.color = colour;
+            }
         }
     }
 }

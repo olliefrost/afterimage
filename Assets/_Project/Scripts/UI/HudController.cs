@@ -3,10 +3,12 @@
 // which clone the run is saved into (and which one is next if a switch is picked), and it pulses
 // after the player presses a hinted button until they make their first clone. The T (retry)
 // button restarts without saving. The F (record) button marks the run so dying saves it as a
-// clone; it turns red with a blinking dot while marked. The clone icons are handled by CloneColumn.
+// clone; it turns red with a blinking dot while marked. All three buttons show their current key,
+// which follows rebinds made in the pause menu. The clone icons are handled by CloneColumn.
 using GameJam.Afterimage;
 using GameJam.Core;
 using GameJam.Interactables;
+using GameJam.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,19 +20,27 @@ namespace GameJam.UI
         [Header("Game references")]
         [SerializeField] private GameStateController _game;
         [SerializeField] private AfterimageManager _afterimages;
+        [SerializeField] private PlayerInputReader _input;
+        [SerializeField] private KeyRebinder _rebinder;
         [Tooltip("Pressing any of these makes the clone button pulse until the first clone is made.")]
         [SerializeField] private PressButton[] _pulseTriggers;
 
         [Header("UI references")]
         [SerializeField] private Button _cloneButton;
+        [Tooltip("Key letter drawn on the clone button.")]
+        [SerializeField] private Text _cloneKeyLabel;
         [Tooltip("Frame image of the clone button, tinted with the controlled clone's colour.")]
         [SerializeField] private Image _cloneButtonFrame;
         [Tooltip("Small text under R: which clone the run is saved into, and the next one if a switch is picked.")]
         [SerializeField] private Text _cloneCaption;
         [SerializeField] private Button _retryButton;
+        [Tooltip("Key letter drawn on the retry button.")]
+        [SerializeField] private Text _retryKeyLabel;
         [Tooltip("Small text under T: retry, and the next clone if a switch is picked.")]
         [SerializeField] private Text _retryCaption;
         [SerializeField] private Button _recordButton;
+        [Tooltip("Key letter drawn on the record button.")]
+        [SerializeField] private Text _recordKeyLabel;
         [Tooltip("Frame image of the record button, tinted red while the run is marked.")]
         [SerializeField] private Image _recordFrame;
         [Tooltip("Record dot on the record button; blinks while the run is marked.")]
@@ -68,6 +78,7 @@ namespace GameJam.UI
             _afterimages.Changed += HandleClonesChanged;
             _game.StateChanged += HandleStateChanged;
             _game.RunMarkedChanged += HandleRunMarkedChanged;
+            _rebinder.Changed += RefreshKeyLabels;
             for (int i = 0; i < _pulseTriggers.Length; i++)
             {
                 _pulseTriggers[i].Pressed += HandleTriggerPressed;
@@ -75,6 +86,7 @@ namespace GameJam.UI
 
             HandleClonesChanged();
             HandleRunMarkedChanged(_game.RunMarked);
+            RefreshKeyLabels();
             _completePanel.SetActive(false);
         }
 
@@ -86,6 +98,7 @@ namespace GameJam.UI
             _afterimages.Changed -= HandleClonesChanged;
             _game.StateChanged -= HandleStateChanged;
             _game.RunMarkedChanged -= HandleRunMarkedChanged;
+            _rebinder.Changed -= RefreshKeyLabels;
             for (int i = 0; i < _pulseTriggers.Length; i++)
             {
                 _pulseTriggers[i].Pressed -= HandleTriggerPressed;
@@ -94,9 +107,13 @@ namespace GameJam.UI
 
         private void Update()
         {
-            // Pulsing is purely visual, so unscaled real time is fine here.
-            float scale = _isPulsing ? 1f + _pulseAmount * (0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * _pulseSpeed)) : 1f;
-            _cloneButtonRect.localScale = new Vector3(scale, scale, 1f);
+            // Both effects are purely visual, so unscaled real time is fine here.
+            // Only touch the scale while pulsing, so CloneHudReveal can animate the button in.
+            if (_isPulsing)
+            {
+                float scale = 1f + _pulseAmount * (0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * _pulseSpeed));
+                _cloneButtonRect.localScale = new Vector3(scale, scale, 1f);
+            }
 
             // The record dot blinks while the run is marked, like a recording light.
             if (_game.RunMarked)
@@ -126,9 +143,10 @@ namespace GameJam.UI
         /// <summary>Stops the pulse once a clone exists, and shows which clone R saves into and what comes next.</summary>
         private void HandleClonesChanged()
         {
-            if (_afterimages.CloneCount > 0)
+            if (_afterimages.CloneCount > 0 && _isPulsing)
             {
                 _isPulsing = false;
+                _cloneButtonRect.localScale = Vector3.one;
             }
 
             int controlled = _afterimages.ControlledSlot;
@@ -136,8 +154,25 @@ namespace GameJam.UI
             bool hasPending = pending != AfterimageManager.NoSlot;
 
             _cloneButtonFrame.color = _afterimages.GetSlotColour(controlled);
-            _cloneCaption.text = hasPending ? $"SAVE {controlled + 1} → PLAY {pending + 1}" : $"SAVE CLONE {controlled + 1}";
+            // At the chamber's clone limit R can only re-record, so the caption says so.
+            bool atLimit = _afterimages.CloneCount >= _afterimages.MaxClones;
+            if (hasPending)
+            {
+                _cloneCaption.text = $"SAVE {controlled + 1} → PLAY {pending + 1}";
+            }
+            else
+            {
+                _cloneCaption.text = atLimit ? $"SAVE CLONE {controlled + 1} · MAX {_afterimages.MaxClones}" : $"SAVE CLONE {controlled + 1}";
+            }
             _retryCaption.text = hasPending ? $"RETRY → {pending + 1}" : "RETRY";
+        }
+
+        /// <summary>Draws the current save, retry and record keys on their buttons.</summary>
+        private void RefreshKeyLabels()
+        {
+            _cloneKeyLabel.text = _input.CloneTarget.KeyName.ToUpperInvariant();
+            _retryKeyLabel.text = _input.RetryTarget.KeyName.ToUpperInvariant();
+            _recordKeyLabel.text = _input.MarkRunTarget.KeyName.ToUpperInvariant();
         }
 
         private void HandleStateChanged(GameState state)

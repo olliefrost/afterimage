@@ -1,9 +1,12 @@
-// GameStateController: owns the level's flow (Playing, Resetting, LevelComplete).
+// GameStateController: owns the level's flow (Intro, Playing, Paused, Resetting, LevelComplete).
 // It listens for the clone/retry/select/mark input, saves or discards the run, resets the room,
 // respawns the clones and restarts the tick clock. One per level scene. The HUD buttons and
-// clone icons call the same Request methods as the keys. If a hazard kills the player, the room
-// freezes for a moment so the hit reads, then restarts. The death saves the run as a clone only if
-// the player marked the run first (F), which is how a clone is sent ahead to take a hit.
+// clone icons call the same Request methods as the keys; PauseMenu calls Pause and Resume.
+// On start it saves this chamber as the Continue point. In a chamber that teaches cloning, the
+// clone controls stay locked until something calls UnlockClones (see CloneUnlocker).
+// If a hazard kills the player, the room freezes for a moment so the hit reads, then restarts.
+// The death saves the run as a clone only if the player marked the run first (F), which is how
+// a clone is sent ahead to take a hit.
 using System;
 using System.Collections;
 using GameJam.Afterimage;
@@ -16,7 +19,9 @@ namespace GameJam.Core
     /// <summary>The states a level can be in.</summary>
     public enum GameState
     {
+        Intro,
         Playing,
+        Paused,
         Resetting,
         LevelComplete
     }
@@ -39,6 +44,10 @@ namespace GameJam.Core
         [Tooltip("Seconds the room stays frozen after the player is killed, so the hit is visible, before it restarts.")]
         [SerializeField] private float _deathResetDelay = 0.8f;
 
+        [Header("Clones")]
+        [Tooltip("Off in a chamber that introduces cloning: R, T, 1-5 and the clone HUD stay locked until UnlockClones is called.")]
+        [SerializeField] private bool _clonesStartUnlocked = true;
+
         [Header("Level complete")]
         [Tooltip("Seconds to show the level complete screen before loading the next scene in Build Settings.")]
         [SerializeField] private float _nextLevelDelay = 3f;
@@ -49,11 +58,22 @@ namespace GameJam.Core
         /// <summary>Raised whenever <see cref="State"/> changes.</summary>
         public event Action<GameState> StateChanged;
 
+        /// <summary>True once the player may save, retry and pick clones in this chamber.</summary>
+        public bool ClonesUnlocked { get; private set; }
+
+        /// <summary>Raised once, when the clone controls unlock part-way through a chamber.</summary>
+        public event Action ClonesUnlockedNow;
+
         /// <summary>True if this run is marked to become a clone when the player dies. Clears on every restart.</summary>
         public bool RunMarked { get; private set; }
 
         /// <summary>Raised whenever <see cref="RunMarked"/> changes, for the HUD's record button.</summary>
         public event Action<bool> RunMarkedChanged;
+
+        private void Awake()
+        {
+            ClonesUnlocked = _clonesStartUnlocked;
+        }
 
         private void OnEnable()
         {
@@ -75,7 +95,76 @@ namespace GameJam.Core
 
         private void Start()
         {
+            SaveProgress.SaveChamber(SceneManager.GetActiveScene().buildIndex);
+
+            // An intro claimed the start in Awake: the attempt begins when it calls FinishIntro.
+            if (State == GameState.Intro)
+            {
+                return;
+            }
+
             _clock.Restart();
+            SetState(GameState.Playing);
+        }
+
+        /// <summary>
+        /// Holds the chamber in the Intro state: no clock, no recording, no gameplay keys. Called by
+        /// IntroSequence in Awake, before this script's Start would begin play.
+        /// </summary>
+        public void BeginIntro()
+        {
+            _input.SetGameplayEnabled(false);
+            SetState(GameState.Intro);
+        }
+
+        /// <summary>Ends the intro and starts the first attempt from tick 0, as a normal chamber start would.</summary>
+        public void FinishIntro()
+        {
+            if (State != GameState.Intro)
+            {
+                return;
+            }
+
+            _input.SetGameplayEnabled(true);
+            _clock.Restart();
+            SetState(GameState.Playing);
+        }
+
+        private void OnDestroy()
+        {
+            // Never leave the game frozen if the scene unloads while paused.
+            if (State == GameState.Paused)
+            {
+                Time.timeScale = 1f;
+            }
+        }
+
+        /// <summary>
+        /// Freezes the attempt: time stops, so the tick clock, the player and every clone hold their
+        /// tick, and gameplay keys are ignored until <see cref="Resume"/>. Used by the pause menu.
+        /// </summary>
+        public void Pause()
+        {
+            if (State != GameState.Playing)
+            {
+                return;
+            }
+
+            Time.timeScale = 0f;
+            _input.SetGameplayEnabled(false);
+            SetState(GameState.Paused);
+        }
+
+        /// <summary>Continues a paused attempt from the tick it stopped on.</summary>
+        public void Resume()
+        {
+            if (State != GameState.Paused)
+            {
+                return;
+            }
+
+            Time.timeScale = 1f;
+            _input.SetGameplayEnabled(true);
             SetState(GameState.Playing);
         }
 
@@ -100,7 +189,7 @@ namespace GameJam.Core
         /// <summary>Picks (or un-picks) the clone to control from the next restart. Used by keys 1-5 and the HUD icons.</summary>
         public void RequestSelect(int slot)
         {
-            if (State != GameState.Playing)
+            if (State != GameState.Playing || !ClonesUnlocked)
             {
                 return;
             }
@@ -111,16 +200,31 @@ namespace GameJam.Core
         /// <summary>
         /// Marks or unmarks this run: a marked run is saved into the controlled clone if the player
         /// dies, so the clone walks into the same hit and shields later runs. R and T are unchanged.
-        /// Used by F and the HUD's record button.
+        /// Used by F and the HUD's record button; locked with the other clone controls.
         /// </summary>
         public void ToggleRunMark()
         {
-            if (State != GameState.Playing)
+            if (State != GameState.Playing || !ClonesUnlocked)
             {
                 return;
             }
 
             SetRunMarked(!RunMarked);
+        }
+
+        /// <summary>
+        /// Turns the clone controls on for the rest of this chamber and tells the HUD to reveal them.
+        /// Called by CloneUnlocker the first time the player falls into the pit; does nothing if already on.
+        /// </summary>
+        public void UnlockClones()
+        {
+            if (ClonesUnlocked)
+            {
+                return;
+            }
+
+            ClonesUnlocked = true;
+            ClonesUnlockedNow?.Invoke();
         }
 
         /// <summary>Ends the level: freezes play, shows the complete screen and moves on if a next scene exists.</summary>
@@ -139,7 +243,7 @@ namespace GameJam.Core
         /// <summary>Starts a new attempt from the player's request, keeping the finished run as a clone if asked.</summary>
         private void StartNewAttempt(bool saveRun)
         {
-            if (State != GameState.Playing)
+            if (State != GameState.Playing || !ClonesUnlocked)
             {
                 return;
             }
@@ -188,6 +292,7 @@ namespace GameJam.Core
             SetState(GameState.Playing);
         }
 
+        /// <summary>Sets the run mark and tells the HUD, only when it actually changes.</summary>
         private void SetRunMarked(bool marked)
         {
             if (RunMarked == marked)
