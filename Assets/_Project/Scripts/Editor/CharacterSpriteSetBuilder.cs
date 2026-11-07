@@ -23,19 +23,29 @@ namespace GameJam.EditorTools
             return AssetDatabase.IsValidFolder(SelectedPath());
         }
 
-        /// <summary>Fixes import settings for the folder's PNGs, then creates the sprite set asset.</summary>
         [MenuItem(MenuPath)]
-        private static void Build()
+        private static void BuildFromSelection()
         {
-            string root = SelectedPath();
+            CharacterSpriteSet set = BuildFromFolder(SelectedPath());
+            if (set != null)
+            {
+                Selection.activeObject = set;
+            }
+        }
 
+        /// <summary>
+        /// Fixes import settings for the folder's PNGs, then creates or refreshes
+        /// <c>&lt;folder&gt;/&lt;folder name&gt;_SpriteSet.asset</c>. Returns null if the folder is not a PixelLab export.
+        /// </summary>
+        public static CharacterSpriteSet BuildFromFolder(string root)
+        {
             // 1. Find the rotations folder and the first animation (e.g. Running) beside it.
             string rotations = Directory.GetDirectories(root, "rotations", SearchOption.AllDirectories)
                 .Select(Normalise).FirstOrDefault();
             if (rotations == null)
             {
                 Debug.LogError($"No 'rotations' folder under {root}; is this a PixelLab character export?");
-                return;
+                return null;
             }
 
             string animations = Normalise(Path.Combine(Path.GetDirectoryName(rotations), "animations"));
@@ -71,13 +81,19 @@ namespace GameJam.EditorTools
                 }
             }
 
-            // 4. Save the set next to the art and select it.
-            var set = ScriptableObject.CreateInstance<CharacterSpriteSet>();
+            // 4. Save the set next to the art, refreshing an existing one so references to it survive.
+            string assetPath = $"{root}/{Path.GetFileName(root)}_SpriteSet.asset";
+            var set = AssetDatabase.LoadAssetAtPath<CharacterSpriteSet>(assetPath);
+            if (set == null)
+            {
+                set = ScriptableObject.CreateInstance<CharacterSpriteSet>();
+                AssetDatabase.CreateAsset(set, assetPath);
+            }
+
             set.SetDirections(directions);
-            string assetPath = AssetDatabase.GenerateUniqueAssetPath($"{root}/{Path.GetFileName(root)}_SpriteSet.asset");
-            AssetDatabase.CreateAsset(set, assetPath);
+            EditorUtility.SetDirty(set);
             AssetDatabase.SaveAssets();
-            Selection.activeObject = set;
+            return set;
         }
 
         private static void ApplyImportSettings(string path)
