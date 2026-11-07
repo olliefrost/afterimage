@@ -2,7 +2,7 @@
 
 ## Project overview
 
-A 2D, top-down 3/4 view (Stardew Valley style perspective) HD pixel-art puzzle game for University of Bristol gamejam with the theme 'Time'. The player records afterimages (clones) of themselves. On every new attempt each earlier clone replays its recorded actions, and the player coordinates the clones to clear rooms: distract or defeat enemies, activate interactables, move objects and collect information.
+A 2D, true isometric (2:1) HD pixel-art puzzle game for University of Bristol gamejam with the theme 'Time'. The player records afterimages (clones) of themselves. On every new attempt each earlier clone replays its recorded actions, and the player coordinates the clones to clear rooms: distract or defeat enemies, activate interactables, move objects and collect information.
 
 **Setting and tone:** post-technology, deserted and overgrown, with half-broken relic tech. Puzzle chambers in the spirit of Portal 2. Inspiration only; never copy assets.
 
@@ -43,7 +43,7 @@ Unity is editor-driven. Claude Code cannot normally run or see the game, so the 
 
 - **Open:** Unity Hub, open the repo root. Do not start Unity from the command line unless asked.
 - **Compile check:** Unity recompiles when the editor regains focus. If Unity MCP tools are connected, read the console with them. Otherwise ask the user to report console errors and warnings.
-- **Run:** press Play in the editor. Main scene: TBD (update once the first scene exists).
+- **Run:** press Play in the editor. Main scene: `Assets/_Project/Scenes/Tutorial1.unity` (the only scene in Build Settings). Keys: WASD/arrows move, E interact, R end run and keep it as a clone, T retry without keeping it.
 - **Build:** Windows standalone from Build Settings, output to `Builds/` (git-ignored). Confirm the settings before the first build and note them here.
 - **Tests and lint:** none set up. If Unity Test Framework tests are added, put them under `Assets/_Project/Tests` and note how to run them here.
 - **Git** runs in the terminal: `git status`, `git diff`, `git log`, `git pull --rebase`.
@@ -52,7 +52,9 @@ Unity is editor-driven. Claude Code cannot normally run or see the game, so the 
 
 - If Unity MCP tools are connected in your session, use them for editor actions: reading the console, inspecting the hierarchy, and creating or editing GameObjects, components and prefabs. It is the only acceptable way for you to change scenes and prefabs.
 - If they are not connected, do not try to set them up. Give the user numbered editor steps instead.
-- MCP config contains machine-specific paths and ports. Do not commit it unless the team has agreed to share it, and check `git status` for it before every commit.
+- The MCP for Unity package (`com.coplaydev.unity-mcp`, pinned v10.3.0) is committed in `Packages/manifest.json` so the team shares it. Its window (Window > MCP for Unity) must use the **stdio** transport to match the Claude Code server; HTTP mode shows "No Unity Editor instances found".
+- MCP client config contains machine-specific paths and ports. Do not commit it, and check `git status` for it before every commit.
+- Unity only renders and advances Play mode while its window has focus. Before an MCP screenshot, force a render (`EditorApplication.QueuePlayerLoopUpdate()` plus `Camera.main.Render()`) or you may get a stale frame. Manual renders log harmless "RenderPass dimensions" errors; clear the console afterwards.
 
 ## Project structure
 
@@ -64,15 +66,13 @@ Repo root:
 
 All our own game content lives under `Assets/_Project/`, kept apart from imported packages. Subfolders:
 
-- `Scripts/<Feature>/` (for example Player, Afterimage, Interactables, Enemies, UI)
-- `Scenes/`
-- `Prefabs/`
-- `Art/` (sprites, tilesets, animations)
+- `Scripts/<Feature>/`: `Core` (tick clock, interfaces, level reset, game state), `Player` (input, movement, actor), `Actors` (shared Interactor), `Afterimage` (record and replay), `Interactables`, `UI`, `Visuals` (camera follow, sprite facing, flicker lights; never affects gameplay)
+- `Scenes/` (`Tutorial1.unity`)
+- `Prefabs/` (Player, Clone, PressButton, Pit, SignalWire, Door, LevelExit, HUD)
+- `Art/Placeholders/` (generated `placeholder_iso_*` sprites, plus `Tiles/` tile assets)
 - `Audio/`
-- `Data/`
-- `Tests/`
-
-This layout is a starting plan. Update this section when the real structure differs.
+- `Data/` (`Tutorial1_Volume.asset` post-processing profile)
+- `Tests/` (not created yet)
 
 - **Naming:** scripts, prefabs and scenes use PascalCase (`Player.prefab`, `Level01.unity`). Sprites are `spr_<thing>_<state>`, sound effects `sfx_<thing>`, music `mus_<name>`. Temporary art is prefixed `placeholder_`.
 - Each level is one scene. Build gameplay objects as prefabs so scene changes stay small. Name each level scene after its design file (`Ideas/tutorial1.md` becomes `Tutorial1.unity`).
@@ -85,7 +85,8 @@ This layout is a starting plan. Update this section when the real structure diff
 - `Ideas/PROJECT_PLAN.md`: the overall game idea, scope lists (Must have, Should have, Stretch) and the high-level summary of each level and how they connect.
 - `Ideas/<level>.md`: one file per level, lowercase, no spaces (`tutorial1.md`, `tutorial2.md`, `level1.md`). Each holds that level's purpose, mechanics taught, room layout, step-by-step flow, art and feedback notes, and open questions.
 - `Ideas/Inspiration/`: look-and-feel reference images, each listed in `inspiration.md` with its source and what to take from it. Image names are lowercase snake_case. Reference only: never import these into `Assets/`.
-- Current files: `PROJECT_PLAN.md`, `tutorial1.md`, `Inspiration/` (add new level files here as they are written).
+- `Ideas/Sketches/`: hand-drawn level layouts (`tutorial1.png`).
+- Current files: `PROJECT_PLAN.md`, `tutorial1.md`, `Inspiration/`, `Sketches/` (add new level files here as they are written).
 - **Before building or changing a level,** read `Ideas/PROJECT_PLAN.md` and that level's file. Build what the level file describes. Open questions in a level file are not yours to decide: ask the user.
 - **Do not edit files in `Ideas/` without the user's say-so.** If the implementation has to differ from a level file, say so in your task summary and let the user update the doc.
 - If a level is mentioned in `Ideas/PROJECT_PLAN.md` but has no file yet, ask the user before inventing its design.
@@ -109,16 +110,20 @@ This layout is a starting plan. Update this section when the real structure diff
 
 ## Key systems
 
-Status: planned design. Update each item to match the code once it exists, and note anything the team changes.
+Status: built and working in Tutorial1. Update each item when the code changes.
 
-- **Afterimage system** (`Scripts/Afterimage`): a recorder samples the player on each fixed tick during an attempt: position, facing and discrete action events (interact, attack, push), stamped with the tick number. When the player starts a new attempt the level resets, and each saved recording is replayed by a clone driven by the same tick counter. Clones replay recorded state and action events rather than raw input, so physics differences cannot desync them.
-- **Actors:** interactables and enemies react to any actor (the player or a clone) through a shared interface, never to the player type directly. Interface name and location: TBD.
-- **Level reset:** every component whose state changes during play (doors, plates, movable objects, enemies) implements a reset interface, so one call returns the room to its starting state. Name: TBD.
+- **Tick clock** (`Core/TickClock`, execution order -100): counts fixed steps from 0 each attempt. Recording and replay index frames by this tick.
+- **Afterimage system** (`Scripts/Afterimage`): `AfterimageRecorder` (on the player, order 50) stores one `ActorFrame` (position, facing, interacted) per tick in a `Recording`. `AfterimageManager` keeps recordings in numbered clone slots and respawns one `AfterimageReplayer` clone per slot each attempt. Clones replay positions and repeat interacts on the same tick, then stand still when their run ends. Slots are ordered so "re-record clone N" can be added later.
+- **Actors:** `Core/IActor` (`Transform`, `IsClone`) is implemented by `PlayerActor` and `AfterimageReplayer`. Interactables (`Interactables/IInteractable`) and triggers talk only to `IActor`. `Actors/Interactor` is shared by player and clone and takes this tick's position, so both reach the same thing.
+- **Level reset:** `Core/IResettable.ResetState()`. Resettables register with the static `Core/LevelReset` in `OnEnable` and unregister in `OnDisable`; `LevelReset.ResetAll()` resets the room.
 - **Planned extensions,** only after the Must have list works: a clone limit or par, clones degrading as their count grows (playback jitter), and editing an earlier clone's path.
-- **Input:** read raw input in one component only (WASD to move, mouse to aim and interact) and expose it as data. No other script reads input directly. Input package: TBD.
-- **Game state and scene flow:** a single controller owns the states Playing, Resetting and LevelComplete, and loads the next level or the end screen. A level can be replayed with fewer clones. Level order follows `Ideas/PROJECT_PLAN.md`. Location: TBD.
-- **Rendering for the 3/4 view:** sort sprites by Y so objects overlap correctly (Transparency Sort Mode set to Custom Axis with (0, 1, 0), sprite pivots at the feet). Pixel art import settings: Point filter, no compression, one shared Pixels Per Unit value: TBD.
-- **UI:** keep it minimal (clone counter, restart, level complete). Use one UI system for the whole project: TBD.
+- **Input:** `Player/PlayerInputReader` is the only script that reads input (Input System package, inspector `InputAction` fields with code defaults). It exposes `MoveInput`, `ConsumeInteract()` and the `CloneRequested`/`RetryRequested` events. Movement is screen-relative; `PlayerMovement._isoVerticalScale` (0.5) makes diagonals follow the iso floor.
+- **Game state and scene flow:** `Core/GameStateController` owns Playing, Resetting and LevelComplete. R saves the run as a clone, T discards it; both reset the room, respawn clones and restart the clock. LevelComplete loads the next Build Settings scene after a delay. Level order follows `Ideas/PROJECT_PLAN.md`.
+- **Level wiring:** `PressButton` (latches) → `SignalWire` (red pulse along its LineRenderer, timed in ticks) → `Door.Open`, wired with inspector UnityEvents. `Pit` is a one-way drop that cages only the live player. `LevelExit` calls `GameStateController.CompleteLevel`.
+- **Rendering (isometric 2:1):** one `Grid` per level with Isometric cell layout, cell size (1, 0.5). Tilemaps: `Floor` (Chunk mode, order -100), and `Walls`/`Ledges` (Individual mode, colliders merged by a `CompositeCollider2D`) so they Y-sort with characters. The Renderer2D sorts by Custom Axis (0, 1, 0). Sprite pivots go at the feet or footprint centre, with sprite sort point Pivot. The two far walls are full height; the near walls are low ledges.
+- **Pixel art:** 64 PPU, 64x32 px floor tiles, characters about 32x64 px, Point filter, no compression, no mipmaps. Camera orthographic size 4.21875 gives an exact 2x pixel scale at 1080p.
+- **Lighting:** URP 2D lights. A dim, cold global light, with point lights as the cues (the ceiling-breach pool over the pit is Tutorial1's "go here" clue). `Visuals/FlickerLight` handles broken lamps, and a global Volume uses `Data/Tutorial1_Volume.asset` (bloom, vignette, colour grade, grain).
+- **UI:** uGUI (Canvas plus legacy `Text`), `UI/HudController`: clone counter, clickable clone button that pulses after the first button press, level complete panel. The EventSystem uses `InputSystemUIInputModule`.
 
 ## Workflow
 
@@ -143,5 +148,6 @@ Status: planned design. Update each item to match the code once it exists, and n
 
 ## Decisions and known issues
 
-- **Decided:** Unity, C#, 2D sprites only with a 3/4 (Stardew Valley style) view, PC target. Scope and level designs live in `Ideas/` (`PROJECT_PLAN.md` plus one file per level).
+- **Decided:** Unity, C#, 2D sprites only with a true isometric 2:1 view (replaced the earlier 3/4 Stardew view), PC target. Scope and level designs live in `Ideas/` (`PROJECT_PLAN.md` plus one file per level).
+- **Decided for Tutorial1:** the pit is a one-way drop (the clone key is the only way out), a clone stands still when its run ends, and the "go here" hint is a brighter area, not a trail of dots.
 - **Known issues and workarounds:** none yet. Add each with a one-line workaround and remove it when fixed.
