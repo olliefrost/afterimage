@@ -1911,11 +1911,11 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 4.21875
+  orthographic size: 2.8125
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294967039
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -5433,6 +5433,95 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 1
   m_BlendShapeWeights: []
+--- !u!1001 &437175579
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 894541442234681004, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894541442234681004, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894541442234681004, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894541442234681004, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 894541442234681004, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894541442234681004, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894541442234681004, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894541442234681004, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894541442234681004, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 894541442234681004, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724757505119376251, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: m_Name
+      value: ChamberMap
+      objectReference: {fileID: 0}
+    - target: {fileID: 3335459529393750012, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: _grid
+      value: 
+      objectReference: {fileID: 273170956}
+    - target: {fileID: 3335459529393750012, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: _input
+      value: 
+      objectReference: {fileID: 2080991564}
+    - target: {fileID: 3335459529393750012, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: _roomBounds
+      value: 
+      objectReference: {fileID: 480909260}
+    - target: {fileID: 3335459529393750012, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: _wallSources.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3335459529393750012, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: _floorSources.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3335459529393750012, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: '_wallSources.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1383586957}
+    - target: {fileID: 3335459529393750012, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: '_wallSources.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1552944012}
+    - target: {fileID: 3335459529393750012, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
+      propertyPath: '_floorSources.Array.data[0]'
+      value: 
+      objectReference: {fileID: 350833171}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fa9a5f0ca51583949a5c75bd33211cf9, type: 3}
 --- !u!1 &446362596
 GameObject:
   m_ObjectHideFlags: 0
@@ -18638,6 +18727,17 @@ MonoBehaviour:
           rid: -2
         m_Provider2DCache:
           rid: -2
+--- !u!114 &1784400571 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4283723652764457355, guid: ded0b009ab4dbfe4bb417358f66206de, type: 3}
+  m_PrefabInstance: {fileID: 2311779384310380124}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51f263b2ed6a347478a9e99d8df89fbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Interactables.Pit
 --- !u!1 &1793167854
 GameObject:
   m_ObjectHideFlags: 0
@@ -21917,6 +22017,7 @@ GameObject:
   - component: {fileID: 2080991563}
   - component: {fileID: 2080991562}
   - component: {fileID: 2080991566}
+  - component: {fileID: 2080991567}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -21951,6 +22052,7 @@ MonoBehaviour:
   _clock: {fileID: 2080991561}
   _clonePrefab: {fileID: 5291575494339755315, guid: be6f3e565cba2704792c237567b239ce, type: 3}
   _cloneParent: {fileID: 1679370523}
+  _maxClones: 2
   _slotColours:
   - {r: 0.25, g: 0.55, b: 1, a: 1}
   - {r: 0.3, g: 0.9, b: 0.4, a: 1}
@@ -21973,6 +22075,7 @@ MonoBehaviour:
   _input: {fileID: 2080991564}
   _recorder: {fileID: 6883134419956444744}
   _afterimages: {fileID: 2080991562}
+  _clonesStartUnlocked: 0
   _nextLevelDelay: 3
 --- !u!114 &2080991564
 MonoBehaviour:
@@ -22021,6 +22124,16 @@ MonoBehaviour:
     m_Type: 1
     m_ExpectedControlType: 
     m_Id: 418f2e88-c304-433b-b7f9-0c9e9c7806aa
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  _map:
+    m_Name: Map
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: 47d2fc87-6899-4944-9ffa-6229cca0ce6e
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
@@ -22111,6 +22224,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Player.KeyRebinder
   _input: {fileID: 2080991564}
   _matchWaitSeconds: 0.1
+--- !u!114 &2080991567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080991560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 471ddfe0e4b0871429ad45572832936b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Interactables.CloneUnlocker
+  _game: {fileID: 2080991563}
+  _pit: {fileID: 1784400571}
 --- !u!1 &2084453122
 GameObject:
   m_ObjectHideFlags: 0
@@ -23031,6 +23158,10 @@ PrefabInstance:
       propertyPath: m_FontData.m_MaxSize
       value: 80
       objectReference: {fileID: 0}
+    - target: {fileID: 2653111199864100748, guid: c4516bc42c8140441b0942080dde60f1, type: 3}
+      propertyPath: _game
+      value: 
+      objectReference: {fileID: 2080991563}
     - target: {fileID: 2959926563865007626, guid: c4516bc42c8140441b0942080dde60f1, type: 3}
       propertyPath: m_Name
       value: HUD
@@ -23714,3 +23845,4 @@ SceneRoots:
   - {fileID: 1333570976}
   - {fileID: 1566223392}
   - {fileID: 527469933}
+  - {fileID: 437175579}

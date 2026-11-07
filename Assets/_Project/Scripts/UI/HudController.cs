@@ -84,8 +84,14 @@ namespace GameJam.UI
 
         private void Update()
         {
+            // Only touch the scale while pulsing, so CloneHudReveal can animate the button in.
+            if (!_isPulsing)
+            {
+                return;
+            }
+
             // Pulsing is purely visual, so unscaled real time is fine here.
-            float scale = _isPulsing ? 1f + _pulseAmount * (0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * _pulseSpeed)) : 1f;
+            float scale = 1f + _pulseAmount * (0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * _pulseSpeed));
             _cloneButtonRect.localScale = new Vector3(scale, scale, 1f);
         }
 
@@ -101,9 +107,10 @@ namespace GameJam.UI
         /// <summary>Stops the pulse once a clone exists, and shows which clone R saves into and what comes next.</summary>
         private void HandleClonesChanged()
         {
-            if (_afterimages.CloneCount > 0)
+            if (_afterimages.CloneCount > 0 && _isPulsing)
             {
                 _isPulsing = false;
+                _cloneButtonRect.localScale = Vector3.one;
             }
 
             int controlled = _afterimages.ControlledSlot;
@@ -111,7 +118,16 @@ namespace GameJam.UI
             bool hasPending = pending != AfterimageManager.NoSlot;
 
             _cloneButtonFrame.color = _afterimages.GetSlotColour(controlled);
-            _cloneCaption.text = hasPending ? $"SAVE {controlled + 1} → PLAY {pending + 1}" : $"SAVE CLONE {controlled + 1}";
+            // At the chamber's clone limit R can only re-record, so the caption says so.
+            bool atLimit = _afterimages.CloneCount >= _afterimages.MaxClones;
+            if (hasPending)
+            {
+                _cloneCaption.text = $"SAVE {controlled + 1} → PLAY {pending + 1}";
+            }
+            else
+            {
+                _cloneCaption.text = atLimit ? $"SAVE CLONE {controlled + 1} · MAX {_afterimages.MaxClones}" : $"SAVE CLONE {controlled + 1}";
+            }
             _retryCaption.text = hasPending ? $"RETRY → {pending + 1}" : "RETRY";
         }
 

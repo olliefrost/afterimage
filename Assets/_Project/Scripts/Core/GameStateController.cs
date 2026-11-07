@@ -2,7 +2,8 @@
 // It listens for the clone/retry/select input, saves or discards the run, resets the room,
 // respawns the clones and restarts the tick clock. One per level scene. The HUD buttons and
 // clone icons call the same Request methods as the keys; PauseMenu calls Pause and Resume.
-// On start it saves this chamber as the Continue point.
+// On start it saves this chamber as the Continue point. In a chamber that teaches cloning, the
+// clone controls stay locked until something calls UnlockClones (see CloneUnlocker).
 using System;
 using System.Collections;
 using GameJam.Afterimage;
@@ -33,6 +34,10 @@ namespace GameJam.Core
         [SerializeField] private AfterimageRecorder _recorder;
         [SerializeField] private AfterimageManager _afterimages;
 
+        [Header("Clones")]
+        [Tooltip("Off in a chamber that introduces cloning: R, T, 1-5 and the clone HUD stay locked until UnlockClones is called.")]
+        [SerializeField] private bool _clonesStartUnlocked = true;
+
         [Header("Level complete")]
         [Tooltip("Seconds to show the level complete screen before loading the next scene in Build Settings.")]
         [SerializeField] private float _nextLevelDelay = 3f;
@@ -42,6 +47,17 @@ namespace GameJam.Core
 
         /// <summary>Raised whenever <see cref="State"/> changes.</summary>
         public event Action<GameState> StateChanged;
+
+        /// <summary>True once the player may save, retry and pick clones in this chamber.</summary>
+        public bool ClonesUnlocked { get; private set; }
+
+        /// <summary>Raised once, when the clone controls unlock part-way through a chamber.</summary>
+        public event Action ClonesUnlockedNow;
+
+        private void Awake()
+        {
+            ClonesUnlocked = _clonesStartUnlocked;
+        }
 
         private void OnEnable()
         {
@@ -123,12 +139,27 @@ namespace GameJam.Core
         /// <summary>Picks (or un-picks) the clone to control from the next restart. Used by keys 1-5 and the HUD icons.</summary>
         public void RequestSelect(int slot)
         {
-            if (State != GameState.Playing)
+            if (State != GameState.Playing || !ClonesUnlocked)
             {
                 return;
             }
 
             _afterimages.SelectSlot(slot);
+        }
+
+        /// <summary>
+        /// Turns the clone controls on for the rest of this chamber and tells the HUD to reveal them.
+        /// Called by CloneUnlocker the first time the player falls into the pit; does nothing if already on.
+        /// </summary>
+        public void UnlockClones()
+        {
+            if (ClonesUnlocked)
+            {
+                return;
+            }
+
+            ClonesUnlocked = true;
+            ClonesUnlockedNow?.Invoke();
         }
 
         /// <summary>Ends the level: freezes play, shows the complete screen and moves on if a next scene exists.</summary>
@@ -147,7 +178,7 @@ namespace GameJam.Core
         /// <summary>Resets the room for a new attempt, keeping the finished run as a clone if asked.</summary>
         private void StartNewAttempt(bool saveRun)
         {
-            if (State != GameState.Playing)
+            if (State != GameState.Playing || !ClonesUnlocked)
             {
                 return;
             }

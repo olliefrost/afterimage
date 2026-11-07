@@ -18,11 +18,13 @@ Isometric chamber, as in `Sketches/tutorial1.png` (scene: `Assets/_Project/Scene
 - **Pit:** 3x3 floor tiles and deep. From outside only the lit far lip shows and the rest is black. Holds a single button at the bottom. It is a one-way drop: the player cannot climb out.
 - **Overgrown annex:** The left side of the room has more moss, crates, rubble and two glowing relic terminals. It is decoration only. Plants and props are spread through the whole room, not just one corner.
 
+- **Clone limit:** at most 2 clones in this chamber (the 5-clone limit starts in later chambers).
+
 ## Step-by-step flow
 
 1. **Spawn.** The player enters the room and sees the shadowed door and the hole with its hint. The door isn't an obvious exit.
 2. **Investigate.** The player is drawn to the brighter area and walks into the hole.
-3. **Reveal.** The player lands at the bottom of the pit next to a lone button and can't get out. Pressing E presses the button, and the R clone button in the bottom right of the HUD starts pulsing to suggest it's worth using.
+3. **Reveal.** The player lands at the bottom of the pit next to a lone button and can't get out. Until this moment the clone controls (R, T, 1-5) and the clone part of the HUD are hidden and do nothing; landing in the pit for the first time unlocks them, and the R and T buttons and the clone column pop onto the HUD. Pressing E presses the button, and the R clone button starts pulsing to suggest it's worth using.
 4. **Button press.** A red pulse travels along a wire on the floor to the door and opens it.
 5. **Clone.** The player presses R (or clicks the clone button) and returns to the spawn point. On the HUD's right edge the blue clone 1 icon turns solid, and the arrow moves to the green clone 2 slot that the player now controls. T (or the smaller retry button) restarts without keeping the run.
 6. **Watch the past self.** The player sees their previous run play out: the clone walks into the hole, presses the button on the same tick, and the signal opens the door. The clone then stands still where its run ended.
@@ -34,6 +36,7 @@ Isometric chamber, as in `Sketches/tutorial1.png` (scene: `Assets/_Project/Scene
 |---|---|
 | Brighter area around the hole | Follow visual cues to find the path |
 | Button in the pit | Interacting with objects has effects elsewhere |
+| Clone controls appear when trapped | The clone key is the way out of a dead end |
 | Pulsing clone button | The clone mechanic is something to use now |
 | Signal running to the door | Cause and effect is shown visually |
 | Watching the clone repeat the run | Clones replay your earlier actions |
@@ -51,7 +54,7 @@ Isometric chamber, as in `Sketches/tutorial1.png` (scene: `Assets/_Project/Scene
 - **Pit:** one-way drop. Pressing the clone key is the only way out.
 - **Hint:** a brighter, warmer area from a ceiling breach, not a trail of dots.
 - **Deep pit:** from outside the inside is hidden in shadow, so the player is lured in without seeing the button. Once they fall in, the ground in front turns see-through so they can still see themselves. A clone in the pit stays hidden.
-- **Limited vision:** the room is near black and the character carries a soft light, so the whole level is never visible at once. Lit cues (breach pool, relic terminals, the open door) still show from a distance. Everything outside the room is black.
+- **Limited vision:** the room is near black and the character carries a soft light, so the whole level is never visible at once. Lit cues (breach pool, relic terminals, the open door) still show from a distance. Everything outside the room is black. The play camera is close (3x pixel scale), and holding Tab shows the chamber map (see `gui.md`).
 
 ## Open questions
 
