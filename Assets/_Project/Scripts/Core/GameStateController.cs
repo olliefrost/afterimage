@@ -1,9 +1,12 @@
 // GameStateController: owns the level's flow (Intro, Playing, Paused, Resetting, LevelComplete).
-// It listens for the clone/retry/select input, saves or discards the run, resets the room,
+// It listens for the clone/retry/select/mark input, saves or discards the run, resets the room,
 // respawns the clones and restarts the tick clock. One per level scene. The HUD buttons and
 // clone icons call the same Request methods as the keys; PauseMenu calls Pause and Resume.
 // On start it saves this chamber as the Continue point. In a chamber that teaches cloning, the
 // clone controls stay locked until something calls UnlockClones (see CloneUnlocker).
+// If a hazard kills the player, the room freezes for a moment so the hit reads, then restarts.
+// The death saves the run as a clone only if the player marked the run first (F), which is how
+// a clone is sent ahead to take a hit.
 using System;
 using System.Collections;
 using GameJam.Afterimage;
@@ -34,6 +37,12 @@ namespace GameJam.Core
         [SerializeField] private PlayerInputReader _input;
         [SerializeField] private AfterimageRecorder _recorder;
         [SerializeField] private AfterimageManager _afterimages;
+        [Tooltip("The live player, so a hazard killing it restarts the attempt.")]
+        [SerializeField] private PlayerActor _player;
+
+        [Header("Player death")]
+        [Tooltip("Seconds the room stays frozen after the player is killed, so the hit is visible, before it restarts.")]
+        [SerializeField] private float _deathResetDelay = 0.8f;
 
         [Header("Clones")]
         [Tooltip("Off in a chamber that introduces cloning: R, T, 1-5 and the clone HUD stay locked until UnlockClones is called.")]
@@ -55,6 +64,12 @@ namespace GameJam.Core
         /// <summary>Raised once, when the clone controls unlock part-way through a chamber.</summary>
         public event Action ClonesUnlockedNow;
 
+        /// <summary>True if this run is marked to become a clone when the player dies. Clears on every restart.</summary>
+        public bool RunMarked { get; private set; }
+
+        /// <summary>Raised whenever <see cref="RunMarked"/> changes, for the HUD's record button.</summary>
+        public event Action<bool> RunMarkedChanged;
+
         private void Awake()
         {
             ClonesUnlocked = _clonesStartUnlocked;
@@ -65,6 +80,8 @@ namespace GameJam.Core
             _input.CloneRequested += RequestClone;
             _input.RetryRequested += RequestRetry;
             _input.SelectCloneRequested += RequestSelect;
+            _input.MarkRunRequested += ToggleRunMark;
+            _player.Died += HandlePlayerDied;
         }
 
         private void OnDisable()
@@ -72,6 +89,8 @@ namespace GameJam.Core
             _input.CloneRequested -= RequestClone;
             _input.RetryRequested -= RequestRetry;
             _input.SelectCloneRequested -= RequestSelect;
+            _input.MarkRunRequested -= ToggleRunMark;
+            _player.Died -= HandlePlayerDied;
         }
 
         private void Start()
@@ -179,6 +198,21 @@ namespace GameJam.Core
         }
 
         /// <summary>
+        /// Marks or unmarks this run: a marked run is saved into the controlled clone if the player
+        /// dies, so the clone walks into the same hit and shields later runs. R and T are unchanged.
+        /// Used by F and the HUD's record button; locked with the other clone controls.
+        /// </summary>
+        public void ToggleRunMark()
+        {
+            if (State != GameState.Playing || !ClonesUnlocked)
+            {
+                return;
+            }
+
+            SetRunMarked(!RunMarked);
+        }
+
+        /// <summary>
         /// Turns the clone controls on for the rest of this chamber and tells the HUD to reveal them.
         /// Called by CloneUnlocker the first time the player falls into the pit; does nothing if already on.
         /// </summary>
@@ -206,7 +240,7 @@ namespace GameJam.Core
             StartCoroutine(LoadNextLevelAfterDelay());
         }
 
-        /// <summary>Resets the room for a new attempt, keeping the finished run as a clone if asked.</summary>
+        /// <summary>Starts a new attempt from the player's request, keeping the finished run as a clone if asked.</summary>
         private void StartNewAttempt(bool saveRun)
         {
             if (State != GameState.Playing || !ClonesUnlocked)
@@ -216,7 +250,35 @@ namespace GameJam.Core
 
             SetState(GameState.Resetting);
             _clock.Stop();
+            ResetRoom(saveRun);
+        }
 
+        /// <summary>
+        /// Freezes the room the moment the player is killed (so R, T and F are ignored too), then
+        /// restarts, saving the run as a clone only if it was marked.
+        /// </summary>
+        private void HandlePlayerDied()
+        {
+            if (State != GameState.Playing)
+            {
+                return;
+            }
+
+            SetState(GameState.Resetting);
+            _clock.Stop();
+            StartCoroutine(ResetAfterDeath(RunMarked));
+        }
+
+        /// <summary>Holds the frozen death frame for a moment, then starts the next attempt.</summary>
+        private IEnumerator ResetAfterDeath(bool saveRun)
+        {
+            yield return new WaitForSeconds(_deathResetDelay);
+            ResetRoom(saveRun);
+        }
+
+        /// <summary>Ends the run, resets the room and starts the next attempt. Expects the clock to be stopped.</summary>
+        private void ResetRoom(bool saveRun)
+        {
             // 1. Hand the finished run to the clone slots: saved into the controlled slot only if asked.
             _afterimages.EndRun(_recorder.TakeRecording(), saveRun);
 
@@ -226,7 +288,20 @@ namespace GameJam.Core
             // 3. Spawn a clone for every saved run except the one now controlled, then count again from tick 0.
             _afterimages.RespawnClones();
             _clock.Restart();
+            SetRunMarked(false);
             SetState(GameState.Playing);
+        }
+
+        /// <summary>Sets the run mark and tells the HUD, only when it actually changes.</summary>
+        private void SetRunMarked(bool marked)
+        {
+            if (RunMarked == marked)
+            {
+                return;
+            }
+
+            RunMarked = marked;
+            RunMarkedChanged?.Invoke(marked);
         }
 
         /// <summary>Waits on the complete screen, then loads the next scene if there is one.</summary>

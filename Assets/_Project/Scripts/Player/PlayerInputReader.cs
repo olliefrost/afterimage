@@ -1,7 +1,7 @@
 // PlayerInputReader: the only script that reads gameplay input (Input System package).
 // It turns keys into plain data and events: PlayerMovement reads MoveInput, PlayerActor consumes
-// interact presses, GameStateController listens for clone (R), retry (T) and clone select (1-5),
-// PauseMenu listens for pause (Esc), and ChamberMap reads MapHeld (hold Tab). While the map is held
+// interact presses, GameStateController listens for clone (R), retry (T), mark run (F) and clone
+// select (1-5), PauseMenu listens for pause (Esc), and ChamberMap reads MapHeld (hold Tab). While the map is held
 // the player stands still. IntroSequence turns on the skip action (any key or click) while the intro plays.
 // While the game is paused, GameStateController switches
 // gameplay keys off here. It also lists the keys the player may rebind (RebindTargets) and applies
@@ -15,7 +15,7 @@ namespace GameJam.Player
 {
     /// <summary>
     /// Reads keyboard input and exposes it as data. Bindings can be changed in the inspector;
-    /// any action left without bindings gets the default keys (WASD/arrows, E, R, T, 1-5, Tab, Esc).
+    /// any action left without bindings gets the default keys (WASD/arrows, E, R, T, F, 1-5, Tab, Esc).
     /// Saved rebinds from the settings menu are applied on top of those defaults. Runs early so the
     /// keys and rebind targets exist before the HUD reads them in its OnEnable.
     /// </summary>
@@ -27,6 +27,8 @@ namespace GameJam.Player
         [SerializeField] private InputAction _interact = new InputAction("Interact", InputActionType.Button);
         [SerializeField] private InputAction _clone = new InputAction("Clone", InputActionType.Button);
         [SerializeField] private InputAction _retry = new InputAction("Retry", InputActionType.Button);
+        [Tooltip("Marks the run so a death saves it as a clone. Defaults to F.")]
+        [SerializeField] private InputAction _markRun = new InputAction("Mark Run", InputActionType.Button);
         [Tooltip("Hold to show the chamber map. The player stands still while it is held.")]
         [SerializeField] private InputAction _map = new InputAction("Map", InputActionType.Button);
         [Tooltip("One action per clone slot; element 0 selects clone 1. Defaults to the number keys 1-5.")]
@@ -65,11 +67,17 @@ namespace GameJam.Player
         /// <summary>The retry key (T by default), for the HUD's key letter.</summary>
         public RebindTarget RetryTarget { get; private set; }
 
+        /// <summary>The mark run key (F by default), for the HUD's key letter.</summary>
+        public RebindTarget MarkRunTarget { get; private set; }
+
         /// <summary>Raised when the clone key is pressed: end the run, keep it as a clone, restart.</summary>
         public event Action CloneRequested;
 
         /// <summary>Raised when the retry key is pressed: restart without keeping the run.</summary>
         public event Action RetryRequested;
+
+        /// <summary>Raised when the mark key is pressed: toggle whether dying saves this run as a clone.</summary>
+        public event Action MarkRunRequested;
 
         /// <summary>Raised with the slot index (0 = clone 1) when a clone select key is pressed.</summary>
         public event Action<int> SelectCloneRequested;
@@ -118,6 +126,11 @@ namespace GameJam.Player
             if (_retry.WasPressedThisFrame())
             {
                 RetryRequested?.Invoke();
+            }
+
+            if (_markRun.WasPressedThisFrame())
+            {
+                MarkRunRequested?.Invoke();
             }
 
             for (int i = 0; i < _selectClone.Length; i++)
@@ -183,6 +196,7 @@ namespace GameJam.Player
             SetActionEnabled(_interact, enabled);
             SetActionEnabled(_clone, enabled);
             SetActionEnabled(_retry, enabled);
+            SetActionEnabled(_markRun, enabled);
             SetActionEnabled(_map, enabled);
             for (int i = 0; i < _selectClone.Length; i++)
             {
@@ -218,6 +232,8 @@ namespace GameJam.Player
             _rebindTargets.Add(CloneTarget);
             RetryTarget = new RebindTarget("RETRY", _retry, 0);
             _rebindTargets.Add(RetryTarget);
+            MarkRunTarget = new RebindTarget("MARK RUN", _markRun, 0);
+            _rebindTargets.Add(MarkRunTarget);
             _rebindTargets.Add(new RebindTarget("MAP (HOLD)", _map, 0));
             for (int i = 0; i < _selectClone.Length; i++)
             {
@@ -279,6 +295,11 @@ namespace GameJam.Player
             if (_retry.bindings.Count == 0)
             {
                 _retry.AddBinding("<Keyboard>/t");
+            }
+
+            if (_markRun.bindings.Count == 0)
+            {
+                _markRun.AddBinding("<Keyboard>/f");
             }
 
             // Number row keys are named "1", "2" and so on, so element i defaults to key i + 1.
