@@ -2,10 +2,12 @@
 // The R (save) button is framed in the colour of the clone the player controls, its caption says
 // which clone the run is saved into (and which one is next if a switch is picked), and it pulses
 // after the player presses a hinted button until they make their first clone. The T (retry)
-// button restarts without saving. The clone icons are handled by CloneColumn.
+// button restarts without saving. Both buttons show their current key, which follows rebinds
+// made in the pause menu. The clone icons are handled by CloneColumn.
 using GameJam.Afterimage;
 using GameJam.Core;
 using GameJam.Interactables;
+using GameJam.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,16 +19,22 @@ namespace GameJam.UI
         [Header("Game references")]
         [SerializeField] private GameStateController _game;
         [SerializeField] private AfterimageManager _afterimages;
+        [SerializeField] private PlayerInputReader _input;
+        [SerializeField] private KeyRebinder _rebinder;
         [Tooltip("Pressing any of these makes the clone button pulse until the first clone is made.")]
         [SerializeField] private PressButton[] _pulseTriggers;
 
         [Header("UI references")]
         [SerializeField] private Button _cloneButton;
+        [Tooltip("Key letter drawn on the clone button.")]
+        [SerializeField] private Text _cloneKeyLabel;
         [Tooltip("Frame image of the clone button, tinted with the controlled clone's colour.")]
         [SerializeField] private Image _cloneButtonFrame;
         [Tooltip("Small text under R: which clone the run is saved into, and the next one if a switch is picked.")]
         [SerializeField] private Text _cloneCaption;
         [SerializeField] private Button _retryButton;
+        [Tooltip("Key letter drawn on the retry button.")]
+        [SerializeField] private Text _retryKeyLabel;
         [Tooltip("Small text under T: retry, and the next clone if a switch is picked.")]
         [SerializeField] private Text _retryCaption;
         [SerializeField] private GameObject _completePanel;
@@ -50,12 +58,14 @@ namespace GameJam.UI
             _retryButton.onClick.AddListener(_game.RequestRetry);
             _afterimages.Changed += HandleClonesChanged;
             _game.StateChanged += HandleStateChanged;
+            _rebinder.Changed += RefreshKeyLabels;
             for (int i = 0; i < _pulseTriggers.Length; i++)
             {
                 _pulseTriggers[i].Pressed += HandleTriggerPressed;
             }
 
             HandleClonesChanged();
+            RefreshKeyLabels();
             _completePanel.SetActive(false);
         }
 
@@ -65,6 +75,7 @@ namespace GameJam.UI
             _retryButton.onClick.RemoveListener(_game.RequestRetry);
             _afterimages.Changed -= HandleClonesChanged;
             _game.StateChanged -= HandleStateChanged;
+            _rebinder.Changed -= RefreshKeyLabels;
             for (int i = 0; i < _pulseTriggers.Length; i++)
             {
                 _pulseTriggers[i].Pressed -= HandleTriggerPressed;
@@ -102,6 +113,13 @@ namespace GameJam.UI
             _cloneButtonFrame.color = _afterimages.GetSlotColour(controlled);
             _cloneCaption.text = hasPending ? $"SAVE {controlled + 1} → PLAY {pending + 1}" : $"SAVE CLONE {controlled + 1}";
             _retryCaption.text = hasPending ? $"RETRY → {pending + 1}" : "RETRY";
+        }
+
+        /// <summary>Draws the current save and retry keys on their buttons.</summary>
+        private void RefreshKeyLabels()
+        {
+            _cloneKeyLabel.text = _input.CloneTarget.KeyName.ToUpperInvariant();
+            _retryKeyLabel.text = _input.RetryTarget.KeyName.ToUpperInvariant();
         }
 
         private void HandleStateChanged(GameState state)

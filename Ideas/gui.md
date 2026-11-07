@@ -3,7 +3,7 @@
 **Purpose:** The in-level HUD for every level. It shows the restart controls, every saved clone,
 which clone the player is controlling right now, and what state each clone is in, and lets the
 player pick a clone to re-record. It also defines the clone slot rules the HUD depends on (limit,
-controlled clone, switching, death).
+controlled clone, switching, death), and the title screen and Esc pause menu (see "Menus").
 
 Placeholder art for now; the user will provide final icon and button art (see "Art").
 
@@ -102,8 +102,24 @@ A dead icon returns to normal when the next attempt starts.
 | R | Save the run into the controlled clone and restart |
 | T | Restart without saving |
 | 1-5 | Pick that clone (or the new slot) to control from the next restart; again to cancel |
+| Esc | Open or close the pause menu |
 
-All are rebindable inspector actions on `PlayerInputReader`.
+Movement (WASD), E, R, T and 1-5 can be rebound by the player in the pause menu's Settings; the
+HUD's key letters and badges follow the new keys. The arrow keys and Esc are fixed.
+
+## Menus
+
+- **Title screen** (`Title.unity`, the first scene): a placeholder "Game Name" logo with buttons
+  beneath it: Continue (only when a save exists), New Game, Quit.
+- **Continue:** the game remembers the last chamber started. Continue restarts that chamber fresh,
+  without its clones. New Game and Restart Game start over from the first chamber.
+- **Pause menu (Esc):** freezes the game and darkens the screen behind a centred panel: Resume,
+  Settings, Restart Game (back to the start of the first chamber), Quit Game. Esc again resumes.
+- **Settings:** one row per rebindable key. Click a key, then press the new one; Esc cancels.
+  Choosing a key that another action already uses swaps the two. Reset to defaults and Back.
+  Rebinds are saved between sessions.
+- Same placeholder style as the HUD; every menu button shares one button prefab, so final art
+  replaces them all at once.
 
 ## Art
 
