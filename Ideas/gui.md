@@ -17,15 +17,15 @@ Placeholder art for now; the user will provide final icon and button art (see "A
 |                                                      (4)     |  <- ghost: new clone being recorded or picked
 |                                                              |
 |                                                              |
-|                                              [T]  [  R  ]    |
+|                                         [F]  [T]  [  R  ]    |
 +--------------------------------------------------------------+
 ```
 
 - **Clone column:** right edge, vertically centred, clone 1 at the top. Every saved clone is shown.
   A faint ghost icon for the next new clone shows only while the player is recording it or has
   picked it (its number key), not while they are re-recording an older clone.
-- **Restart buttons:** bottom right. R (save) is the large button; T (retry) is a smaller button to
-  its left.
+- **Run buttons:** bottom right. R (save) is the large button; T (retry) is a smaller button to
+  its left, and F (record) the same size to the left of T.
 - **Level complete panel:** centred, unchanged.
 - Nothing else on screen. The game view stays as clear as possible.
 
@@ -35,9 +35,12 @@ Placeholder art for now; the user will provide final icon and button art (see "A
 |---|---|---|---|---|
 | Save | R | key "R" plus a clone glyph | "SAVE CLONE N", or "SAVE N → PLAY M" when clone M is picked | Saves the run into the controlled clone, then restarts (see "Clone slot rules") |
 | Retry | T | key "T" plus a loop arrow | "RETRY", or "RETRY → M" when clone M is picked | Throws the run away, then restarts |
+| Record | F | key "F" plus a record dot | "RECORD", or "SAVES ON DEATH" while marked | Marks (or unmarks) this run: if the player dies, the run is saved into the controlled clone instead of thrown away |
 
 - Both are clickable as well as bound to their key. The key letter is drawn on the button.
 - The R button's frame takes the colour of the controlled clone.
+- The F button's frame turns red and its dot blinks while the run is marked, so the player always
+  knows whether dying will save.
 - The R button pulses after the live player presses a hinted button before making any clone
   (the Tutorial1 cue), and stops once the first clone exists.
 
@@ -90,10 +93,15 @@ A dead icon returns to normal when the next attempt starts.
   - else (re-recording an old clone) control stays on that clone, to keep refining it. Press the
     next free number (for example 3 with two clones) to go back to making new clones; its ghost
     icon appears when picked.
-- **T:** throws the run away and restarts. A picked clone still becomes controlled.
+- **T:** throws the run away and restarts, even if the run is marked. A picked clone still becomes
+  controlled.
+- **F:** marks the current run (press again to unmark). The mark clears on every restart.
+- **Player death:** the room freezes briefly, then restarts. A marked run is saved into the
+  controlled clone exactly as R would (so its clone walks into the same hit next time and shields
+  whoever follows); an unmarked run is thrown away as T would.
 - Every other clone keeps its path and replays as before.
-- **Death (hook built, no hazard yet):** when a hazard kills a clone it stops replaying for the
-  rest of the attempt and the HUD shows it as Dead. Death resets when the next attempt starts.
+- **Clone death:** when a hazard kills a clone it stops replaying for the rest of the attempt and
+  the HUD shows it as Dead. Death resets when the next attempt starts.
 
 ## Keybinds
 
@@ -101,6 +109,7 @@ A dead icon returns to normal when the next attempt starts.
 |---|---|
 | R | Save the run into the controlled clone and restart |
 | T | Restart without saving |
+| F | Mark this run so dying saves it as a clone; again to unmark |
 | 1-5 | Pick that clone (or the new slot) to control from the next restart; again to cancel |
 
 All are rebindable inspector actions on `PlayerInputReader`.
@@ -113,7 +122,7 @@ All are rebindable inspector actions on `PlayerInputReader`.
   display; icons tinted from one white sprite so a single asset serves all five colours.
 - Pixel scale matches the game (Point filter); buttons draw at 2x and clone icons at 3x on 1080p.
 - Needed from the user: clone icon (white, tintable), dead overlay (skull), picked outline,
-  controlled pointer and row frame, key badge, R button, T button.
+  controlled pointer and row frame, key badge, R button, T button, F button with record dot.
 
 ## Open questions
 
