@@ -1,0 +1,70 @@
+# PROJECT_PLAN.md
+
+## Concept
+
+- **One-line pitch:** ¾ view game using after images of self to navigate around enemies and solve puzzles across a variety of rooms.
+- **How the game uses the theme of time:** Past versions of self used to help complete rooms by defeating/distracting enemies, acquiring information, activating interactables and manipulating objects.
+- **Genre and perspective:** ¾ view, low res "pixel art +"
+- **Player goal and win/lose condition:** Solve the puzzles, complete the levels
+- **Target platform and engine:** PC, Unity
+
+## Core mechanic
+
+- **Main time mechanic (what the player does with time):** Creates afterimages, each one replays its actions each time you reattempt (possibly add the ability to go back and modify actions of afterimages)
+- **Moment-to-moment controls:** WASD, mouse
+- **What makes it interesting or tricky:** Coordinating the clones/afterimages to work together and solve the puzzle in the fewest clones possible, add a par later on. Maybe add a time limit? As the number of clones increases they get worse due to the dodgy tech?
+- **How we will test that it is fun early:** Playtest, keep modular so there's always a working version, later will get others to try
+
+## Scope
+
+- **Must have (playable end to end):** At least one full working level with interesting puzzles, working afterimage mechanics
+- **Should have:** Enemies, inside/outside variations
+- **Stretch goals:** (Coop? Would this work?), lore, easter eggs, NPCs with text speech
+
+## Game loop and structure
+
+- **Start screen to first play:** <awake in overgrown chamber (dungeon/cave?..), navigate through puzzle chamber, then onto another chamber (outside?)>
+- **Core loop (repeated actions):** Repeat sending out a new clone, all the previous clones replay on a new attempt. Can go back and edit a previous clone's path after
+- **Levels, rounds or progression:** Start by polishing an initial level, then...
+- **End states and restart:** Escaping the chambers/map? Can replay a level attempting to use fewer clones or do it quicker
+
+## Art and audio
+
+- **Visual style and palette:** Post-technology/deserted world, overgrown, relic/half broken tech, Portal 2 inspired
+- **Asset list (sprites, UI, backgrounds):** TBD
+- **Sound effects and music:** TBD
+- **Asset sources and licences:** TBD
+- **Inspiration (not copying but general style):** Portal 2 (world and puzzle chamber concept), Stardew Valley (¾ view)
+
+## Tech
+
+- **Engine, language and version:** Unity, C#, version?
+- **Repo and branching approach:**
+- **Key systems (input, time system, entities, UI):**
+- **Build and export target:**
+
+## Team and tasks
+
+- **Roles:** Programming/Implementation, Asset/Sound design, Planning/Ideas
+- **Task split by person:** TBD (likely rotate and work together on different tasks)
+
+## Timeline
+
+- Runs about midday Saturday to midday Sunday
+- **Concept locked and repo set up by:** Before the start
+- **Core mechanic playable by:** Early afternoon
+- **Feature complete by:** TBD
+- **Playtest and polish by:** TBD
+- **Submission buffer starts:** TBD
+
+## Risks
+
+- **Biggest technical risk and fallback:** Scope creep with interesting features before core mechanics get implemented. Need to ensure a new playable version fairly often in between each new feature / expansion
+- **Biggest scope risk and what we cut first:** Extra bits like Coop, detailed lore, etc. come last after polished functioning puzzle levels with cloning mechanic
+
+## Submission checklist
+
+- [ ] Build runs on a clean machine
+- [ ] Page and upload set up, with description
+- [ ] Screenshots or a short gameplay clip
+- [ ] Credits and asset licences listed
