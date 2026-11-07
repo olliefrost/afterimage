@@ -43,6 +43,16 @@
 - Why - Rescuing sibling from deep within the lab. Evil parents owns the evil corp and experiments on you/sibling. Turns out they were just walking into their own cage/pan out at the end with scientists watching you.
 - When - post technology world, potentially this is all an illusion created by the lab?
 
+## Story
+- Intro - Camera starts from inside, sees open door to outside world (all you can see is bright lights). Text box of somebody yelling "hey, get back here!" or something similar, then character sprints in, and door slams shut behind. Camera then centred on character from now on.
+- 
+  
+## General level design
+
+- Buttons/pressure plates
+- Lasers that take a while to charge up and then fire at some frequency
+- Specific door that signals next level
+
 ## Detailed character description
 
 - Long black hair, somewhat scruffy, white, shadow of hair obscures facial features
