@@ -1,7 +1,8 @@
 // PlayerInputReader: the only script that reads gameplay input (Input System package).
 // It turns keys into plain data and events: PlayerMovement reads MoveInput, PlayerActor consumes
 // interact presses, GameStateController listens for clone (R), retry (T) and clone select (1-5),
-// and PauseMenu listens for pause (Esc). While the game is paused, GameStateController switches
+// PauseMenu listens for pause (Esc), and ChamberMap reads MapHeld (hold Tab). While the map is held
+// the player stands still. While the game is paused, GameStateController switches
 // gameplay keys off here. It also lists the keys the player may rebind (RebindTargets) and applies
 // any rebinds saved earlier; KeyRebinder changes them from the pause menu.
 using System;
@@ -13,7 +14,7 @@ namespace GameJam.Player
 {
     /// <summary>
     /// Reads keyboard input and exposes it as data. Bindings can be changed in the inspector;
-    /// any action left without bindings gets the default keys (WASD/arrows, E, R, T, 1-5, Esc).
+    /// any action left without bindings gets the default keys (WASD/arrows, E, R, T, 1-5, Tab, Esc).
     /// Saved rebinds from the settings menu are applied on top of those defaults. Runs early so the
     /// keys and rebind targets exist before the HUD reads them in its OnEnable.
     /// </summary>
@@ -25,6 +26,8 @@ namespace GameJam.Player
         [SerializeField] private InputAction _interact = new InputAction("Interact", InputActionType.Button);
         [SerializeField] private InputAction _clone = new InputAction("Clone", InputActionType.Button);
         [SerializeField] private InputAction _retry = new InputAction("Retry", InputActionType.Button);
+        [Tooltip("Hold to show the chamber map. The player stands still while it is held.")]
+        [SerializeField] private InputAction _map = new InputAction("Map", InputActionType.Button);
         [Tooltip("One action per clone slot; element 0 selects clone 1. Defaults to the number keys 1-5.")]
         [SerializeField] private InputAction[] _selectClone =
         {
@@ -46,6 +49,9 @@ namespace GameJam.Player
 
         /// <summary>Current movement direction, each axis in -1..1.</summary>
         public Vector2 MoveInput { get; private set; }
+
+        /// <summary>True while the map key is held down. Always false while paused.</summary>
+        public bool MapHeld { get; private set; }
 
         /// <summary>Every key the player may rebind, in the order the settings menu lists them.</summary>
         public IReadOnlyList<RebindTarget> RebindTargets => _rebindTargets;
@@ -88,9 +94,11 @@ namespace GameJam.Player
 
         private void Update()
         {
-            MoveInput = Vector2.ClampMagnitude(_move.ReadValue<Vector2>(), 1f);
+            // 1. While the map is open the player looks, not moves: no walking and no interacting.
+            MapHeld = _map.IsPressed();
+            MoveInput = MapHeld ? Vector2.zero : Vector2.ClampMagnitude(_move.ReadValue<Vector2>(), 1f);
 
-            if (_interact.WasPressedThisFrame())
+            if (_interact.WasPressedThisFrame() && !MapHeld)
             {
                 _interactQueued = true;
             }
@@ -137,6 +145,7 @@ namespace GameJam.Player
             _gameplayEnabled = enabled;
             _interactQueued = false;
             MoveInput = Vector2.zero;
+            MapHeld = false;
             if (isActiveAndEnabled)
             {
                 SetGameplayActionsEnabled(enabled);
@@ -155,6 +164,7 @@ namespace GameJam.Player
             SetActionEnabled(_interact, enabled);
             SetActionEnabled(_clone, enabled);
             SetActionEnabled(_retry, enabled);
+            SetActionEnabled(_map, enabled);
             for (int i = 0; i < _selectClone.Length; i++)
             {
                 SetActionEnabled(_selectClone[i], enabled);
@@ -189,6 +199,7 @@ namespace GameJam.Player
             _rebindTargets.Add(CloneTarget);
             RetryTarget = new RebindTarget("RETRY", _retry, 0);
             _rebindTargets.Add(RetryTarget);
+            _rebindTargets.Add(new RebindTarget("MAP (HOLD)", _map, 0));
             for (int i = 0; i < _selectClone.Length; i++)
             {
                 RebindTarget select = new RebindTarget($"PICK CLONE {i + 1}", _selectClone[i], 0);
@@ -258,6 +269,11 @@ namespace GameJam.Player
                 {
                     _selectClone[i].AddBinding($"<Keyboard>/{i + 1}");
                 }
+            }
+
+            if (_map.bindings.Count == 0)
+            {
+                _map.AddBinding("<Keyboard>/tab");
             }
 
             if (_pause.bindings.Count == 0)

@@ -10,9 +10,9 @@
 
 ## Core mechanic
 
-- **Main time mechanic (what the player does with time):** Creates afterimages, each one replays its actions each time you reattempt. Up to 5 clones, each with its own colour; the player always controls one clone (shown in the HUD) and can switch to an earlier clone to re-record its path while the others keep replaying (rules in `gui.md`)
-- **Moment-to-moment controls:** WASD/arrows move (screen-relative), E interact, R save the run into the controlled clone and restart, T restart without saving, 1-5 pick the clone to control from the next restart, Esc pause menu. The HUD's R/T buttons and clone icons can also be clicked. Gameplay keys can be rebound in the pause menu's Settings (menus in `gui.md`).
-- **What makes it interesting or tricky:** Coordinating the clones/afterimages to work together and solve the puzzle in the fewest clones possible, add a par later on. Maybe add a time limit? As the number of clones increases they get worse due to the dodgy tech?
+- **Main time mechanic (what the player does with time):** Creates afterimages, each one replays its actions each time you reattempt. Up to 5 clones (Tutorial1 allows 2 and only unlocks cloning once the player is trapped in its pit), each with its own colour; the player always controls one clone (shown in the HUD) and can switch to an earlier clone to re-record its path while the others keep replaying (rules in `gui.md`)
+- **Moment-to-moment controls:** WASD/arrows move (screen-relative), E interact, R save the run into the controlled clone and restart, T restart without saving, 1-5 pick the clone to control from the next restart, hold Tab for the chamber map, Esc pause menu. The HUD's R/T buttons and clone icons can also be clicked. Gameplay keys can be rebound in the pause menu's Settings (menus in `gui.md`).
+- **What makes it interesting or tricky:** The camera stays close and the character only sees a small pool of light, so the player relies on the hold-Tab chamber map (walls, key features and a live dot per clone) to keep track of their clones. Coordinating the clones/afterimages to work together and solve the puzzle in the fewest clones possible, add a par later on. Maybe add a time limit? As the number of clones increases they get worse due to the dodgy tech?
 - **How we will test that it is fun early:** Playtest, keep modular so there's always a working version, later will get others to try
 
 ## Scope
