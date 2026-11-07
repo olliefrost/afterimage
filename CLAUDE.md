@@ -142,7 +142,7 @@ Status: built and working in Tutorial1. Update each item when the code changes.
 - Plan before coding when a task touches more than three files or any shared system: write a short plan and wait for the user's go-ahead. For smaller tasks, proceed.
 - Commit after each finished, working task, once the user has confirmed it in Play mode. Push when the user asks. One logical change per commit.
 - **Commit format:** `type(scope): imperative summary`, 72 characters or fewer, for example `feat(afterimage): record player position each fixed tick`. Types: `feat`, `fix`, `refactor`, `docs`, `chore`, `assets`. Add a body when the reason or a trade-off is not obvious from the diff.
-- **A task is done when:** the code compiles with no new console errors or warnings, you have checked or listed what to test in Play mode, there are no stray debug logs, comments match the code, and this file is current.
+- **A task is done when:** the code compiles with no new console errors or warnings, you have checked or listed what to test in Play mode, there are no stray debug logs, comments match the code, this file is current, and you have run the `code-review` skill on the change and fixed or reported its findings. Do the review at the end of every build task, before committing.
 - **Report back briefly:** what changed, which files, exact steps to test in Unity, anything you could not verify, any deviation from a file in `Ideas/`, and any update made to this file. If something is unclear, ask one short question instead of guessing.
 
 ## Rules and limits
