@@ -24,7 +24,7 @@ Isometric chamber, as in `Sketches/tutorial1.png` (scene: `Assets/_Project/Scene
 2. **Investigate.** The player is drawn to the brighter area and walks into the hole.
 3. **Reveal.** The player lands at the bottom of the pit next to a lone button and can't get out. Pressing E presses the button, and the R clone button in the bottom right of the HUD starts pulsing to suggest it's worth using.
 4. **Button press.** A red pulse travels along a wire on the floor to the door and opens it.
-5. **Clone.** The player presses R (or clicks the clone button) and returns to the spawn point. A blue clone 1 icon appears on the right edge of the HUD. T (or the smaller retry button) restarts without keeping the run.
+5. **Clone.** The player presses R (or clicks the clone button) and returns to the spawn point. On the HUD's right edge the blue clone 1 icon turns solid, and the arrow moves to the green clone 2 slot that the player now controls. T (or the smaller retry button) restarts without keeping the run.
 6. **Watch the past self.** The player sees their previous run play out: the clone walks into the hole, presses the button on the same tick, and the signal opens the door. The clone then stands still where its run ended.
 7. **Exit.** The door is now clearly the right way to go: it fades open and warm light spills into the room. The player leaves through it and the level completes.
 

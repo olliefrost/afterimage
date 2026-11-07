@@ -1,6 +1,8 @@
 // AfterimageReplayer: drives one clone. Each tick it moves to the recorded position and repeats
-// any recorded interact through its own Interactor. Once the run ends it stands still.
-// Spawned and set up by AfterimageManager at the start of each attempt.
+// any recorded interact through its own Interactor. Once the run ends it stands still; if it is
+// killed it stops replaying for the rest of the attempt.
+// Spawned and set up by AfterimageManager at the start of each attempt; CloneTint reads its colour.
+using System;
 using GameJam.Actors;
 using GameJam.Core;
 using UnityEngine;
@@ -28,16 +30,30 @@ namespace GameJam.Afterimage
         /// <summary>Facing on the current tick, for sprites.</summary>
         public Vector2 Facing { get; private set; } = Vector2.down;
 
+        /// <summary>Which clone slot this clone replays (0 = clone 1).</summary>
+        public int SlotIndex { get; private set; }
+
+        /// <summary>The slot's colour, for the clone's tint and light.</summary>
+        public Color SlotColour { get; private set; } = Color.white;
+
+        /// <summary>True once the clone has died this attempt.</summary>
+        public bool IsDead { get; private set; }
+
+        /// <summary>Raised once when the clone dies.</summary>
+        public event Action<AfterimageReplayer> Died;
+
         private void Awake()
         {
             _body = GetComponent<Rigidbody2D>();
         }
 
-        /// <summary>Gives the clone its run and clock and places it at the run's first position.</summary>
-        public void Init(Recording recording, TickClock clock)
+        /// <summary>Gives the clone its run, clock and slot, and places it at the run's first position.</summary>
+        public void Init(Recording recording, TickClock clock, int slotIndex, Color slotColour)
         {
             _recording = recording;
             _clock = clock;
+            SlotIndex = slotIndex;
+            SlotColour = slotColour;
 
             if (_recording.Frames.Count > 0)
             {
@@ -47,9 +63,22 @@ namespace GameJam.Afterimage
             }
         }
 
+        /// <summary>Kills the clone: it stops replaying where it stands until the next attempt. Hazards call this.</summary>
+        [ContextMenu("Kill")]
+        public void Kill()
+        {
+            if (IsDead)
+            {
+                return;
+            }
+
+            IsDead = true;
+            Died?.Invoke(this);
+        }
+
         private void FixedUpdate()
         {
-            if (_recording == null || !_clock.IsRunning)
+            if (_recording == null || IsDead || !_clock.IsRunning)
             {
                 return;
             }

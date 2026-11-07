@@ -21841,6 +21841,12 @@ MonoBehaviour:
   _clock: {fileID: 2080991561}
   _clonePrefab: {fileID: 5291575494339755315, guid: be6f3e565cba2704792c237567b239ce, type: 3}
   _cloneParent: {fileID: 1679370523}
+  _slotColours:
+  - {r: 0.25, g: 0.55, b: 1, a: 1}
+  - {r: 0.3, g: 0.9, b: 0.4, a: 1}
+  - {r: 1, g: 0.85, b: 0.25, a: 1}
+  - {r: 0.7, g: 0.4, b: 1, a: 1}
+  - {r: 1, g: 0.55, b: 0.15, a: 1}
 --- !u!114 &2080991563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21905,6 +21911,52 @@ MonoBehaviour:
     m_Type: 1
     m_ExpectedControlType: 
     m_Id: 418f2e88-c304-433b-b7f9-0c9e9c7806aa
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  _selectClone:
+  - m_Name: Select Clone 1
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: cd4c63c7-fdce-47c1-b0aa-c5928c6d6fab
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  - m_Name: Select Clone 2
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: f8ef7994-172c-492c-a11f-c4b01f698502
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  - m_Name: Select Clone 3
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: 5a36da28-80f8-46c1-af0a-352c0bbd7f29
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  - m_Name: Select Clone 4
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: cd80ab3d-565c-4a87-9359-cea3cb494742
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  - m_Name: Select Clone 5
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: 7e4d83f8-a117-4793-927b-cd9c84ab86a2
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
@@ -22843,7 +22895,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1534664279219279793, guid: c4516bc42c8140441b0942080dde60f1, type: 3}
       propertyPath: m_FontData.m_MaxSize
-      value: 40
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 2959926563865007626, guid: c4516bc42c8140441b0942080dde60f1, type: 3}
       propertyPath: m_Name
@@ -22941,6 +22993,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9219250981509658261, guid: c4516bc42c8140441b0942080dde60f1, type: 3}
+      propertyPath: _game
+      value: 
+      objectReference: {fileID: 2080991563}
+    - target: {fileID: 9219250981509658261, guid: c4516bc42c8140441b0942080dde60f1, type: 3}
+      propertyPath: _afterimages
+      value: 
+      objectReference: {fileID: 2080991562}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
