@@ -1,8 +1,10 @@
 // Door: blocks the way until Open() is called (usually by SignalWire.OnArrived). Opening removes
-// the blocking collider, recolours the door and turns on its "open" visuals (light spill or trail)
-// so the exit reads clearly. Closes again on every new attempt.
+// the blocking collider, tints the door and turns on its "open" visuals (light spill or trail)
+// so the exit reads clearly. Closes again on every new attempt. OnOpened/OnClosed drive animation
+// (e.g. SpriteFlipbook.PlayForward/PlayBackward); the collider never waits for it.
 using GameJam.Core;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace GameJam.Interactables
 {
@@ -20,6 +22,12 @@ namespace GameJam.Interactables
         [SerializeField] private Color _closedColor = new Color(0.2f, 0.2f, 0.22f);
         [SerializeField] private Color _openColor = new Color(0.1f, 0.1f, 0.1f, 0.3f);
 
+        [Header("Events")]
+        [Tooltip("Fired when the door opens, e.g. SpriteFlipbook.PlayForward.")]
+        [SerializeField] private UnityEvent _onOpened = new UnityEvent();
+        [Tooltip("Fired when an open door closes on reset, e.g. SpriteFlipbook.PlayBackward.")]
+        [SerializeField] private UnityEvent _onClosed = new UnityEvent();
+
         private bool _isOpen;
 
         private void OnEnable()
@@ -36,15 +44,26 @@ namespace GameJam.Interactables
         /// <summary>Opens the door and lets actors through.</summary>
         public void Open()
         {
+            if (_isOpen)
+            {
+                return;
+            }
+
             _isOpen = true;
             ApplyState();
+            _onOpened.Invoke();
         }
 
         /// <summary>Closes the door for the next attempt.</summary>
         public void ResetState()
         {
+            bool wasOpen = _isOpen;
             _isOpen = false;
             ApplyState();
+            if (wasOpen)
+            {
+                _onClosed.Invoke();
+            }
         }
 
         private void ApplyState()
