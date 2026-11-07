@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5422114586904943767}
   - component: {fileID: 7045671904139615987}
   - component: {fileID: 6376884972195171044}
+  - component: {fileID: 5881101974662922696}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -63,6 +64,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.ActorPitDepth
   _fallDuration: 0.3
+--- !u!114 &5881101974662922696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1511469254691300897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4881562eb583960439aec6be00ba0c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.ActorElevation
+  _climbSpeed: 6
 --- !u!1 &3024435791549519281
 GameObject:
   m_ObjectHideFlags: 0

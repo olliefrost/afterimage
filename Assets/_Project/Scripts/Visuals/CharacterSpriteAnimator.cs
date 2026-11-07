@@ -1,6 +1,7 @@
 // CharacterSpriteAnimator: sits on a character's Visual child (player or clone). It works out
 // facing from how the character moved this frame, picks the front/back/side sprite and adds a
-// small walk bob. Visual only, so it needs no link to input or recordings.
+// small walk bob. It also adds the ground height from ActorElevation (if the Body has one), since it
+// owns this sprite's position. Visual only, so it needs no link to input or recordings.
 using UnityEngine;
 
 namespace GameJam.Visuals
@@ -25,6 +26,7 @@ namespace GameJam.Visuals
         private const float MinMoveSqr = 0.000001f;
 
         private Transform _body;
+        private ActorElevation _elevation;
         private Vector3 _lastBodyPosition;
         private Vector3 _restLocalPosition;
         private float _walkTime;
@@ -32,6 +34,7 @@ namespace GameJam.Visuals
         private void Awake()
         {
             _body = transform.parent != null ? transform.parent : transform;
+            _elevation = GetComponentInParent<ActorElevation>();
             _lastBodyPosition = _body.position;
             _restLocalPosition = transform.localPosition;
         }
@@ -54,9 +57,10 @@ namespace GameJam.Visuals
                 _walkTime = 0f;
             }
 
-            // 3. Bob up and down while walking.
+            // 3. Bob up and down while walking, standing on whatever ground height the level has here.
             float bob = isMoving ? Mathf.Abs(Mathf.Sin(_walkTime * _bobSpeed)) * _bobHeight : 0f;
-            transform.localPosition = _restLocalPosition + new Vector3(0f, bob, 0f);
+            float ground = _elevation != null ? _elevation.Height : 0f;
+            transform.localPosition = _restLocalPosition + new Vector3(0f, bob + ground, 0f);
         }
 
         private void ApplyFacing(Vector2 direction)
