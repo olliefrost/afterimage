@@ -45,7 +45,7 @@
 - When - post technology world, potentially this is all an illusion created by the lab?
 
 ## Story
-- Intro - Camera starts from inside, sees open door to outside world (all you can see is bright lights). Text box of somebody yelling "hey, get back here!" or something similar, then character sprints in, and door slams shut behind. Camera then centred on character from now on.
+- Intro - Camera starts from inside, sees open door to outside world (all you can see is bright lights). Text box of somebody yelling "hey, get back here!" or something similar, then character sprints in, and door slams shut behind. Camera then centred on character from now on. **Built in Tutorial1:** entrance door in the back-left wall, line "HEY! GET BACK HERE!" from "???", plays on New Game and Restart Game only, any key skips (details in `tutorial1.md`, step 0).
 - 
   
 ## General level design
