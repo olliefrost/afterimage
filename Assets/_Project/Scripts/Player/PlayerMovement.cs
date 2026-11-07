@@ -15,7 +15,9 @@ namespace GameJam.Player
 
         [Header("Tuning")]
         [Tooltip("Walking speed in units per second.")]
-        [SerializeField] private float _moveSpeed = 4f;
+        [SerializeField] private float _moveSpeed = 3.5f;
+        [Tooltip("Scales vertical movement for the 2:1 isometric floor. 0.5 makes W+D follow the floor's grid lines.")]
+        [SerializeField] private float _isoVerticalScale = 0.5f;
 
         private Rigidbody2D _body;
 
@@ -40,7 +42,9 @@ namespace GameJam.Player
                 Facing = direction.normalized;
             }
 
-            _body.MovePosition(_body.position + direction * (_moveSpeed * Time.fixedDeltaTime));
+            // Screen-relative input, squashed vertically so movement matches the isometric floor.
+            Vector2 velocity = new Vector2(direction.x, direction.y * _isoVerticalScale) * _moveSpeed;
+            _body.MovePosition(_body.position + velocity * Time.fixedDeltaTime);
         }
     }
 }

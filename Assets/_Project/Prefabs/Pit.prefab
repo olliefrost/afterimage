@@ -69,11 +69,11 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: -1.35, y: -1.45}
-  - {x: -1.35, y: 0.45}
-  - {x: 1.35, y: 0.45}
-  - {x: 1.35, y: -1.45}
-  - {x: -1.35, y: -1.45}
+  - {x: 0, y: 0.3}
+  - {x: 1.05, y: -0.2}
+  - {x: 0, y: -0.7}
+  - {x: -1.05, y: -0.2}
+  - {x: 0, y: 0.3}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
@@ -159,12 +159,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -98
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 9b63ce80ea339154f8abeb42e0c7ade5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e6aba0d173d9af647bae3746726ba4f0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 3, y: 3}
+  m_Size: {x: 3, y: 1.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -196,7 +196,7 @@ Transform:
   m_GameObject: {fileID: 3723941132224843677}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.3, z: 0}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -220,8 +220,8 @@ MonoBehaviour:
   m_Light2DProvider:
     rid: -2
   m_SelectionSources:
-    rid: 2278921636455120995
-  m_FalloffIntensity: 0.5
+    rid: 2278921636455121040
+  m_FalloffIntensity: 0.6
   m_Color: {r: 1, g: 0.25, b: 0.2, a: 1}
   m_Intensity: 1
   m_LightVolumeIntensity: 1
@@ -235,7 +235,7 @@ MonoBehaviour:
   m_NormalMapDistance: 3
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
-  m_ShadowsEnabled: 0
+  m_ShadowsEnabled: 1
   m_ShadowIntensity: 0.75
   m_ShadowSoftness: 0.3
   m_ShadowSoftnessFalloffIntensity: 0.5
@@ -249,8 +249,8 @@ MonoBehaviour:
     m_Extent: {x: 0, y: 0, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0.3
-  m_PointLightOuterRadius: 2
+  m_PointLightInnerRadius: 0.24000001
+  m_PointLightOuterRadius: 1.6
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -266,7 +266,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2278921636455120995
+    - rid: 2278921636455121040
       type: {class: Light2DProviderSources, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data:
         m_SelectedHashCode: 3
@@ -283,7 +283,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7276030155618957434}
-  - component: {fileID: 939664116532231667}
+  - component: {fileID: 5117568770969150959}
   - component: {fileID: 4283723652764457355}
   m_Layer: 0
   m_Name: Pit
@@ -301,7 +301,7 @@ Transform:
   m_GameObject: {fileID: 6289068382436005804}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: -1.5, z: 0}
+  m_LocalPosition: {x: 1, y: 3.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -312,8 +312,8 @@ Transform:
   - {fileID: 4424073443689873745}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &939664116532231667
-BoxCollider2D:
+--- !u!60 &5117568770969150959
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -356,8 +356,13 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.6, y: 2.6}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: -1.2750001, y: 0}
+      - {x: 0, y: 0.63750005}
+      - {x: 1.2750001, y: 0}
+      - {x: 0, y: -0.63750005}
+  m_UseDelaunayMesh: 1
 --- !u!114 &4283723652764457355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -397,7 +402,7 @@ Transform:
   m_GameObject: {fileID: 6387570186735650454}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.9, z: 0}
+  m_LocalPosition: {x: 0, y: -0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -417,7 +422,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1962697088681041566, guid: fd363a5fded65284e8db2f29ae7e3b4b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.35
+      value: -0.12
       objectReference: {fileID: 0}
     - target: {fileID: 1962697088681041566, guid: fd363a5fded65284e8db2f29ae7e3b4b, type: 3}
       propertyPath: m_LocalPosition.z

@@ -84,16 +84,16 @@ LineRenderer:
   m_SortingOrder: -97
   m_MaskInteraction: 0
   m_Positions:
-  - {x: 0.5, y: -3.1, z: 0}
-  - {x: 0.5, y: -5.5, z: 0}
-  - {x: 2, y: -7, z: 0}
-  - {x: 11.5, y: -6.5, z: 0}
-  - {x: 12.3, y: 0, z: 0}
-  - {x: 11.3, y: 4.6, z: 0}
-  - {x: 9, y: 5.6, z: 0}
+  - {x: 1.75, y: 3.375, z: 0}
+  - {x: 3.5, y: 3.5, z: 0}
+  - {x: 5.5, y: 3.5, z: 0}
+  - {x: 7, y: 3.75, z: 0}
+  - {x: 7, y: 4.25, z: 0}
+  - {x: 6.7, y: 4.5, z: 0}
+  - {x: 6.55, y: 4.72, z: 0}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.1
+    widthMultiplier: 0.05
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -208,7 +208,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5.5555553, y: 5.5555553, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2816600271125737509}
@@ -231,8 +231,8 @@ MonoBehaviour:
   m_Light2DProvider:
     rid: -2
   m_SelectionSources:
-    rid: 2278921636455120997
-  m_FalloffIntensity: 0.5
+    rid: 2278921636455121042
+  m_FalloffIntensity: 0.6
   m_Color: {r: 1, g: 0.2, b: 0.15, a: 1}
   m_Intensity: 1.2
   m_LightVolumeIntensity: 1
@@ -246,7 +246,7 @@ MonoBehaviour:
   m_NormalMapDistance: 3
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
-  m_ShadowsEnabled: 0
+  m_ShadowsEnabled: 1
   m_ShadowIntensity: 0.75
   m_ShadowSoftness: 0.3
   m_ShadowSoftnessFalloffIntensity: 0.5
@@ -260,8 +260,8 @@ MonoBehaviour:
     m_Extent: {x: 0, y: 0, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0.22500001
-  m_PointLightOuterRadius: 1.5
+  m_PointLightInnerRadius: 0.18
+  m_PointLightOuterRadius: 1.2
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -277,7 +277,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 2278921636455120997
+    - rid: 2278921636455121042
       type: {class: Light2DProviderSources, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data:
         m_SelectedHashCode: 3
@@ -311,8 +311,8 @@ Transform:
   m_GameObject: {fileID: 6951041640743026968}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: -3.1, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
+  m_LocalPosition: {x: 1.75, y: 3.375, z: 0}
+  m_LocalScale: {x: 0.18, y: 0.18, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6899739950941982348}
