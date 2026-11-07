@@ -1,0 +1,95 @@
+{
+  "group_id": "f9695ef9-87e8-4dfa-b422-2a67bfa5b0e7",
+  "states": [
+    {
+      "character": {
+        "id": "7db3114f-d6e9-4675-9304-8865d1815d19",
+        "name": "Idle",
+        "prompt": "Detailed pixel art character, full body. Young woman with a lean, athletic build and pale skin. Long, wild, messy black hair that hides most of her face in shadow. Faded charcoal-grey tank top. Baggy dark olive-green cargo trousers with large side pockets, gathered at the waist with a cloth jacket or sash tied around it. Black leather combat boots with laces. Her left arm has glowing cyan circuit-line markings running from shoulder to wrist, with a bright blue diamond-shaped crystal implant on the upper arm that gives off a soft glow. Gritty post-apocalyptic, cyberpunk look. Muted, desaturated palette of dark greys, olive and brown, with cyan glow as the only bright accent. Moody low-key lighting, crisp pixel outlines, careful shading, no anti-aliasing, transparent background.",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-11-07T17:02:14.111387+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {
+          "Running": {
+            "east": [
+              "Idle/animations/Running/east/frame_000.png",
+              "Idle/animations/Running/east/frame_001.png",
+              "Idle/animations/Running/east/frame_002.png",
+              "Idle/animations/Running/east/frame_003.png",
+              "Idle/animations/Running/east/frame_004.png",
+              "Idle/animations/Running/east/frame_005.png"
+            ],
+            "north-west": [
+              "Idle/animations/Running/north-west/frame_000.png",
+              "Idle/animations/Running/north-west/frame_001.png",
+              "Idle/animations/Running/north-west/frame_002.png",
+              "Idle/animations/Running/north-west/frame_003.png",
+              "Idle/animations/Running/north-west/frame_004.png",
+              "Idle/animations/Running/north-west/frame_005.png"
+            ],
+            "south": [
+              "Idle/animations/Running/south/frame_000.png",
+              "Idle/animations/Running/south/frame_001.png",
+              "Idle/animations/Running/south/frame_002.png",
+              "Idle/animations/Running/south/frame_003.png",
+              "Idle/animations/Running/south/frame_004.png",
+              "Idle/animations/Running/south/frame_005.png"
+            ],
+            "south-west": [
+              "Idle/animations/Running/south-west/frame_000.png",
+              "Idle/animations/Running/south-west/frame_001.png",
+              "Idle/animations/Running/south-west/frame_002.png",
+              "Idle/animations/Running/south-west/frame_003.png",
+              "Idle/animations/Running/south-west/frame_004.png",
+              "Idle/animations/Running/south-west/frame_005.png"
+            ],
+            "north-east": [
+              "Idle/animations/Running/north-east/frame_000.png",
+              "Idle/animations/Running/north-east/frame_001.png",
+              "Idle/animations/Running/north-east/frame_002.png",
+              "Idle/animations/Running/north-east/frame_003.png",
+              "Idle/animations/Running/north-east/frame_004.png",
+              "Idle/animations/Running/north-east/frame_005.png"
+            ],
+            "south-east": [
+              "Idle/animations/Running/south-east/frame_000.png",
+              "Idle/animations/Running/south-east/frame_001.png",
+              "Idle/animations/Running/south-east/frame_002.png",
+              "Idle/animations/Running/south-east/frame_003.png",
+              "Idle/animations/Running/south-east/frame_004.png",
+              "Idle/animations/Running/south-east/frame_005.png"
+            ],
+            "west": [
+              "Idle/animations/Running/west/frame_000.png",
+              "Idle/animations/Running/west/frame_001.png",
+              "Idle/animations/Running/west/frame_002.png",
+              "Idle/animations/Running/west/frame_003.png",
+              "Idle/animations/Running/west/frame_004.png",
+              "Idle/animations/Running/west/frame_005.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-11-07T17:33:52.657236"
+}
