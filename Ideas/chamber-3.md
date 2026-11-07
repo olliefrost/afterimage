@@ -87,9 +87,16 @@ Isometric, facing northwest, as in the sketch. Corners are referred to as:
   power and everything after it unravels.
 - **Plates, not buttons:** each raised button and plate pair works by standing on the plate; the
   buttons are decoration.
-- **Height is faked:** the raised ledges sit behind a ledge face that only the raised stairs cross.
-- **Holding the block:** the block slides into the beam while someone stands in its push spot
-  behind it, and springs back when they step off.
+- **Raised balcony:** the plates by the back wall and the exit door sit on a balcony one wall-block
+  high, split into three bays by pillars. Its front edge is solid except where the raised stairs
+  stand; the 4 plates flip up into 4 steps leading onto it, with rails so you only get on at the
+  bottom and off at the top. Characters on the balcony or the steps are drawn at that height.
+- **Hydraulic mechanism:** a fixed base pushes the block out on a piston arm along a floor channel
+  until it caps the laser lens. A pedal on the floor drives it; let go and the block springs back
+  against the base.
+- **Visible wiring:** cables run from the generator to every plate and the exit door and light up
+  when the room is powered. Each plate has its own cable to what it moves (pedal → piston, plates →
+  the stairs' stops), and a stop's floor marker lights up when the stairs will go there.
 - **Fuel:** a steady stream of crates, one about every 1.2 seconds.
 - **Exit door:** opens when the player walks up to it while the room is powered.
 - **Afterimage 4's timing:** it boards the stairs once they flip up; they only slide left when
