@@ -1,11 +1,12 @@
 // CameraFollow: keeps the main camera on the player with a little smoothing, never showing past
 // the room edges. Snaps instantly when the player teleports (new attempt, falling into the pit).
+// IntroSequence points it at other targets (Follow) and shakes it (Shake) during the intro.
 // Visual only: nothing in gameplay reads the camera.
 using UnityEngine;
 
 namespace GameJam.Visuals
 {
-    /// <summary>Smoothly follows a target and clamps the view to a room-bounds box.</summary>
+    /// <summary>Smoothly follows a target, clamps the view to a room-bounds box, and can shake.</summary>
     [RequireComponent(typeof(Camera))]
     public class CameraFollow : MonoBehaviour
     {
@@ -21,9 +22,16 @@ namespace GameJam.Visuals
         [SerializeField] private Vector2 _offset = new Vector2(0f, 0.5f);
         [Tooltip("If the target is further than this from the camera, jump instead of gliding (teleports).")]
         [SerializeField] private float _snapDistance = 3f;
+        [Tooltip("Seconds to glide to a new target set with Follow(target, false), however far away it is.")]
+        [SerializeField] private float _glideTime = 0.6f;
 
         private Camera _camera;
         private Vector3 _velocity;
+        private bool _isGliding;
+        private Vector3 _restPosition;
+        private float _shakeTimeLeft;
+        private float _shakeDuration;
+        private float _shakeStrength;
 
         private void Awake()
         {
@@ -32,7 +40,8 @@ namespace GameJam.Visuals
 
         private void Start()
         {
-            transform.position = ClampToRoom(DesiredPosition());
+            _restPosition = ClampToRoom(DesiredPosition());
+            transform.position = _restPosition;
         }
 
         private void LateUpdate()
@@ -44,19 +53,61 @@ namespace GameJam.Visuals
 
             // 1. Glide toward the target, or jump straight there after a teleport.
             Vector3 desired = DesiredPosition();
-            Vector3 next;
-            if (Vector2.Distance(transform.position, desired) > _snapDistance)
+            if (_isGliding)
             {
-                next = desired;
+                _restPosition = Vector3.SmoothDamp(_restPosition, desired, ref _velocity, _glideTime);
+                _isGliding = Vector2.Distance(_restPosition, desired) > 0.02f;
+            }
+            else if (Vector2.Distance(_restPosition, desired) > _snapDistance)
+            {
+                _restPosition = desired;
                 _velocity = Vector3.zero;
             }
             else
             {
-                next = Vector3.SmoothDamp(transform.position, desired, ref _velocity, _smoothTime);
+                _restPosition = Vector3.SmoothDamp(_restPosition, desired, ref _velocity, _smoothTime);
             }
 
-            // 2. Keep the whole view inside the room.
-            transform.position = ClampToRoom(next);
+            // 2. Keep the whole view inside the room, then add any shake on top.
+            _restPosition = ClampToRoom(_restPosition);
+            transform.position = _restPosition + ShakeOffset();
+        }
+
+        /// <summary>
+        /// Switches the camera to a new target. With <paramref name="snap"/> it jumps there this frame;
+        /// otherwise it glides there over the glide time, even across the whole room.
+        /// </summary>
+        public void Follow(Transform target, bool snap)
+        {
+            _target = target;
+            _velocity = Vector3.zero;
+            _isGliding = !snap;
+            if (snap)
+            {
+                _restPosition = ClampToRoom(DesiredPosition());
+                transform.position = _restPosition;
+            }
+        }
+
+        /// <summary>Shakes the view for a moment, fading out, for impacts like a door slamming.</summary>
+        public void Shake(float duration, float strength)
+        {
+            _shakeDuration = Mathf.Max(duration, 0.01f);
+            _shakeTimeLeft = _shakeDuration;
+            _shakeStrength = strength;
+        }
+
+        /// <summary>This frame's random shake offset, shrinking to nothing as the shake ends.</summary>
+        private Vector3 ShakeOffset()
+        {
+            if (_shakeTimeLeft <= 0f)
+            {
+                return Vector3.zero;
+            }
+
+            _shakeTimeLeft -= Time.unscaledDeltaTime;
+            Vector2 offset = Random.insideUnitCircle * _shakeStrength * Mathf.Clamp01(_shakeTimeLeft / _shakeDuration);
+            return new Vector3(offset.x, offset.y, 0f);
         }
 
         private Vector3 DesiredPosition()
