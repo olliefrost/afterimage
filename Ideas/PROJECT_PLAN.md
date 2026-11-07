@@ -36,6 +36,12 @@
 - **Asset sources and licences:** TBD
 - **Inspiration (not copying but general style):** Portal 2 (world and puzzle chamber concept), Stardew Valley (¾ view)
 
+## Lore
+- What - Rugged female character, escaped lab rat sort of look, arm implant (ark esque)
+- Where - Modern/dungeon fusion, evil lab
+- Why - Rescuing sibling from deep within the lab. Evil parents owns the evil corp and experiments on you/sibling. Turns out they were just walking into their own cage/pan out at the end with scientists watching you.
+- When - post technology world, potentially this is all an illusion created by the lab?
+
 ## Tech
 
 - **Engine, language and version:** Unity, C#, version?
