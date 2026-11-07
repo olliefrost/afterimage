@@ -2,16 +2,16 @@
 
 ## Concept
 
-- **One-line pitch:** ¾ view game using after images of self to navigate around enemies and solve puzzles across a variety of rooms.
+- **One-line pitch:** Isometric game using after images of self to navigate around enemies and solve puzzles across a variety of rooms.
 - **How the game uses the theme of time:** Past versions of self used to help complete rooms by defeating/distracting enemies, acquiring information, activating interactables and manipulating objects.
-- **Genre and perspective:** ¾ view, low res "pixel art +"
+- **Genre and perspective:** True isometric (2:1), HD pixel art (64x32 px floor tiles, 64 pixels per unit)
 - **Player goal and win/lose condition:** Solve the puzzles, complete the levels
 - **Target platform and engine:** PC, Unity
 
 ## Core mechanic
 
 - **Main time mechanic (what the player does with time):** Creates afterimages, each one replays its actions each time you reattempt (possibly add the ability to go back and modify actions of afterimages)
-- **Moment-to-moment controls:** WASD, mouse
+- **Moment-to-moment controls:** WASD/arrows move (screen-relative), E interact, R end the run and keep it as a clone, T retry without keeping it. Mouse not used yet.
 - **What makes it interesting or tricky:** Coordinating the clones/afterimages to work together and solve the puzzle in the fewest clones possible, add a par later on. Maybe add a time limit? As the number of clones increases they get worse due to the dodgy tech?
 - **How we will test that it is fun early:** Playtest, keep modular so there's always a working version, later will get others to try
 
@@ -25,7 +25,7 @@
 
 - **Start screen to first play:** <awake in overgrown chamber (dungeon/cave?..), navigate through puzzle chamber, then onto another chamber (outside?)>
 - **Core loop (repeated actions):** Repeat sending out a new clone, all the previous clones replay on a new attempt. Can go back and edit a previous clone's path after
-- **Levels, rounds or progression:** Start by polishing an initial level, then...
+- **Levels, rounds or progression:** Start by polishing an initial level, then... Tutorial1 ("First Clone", `tutorial1.md`) is built and playable.
 - **End states and restart:** Escaping the chambers/map? Can replay a level attempting to use fewer clones or do it quicker
 
 ## Art and audio
@@ -34,7 +34,8 @@
 - **Asset list (sprites, UI, backgrounds):** TBD
 - **Sound effects and music:** TBD
 - **Asset sources and licences:** TBD
-- **Inspiration (not copying but general style):** Portal 2 (world and puzzle chamber concept), Stardew Valley (¾ view)
+- **Inspiration (not copying but general style):** Portal 2 (world and puzzle chamber concept), classic isometric room games (view)
+- **Placeholder art:** generated in-engine (`placeholder_iso_*` in `Assets/_Project/Art/Placeholders/`) at the final scale, so real art can replace it file by file
 
 ## Lore
 
@@ -62,10 +63,10 @@
 
 ## Tech
 
-- **Engine, language and version:** Unity, C#, version?
-- **Repo and branching approach:**
-- **Key systems (input, time system, entities, UI):**
-- **Build and export target:**
+- **Engine, language and version:** Unity 6 (6000.6.8f1), C#, URP 2D, Input System package
+- **Repo and branching approach:** `main` always runs; short-lived `<area>/<description>` branches merged by PR (details in `CLAUDE.md`)
+- **Key systems (input, time system, entities, UI):** one input reader; a shared tick clock that records the player each fixed step and replays clones from it; an actor interface so buttons, pits and exits react to player and clones alike; a level reset interface; uGUI HUD (see `CLAUDE.md`, Key systems)
+- **Build and export target:** Windows standalone (settings not confirmed yet)
 
 ## Team and tasks
 
