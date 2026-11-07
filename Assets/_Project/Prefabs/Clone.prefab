@@ -240,7 +240,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: b813b5960823aae46a1a217771c35b88, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d3f7cf0159ad8a843a73b951cbe0c890, type: 3}
   m_Color: {r: 0.45, g: 0.9, b: 1, a: 0.55}
   m_FlipX: 0
   m_FlipY: 0
@@ -264,9 +264,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.CharacterSpriteAnimator
   _renderer: {fileID: 5603025798857344726}
-  _front: {fileID: 21300000, guid: b813b5960823aae46a1a217771c35b88, type: 3}
-  _back: {fileID: 21300000, guid: bea94588714e86d43bc8d96185a15836, type: 3}
-  _side: {fileID: 21300000, guid: 5df4df0dc53875b47aabd165df8ddf4a, type: 3}
+  _sprites: {fileID: 11400000, guid: 2815202202b486e4a8ebf5cf2fe2a9f7, type: 2}
+  _isoVerticalScale: 0.5
+  _startDirection: 6
   _bobHeight: 0.03
   _bobSpeed: 16
 --- !u!1 &4422263530664090615
@@ -350,7 +350,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: b35d57b6ebd9d7949ac73825aced216a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ed51088779ea2e342894f2ac19f33762, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -580,7 +580,7 @@ MonoBehaviour:
   m_NormalMapDistance: 3
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
-  m_ShadowsEnabled: 1
+  m_ShadowsEnabled: 0
   m_ShadowIntensity: 0.75
   m_ShadowSoftness: 0.3
   m_ShadowSoftnessFalloffIntensity: 0.5
