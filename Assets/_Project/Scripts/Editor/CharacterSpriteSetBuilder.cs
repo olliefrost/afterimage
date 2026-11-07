@@ -1,7 +1,7 @@
 // CharacterSpriteSetBuilder: editor-only. Right-click a PixelLab character export folder (the one
 // holding <State>/rotations and <State>/animations, e.g. Assets/Sprites/main_character) and choose
 // Create > GameJam > Character Sprite Set From Folder. It gives every PNG pixel-art import settings
-// (64 PPU, Point, uncompressed, pivot at the feet) and builds a CharacterSpriteSet asset in that folder
+// (64 PPU, Point, uncompressed, pivot under the lowest foot of each folder) and builds a CharacterSpriteSet asset in that folder
 // for CharacterSpriteAnimator to use.
 using System.IO;
 using System.Linq;
@@ -54,13 +54,21 @@ namespace GameJam.EditorTools
                 : null;
 
             // 2. Give every PNG pixel-art import settings so sprites are crisp and stand on their feet.
-            string[] pngs = Directory.GetFiles(root, "*.png", SearchOption.AllDirectories).Select(Normalise).ToArray();
+            //    Idle and run images use different canvas sizes, so each folder is pivoted on the lowest
+            //    foot in that folder; otherwise she would jump off her shadow when she starts running.
+            string[] folders = Directory.GetFiles(root, "*.png", SearchOption.AllDirectories)
+                .Select(p => Normalise(Path.GetDirectoryName(p))).Distinct().ToArray();
             AssetDatabase.StartAssetEditing();
             try
             {
-                foreach (string png in pngs)
+                foreach (string folder in folders)
                 {
-                    ApplyImportSettings(png);
+                    string[] pngs = Directory.GetFiles(folder, "*.png").Select(Normalise).ToArray();
+                    float feet = pngs.Min(FeetFromBottom);
+                    foreach (string png in pngs)
+                    {
+                        ApplyImportSettings(png, feet);
+                    }
                 }
             }
             finally
@@ -96,7 +104,8 @@ namespace GameJam.EditorTools
             return set;
         }
 
-        private static void ApplyImportSettings(string path)
+        /// <summary>Pixel-art settings with the pivot <paramref name="feetFraction"/> of the height up, under the feet.</summary>
+        private static void ApplyImportSettings(string path, float feetFraction)
         {
             if (!(AssetImporter.GetAtPath(path) is TextureImporter importer))
             {
@@ -112,9 +121,41 @@ namespace GameJam.EditorTools
 
             var settings = new TextureImporterSettings();
             importer.ReadTextureSettings(settings);
-            settings.spriteAlignment = (int)SpriteAlignment.BottomCenter;
+            settings.spriteAlignment = (int)SpriteAlignment.Custom;
+            settings.spritePivot = new Vector2(0.5f, feetFraction);
             importer.SetTextureSettings(settings);
             importer.SaveAndReimport();
+        }
+
+        /// <summary>
+        /// How far up the image the lowest opaque pixel sits, as a fraction of its height. Read from the
+        /// PNG file itself, so it works before the texture is imported.
+        /// </summary>
+        private static float FeetFromBottom(string path)
+        {
+            var texture = new Texture2D(2, 2);
+            try
+            {
+                texture.LoadImage(File.ReadAllBytes(path));
+                Color32[] pixels = texture.GetPixels32();
+                int width = texture.width;
+                for (int row = 0; row < texture.height; row++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        if (pixels[row * width + x].a > 0)
+                        {
+                            return (float)row / texture.height;
+                        }
+                    }
+                }
+
+                return 0f;
+            }
+            finally
+            {
+                Object.DestroyImmediate(texture);
+            }
         }
 
         /// <summary>Loads frame_*.png sprites in name order, or an empty array if the folder is missing.</summary>
