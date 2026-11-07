@@ -15,7 +15,7 @@ Isometric chamber, as in `Sketches/tutorial1.png` (scene: `Assets/_Project/Scene
 - **Spawn area:** Centre-right, close to the back-right wall, mostly empty and only faintly lit, so the player's attention is pushed toward the hint.
 - **Door:** Set into the back-right wall towards its right end, left in shadow so it doesn't read as the obvious route. A short corridor behind it leads to the level exit.
 - **Hole:** In the centre of the room. The hint is a collapsed patch of ceiling above it: a soft, slightly warmer pool of daylight falls around the hole and plants grow thicker there. The room is otherwise dim and cold. There is no trail of dots.
-- **Pit:** 3x3 floor tiles with its far inner walls visible. Holds a single button at the bottom. It is a one-way drop: the player cannot climb out.
+- **Pit:** 3x3 floor tiles and deep. From outside only the lit far lip shows and the rest is black. Holds a single button at the bottom. It is a one-way drop: the player cannot climb out.
 - **Overgrown annex:** The left side of the room has more moss, crates, rubble and two glowing relic terminals. It is decoration only. Plants and props are spread through the whole room, not just one corner.
 
 ## Step-by-step flow
@@ -50,6 +50,8 @@ Isometric chamber, as in `Sketches/tutorial1.png` (scene: `Assets/_Project/Scene
 - **Clone replay:** a clone replays its run once, then stands still where it ended. It does not loop.
 - **Pit:** one-way drop. Pressing the clone key is the only way out.
 - **Hint:** a brighter, warmer area from a ceiling breach, not a trail of dots.
+- **Deep pit:** from outside the inside is hidden in shadow, so the player is lured in without seeing the button. Once they fall in, the ground in front turns see-through so they can still see themselves. A clone in the pit stays hidden.
+- **Limited vision:** the room is near black and the character carries a soft light, so the whole level is never visible at once. Lit cues (breach pool, relic terminals, the open door) still show from a distance. Everything outside the room is black.
 
 ## Open questions
 
