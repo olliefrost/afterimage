@@ -180,6 +180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4727502268572040796}
   - component: {fileID: 1484567655490876219}
+  - component: {fileID: 9208598893620715979}
   m_Layer: 0
   m_Name: PitShadow
   m_TagString: Untagged
@@ -262,6 +263,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &9208598893620715979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734927504410097236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf36f78c591724c4c81fa3ca03e1cde0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.OcclusionFader
+  _sprites:
+  - {fileID: 1484567655490876219}
+  _tilemaps: []
+  _fadedAlpha: 0.15
+  _fadeDuration: 0.3
 --- !u!1 &3723941132224843677
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,14 +503,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.PitVisuals
   _pit: {fileID: 4283723652764457355}
-  _shadow: {fileID: 1484567655490876219}
-  _frontGround: {fileID: 4521788273843260690}
+  _shadowFader: {fileID: 9208598893620715979}
+  _groundFader: {fileID: 7847319562665473744}
   _pitLight: {fileID: 3780610019940961148}
   _depth: 1.25
   _actorSortingOrder: -70
-  _revealedShadowAlpha: 0.15
-  _revealedGroundAlpha: 0.35
-  _revealDuration: 0.3
 --- !u!1 &6387570186735650454
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,6 +549,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4561299205633165580}
   - component: {fileID: 4521788273843260690}
+  - component: {fileID: 7847319562665473744}
   m_Layer: 0
   m_Name: PitFrontGround
   m_TagString: Untagged
@@ -616,6 +632,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &7847319562665473744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6674920668047406381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf36f78c591724c4c81fa3ca03e1cde0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.OcclusionFader
+  _sprites:
+  - {fileID: 4521788273843260690}
+  _tilemaps: []
+  _fadedAlpha: 0.2
+  _fadeDuration: 0.3
 --- !u!1001 &5626245614506894665
 PrefabInstance:
   m_ObjectHideFlags: 0
