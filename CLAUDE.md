@@ -60,7 +60,7 @@ Repo root:
 
 - `Ideas/` design documents (not Unity assets, see below)
 - `Assets/_Project/` all our own game content
-- `CLAUDE.md`, `CREDITS.md`
+- `CLAUDE.md`, `CREDITS.md` (not created yet; add it with the first external asset)
 
 All our own game content lives under `Assets/_Project/`, kept apart from imported packages. Subfolders:
 
@@ -84,7 +84,8 @@ This layout is a starting plan. Update this section when the real structure diff
 
 - `Ideas/PROJECT_PLAN.md`: the overall game idea, scope lists (Must have, Should have, Stretch) and the high-level summary of each level and how they connect.
 - `Ideas/<level>.md`: one file per level, lowercase, no spaces (`tutorial1.md`, `tutorial2.md`, `level1.md`). Each holds that level's purpose, mechanics taught, room layout, step-by-step flow, art and feedback notes, and open questions.
-- Current files: `PROJECT_PLAN.md`, `tutorial1.md` (add new level files here as they are written).
+- `Ideas/Inspiration/`: look-and-feel reference images, each listed in `inspiration.md` with its source and what to take from it. Image names are lowercase snake_case. Reference only: never import these into `Assets/`.
+- Current files: `PROJECT_PLAN.md`, `tutorial1.md`, `Inspiration/` (add new level files here as they are written).
 - **Before building or changing a level,** read `Ideas/PROJECT_PLAN.md` and that level's file. Build what the level file describes. Open questions in a level file are not yours to decide: ask the user.
 - **Do not edit files in `Ideas/` without the user's say-so.** If the implementation has to differ from a level file, say so in your task summary and let the user update the doc.
 - If a level is mentioned in `Ideas/PROJECT_PLAN.md` but has no file yet, ask the user before inventing its design.
