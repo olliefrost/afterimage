@@ -2,7 +2,8 @@
 // It turns keys into plain data and events: PlayerMovement reads MoveInput, PlayerActor consumes
 // interact presses, GameStateController listens for clone (R), retry (T) and clone select (1-5),
 // PauseMenu listens for pause (Esc), and ChamberMap reads MapHeld (hold Tab). While the map is held
-// the player stands still. While the game is paused, GameStateController switches
+// the player stands still. IntroSequence turns on the skip action (any key or click) while the intro plays.
+// While the game is paused, GameStateController switches
 // gameplay keys off here. It also lists the keys the player may rebind (RebindTargets) and applies
 // any rebinds saved earlier; KeyRebinder changes them from the pause menu.
 using System;
@@ -39,6 +40,8 @@ namespace GameJam.Player
         };
         [Tooltip("Opens and closes the pause menu. Stays active while paused and cannot be rebound in game.")]
         [SerializeField] private InputAction _pause = new InputAction("Pause", InputActionType.Button);
+        [Tooltip("Skips a cutscene such as the intro. Off except while one plays; not rebindable.")]
+        [SerializeField] private InputAction _skip = new InputAction("Skip", InputActionType.Button);
 
         private readonly List<RebindTarget> _rebindTargets = new List<RebindTarget>();
         private readonly List<RebindTarget> _selectTargets = new List<RebindTarget>();
@@ -74,6 +77,9 @@ namespace GameJam.Player
         /// <summary>Raised when the pause key is pressed, whether or not the game is paused.</summary>
         public event Action PauseRequested;
 
+        /// <summary>Raised when any key or mouse button is pressed while skipping is on (see <see cref="SetSkipEnabled"/>).</summary>
+        public event Action SkipRequested;
+
         private void Awake()
         {
             AddDefaultBindings();
@@ -89,6 +95,7 @@ namespace GameJam.Player
         private void OnDisable()
         {
             _pause.Disable();
+            _skip.Disable();
             SetGameplayActionsEnabled(false);
         }
 
@@ -121,9 +128,15 @@ namespace GameJam.Player
                 }
             }
 
+            // Pause before skip: an Esc that skips the intro must not also pause the game it just started.
             if (_pause.WasPressedThisFrame())
             {
                 PauseRequested?.Invoke();
+            }
+
+            if (_skip.WasPressedThisFrame())
+            {
+                SkipRequested?.Invoke();
             }
         }
 
@@ -150,6 +163,12 @@ namespace GameJam.Player
             {
                 SetGameplayActionsEnabled(enabled);
             }
+        }
+
+        /// <summary>Turns the skip action (any key or left click) on while a cutscene plays, and off after.</summary>
+        public void SetSkipEnabled(bool enabled)
+        {
+            SetActionEnabled(_skip, enabled);
         }
 
         /// <summary>The key that picks a clone slot (0 = clone 1), for the HUD's key badges.</summary>
@@ -274,6 +293,12 @@ namespace GameJam.Player
             if (_map.bindings.Count == 0)
             {
                 _map.AddBinding("<Keyboard>/tab");
+            }
+
+            if (_skip.bindings.Count == 0)
+            {
+                _skip.AddBinding("<Keyboard>/anyKey");
+                _skip.AddBinding("<Mouse>/leftButton");
             }
 
             if (_pause.bindings.Count == 0)
