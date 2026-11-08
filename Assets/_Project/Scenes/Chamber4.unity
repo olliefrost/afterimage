@@ -85225,7 +85225,7 @@ MonoBehaviour:
   _clock: {fileID: 2080991561}
   _clonePrefab: {fileID: 5291575494339755315, guid: be6f3e565cba2704792c237567b239ce, type: 3}
   _cloneParent: {fileID: 1679370523}
-  _maxClones: 4
+  _maxClones: 5
   _slotColours:
   - {r: 0.25, g: 0.55, b: 1, a: 1}
   - {r: 0.3, g: 0.9, b: 0.4, a: 1}

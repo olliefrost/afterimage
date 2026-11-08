@@ -1,6 +1,7 @@
 // CameraFollow: keeps the main camera on the player with a little smoothing, never showing past
-// the room edges. It follows the target's drawn height on raised ground (ElevationField), so the
-// player stays on screen up on ledges. Snaps instantly when the player teleports (new attempt, falling
+// the room edges. It follows the target's drawn height on raised ground, so the player stays on
+// screen up on ledges: the eased height from the target's ActorElevation when it has one (so a jump
+// across a chasm or over platforms does not make the view bob or snap), else ElevationField directly. Snaps instantly when the player teleports (new attempt, falling
 // into the pit). IntroSequence points it at other targets (Follow). Every screen shake arrives here
 // through ScreenShake (buttons, doors, deaths, the intro slam); shakes that happen off-screen fade
 // with distance, and the player's GameSettings shake level scales them all.
@@ -36,6 +37,7 @@ namespace GameJam.Visuals
         [SerializeField] private float _shakeFalloff = 4f;
 
         private Camera _camera;
+        private ActorElevation _targetElevation;
         private Vector3 _velocity;
         private bool _isGliding;
         private Vector3 _restPosition;
@@ -47,6 +49,7 @@ namespace GameJam.Visuals
         private void Awake()
         {
             _camera = GetComponent<Camera>();
+            CacheTargetElevation();
         }
 
         private void OnEnable()
@@ -101,6 +104,7 @@ namespace GameJam.Visuals
         public void Follow(Transform target, bool snap)
         {
             _target = target;
+            CacheTargetElevation();
             _velocity = Vector3.zero;
             _isGliding = !snap;
             if (snap)
@@ -182,10 +186,19 @@ namespace GameJam.Visuals
         }
 
         /// <summary>The camera position that centres the target as drawn.</summary>
+        /// <summary>Remembers the target's ActorElevation (the player and clones have one), if any.</summary>
+        private void CacheTargetElevation()
+        {
+            _targetElevation = _target != null ? _target.GetComponentInChildren<ActorElevation>() : null;
+        }
+
         private Vector3 DesiredPosition()
         {
-            // Aim at where the target is drawn: its floor-plan position lifted by the ground height there.
-            Vector2 target = (Vector2)_target.position + _offset + new Vector2(0f, ElevationField.HeightAt(_target.position));
+            // Aim at where the target is drawn: its floor-plan position lifted by its drawn height. That is
+            // ActorElevation's eased height (steady mid-jump, ignores the jump arc), not the raw ground under
+            // the feet, which flips between platform and chasm heights while jumping.
+            float height = _targetElevation != null ? _targetElevation.Height : ElevationField.HeightAt(_target.position);
+            Vector2 target = (Vector2)_target.position + _offset + new Vector2(0f, height);
             return new Vector3(target.x, target.y, transform.position.z);
         }
 
