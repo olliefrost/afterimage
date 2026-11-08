@@ -35,7 +35,7 @@ namespace GameJam.Story
 
         [Header("Dialogue")]
         [SerializeField] private string _speaker = "???";
-        [SerializeField] private string _line = "HEY! GET BACK HERE!";
+        [SerializeField] private string _line = "Come back here!";
 
         [Header("Timing")]
         [Tooltip("Seconds looking at the open door before the shout.")]

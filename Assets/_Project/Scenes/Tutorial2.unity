@@ -4322,6 +4322,94 @@ MonoBehaviour:
           rid: -2
         m_Provider2DCache:
           rid: -2
+--- !u!1001 &976000583
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1926694595166378304, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1926694595166378304, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1926694595166378304, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1926694595166378304, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1926694595166378304, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1926694595166378304, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1926694595166378304, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1926694595166378304, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1926694595166378304, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1926694595166378304, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6473373639133139839, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: m_Name
+      value: Rewind
+      objectReference: {fileID: 0}
+    - target: {fileID: 6839053056367927628, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: _input
+      value: 
+      objectReference: {fileID: 2080991564}
+    - target: {fileID: 6839053056367927628, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: _player
+      value: 
+      objectReference: {fileID: 6883134419956444746}
+    - target: {fileID: 6839053056367927628, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: _afterimages
+      value: 
+      objectReference: {fileID: 2080991562}
+    - target: {fileID: 6839053056367927628, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: _playerSprite
+      value: 
+      objectReference: {fileID: 6883134419956444747}
+    - target: {fileID: 6839053056367927628, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+      propertyPath: _playerAnimator
+      value: 
+      objectReference: {fileID: 6883134419956444748}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+--- !u!114 &976000584 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6839053056367927628, guid: bb0f6fab802ff644a909c8dee5dd17bf, type: 3}
+  m_PrefabInstance: {fileID: 976000583}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 852525b4ae934f44284ab1fb32758f2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.RewindEffect
 --- !u!1 &1333570973
 GameObject:
   m_ObjectHideFlags: 0
@@ -6392,6 +6480,7 @@ MonoBehaviour:
   _player: {fileID: 6883134419956444746}
   _deathResetDelay: 0.8
   _clonesStartUnlocked: 1
+  _rewind: {fileID: 976000584}
   _nextLevelDelay: 3
 --- !u!114 &2080991564
 MonoBehaviour:
@@ -6809,6 +6898,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b73fa0f336ca0164caebf265e43c3699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Player.PlayerActor
+--- !u!212 &6883134419956444747 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 4192614582825063985, guid: 343654197688a0641a734323a5d40d96, type: 3}
+  m_PrefabInstance: {fileID: 6883134419956444743}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6883134419956444748 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 635761061728136558, guid: 343654197688a0641a734323a5d40d96, type: 3}
+  m_PrefabInstance: {fileID: 6883134419956444743}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 992e7f409f86364479dbc2d873d2de95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.CharacterSpriteAnimator
 --- !u!1001 &8720438357902665681
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6958,3 +7063,4 @@ SceneRoots:
   - {fileID: 404953430}
   - {fileID: 639953182}
   - {fileID: 1890167589}
+  - {fileID: 976000583}

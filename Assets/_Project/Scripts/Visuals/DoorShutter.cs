@@ -1,6 +1,7 @@
-// DoorShutter: makes a door's panel sprite roll up into the top of its frame like a shutter, so an
-// open door still shows a door. SetRaised(1) is fully rolled up, 0 is down (closed). The top edge
-// stays put and the panel squashes towards it. IntroSequence raises the entrance door's shutter
+// DoorShutter: makes a door's panel roll up into the top of its frame like a shutter, so an open
+// door still shows a door. SetRaised(1) is fully rolled up, 0 is down (closed). If the panel is a
+// SpriteFlipbook of slide-up frames (the iso Door prefab), it scrubs those frames; a plain sprite
+// panel instead squashes towards its top edge. IntroSequence raises the entrance door's shutter
 // while the door stands open and drops it for the slam. Visual only; Door still owns the collider.
 using UnityEngine;
 
@@ -25,6 +26,7 @@ namespace GameJam.Visuals
         private Vector3 _restPosition;
         private Vector3 _restScale;
         private SpriteRenderer _panelRenderer;
+        private SpriteFlipbook _flipbook;
         private int _restSortingOrder;
 
         private void Awake()
@@ -32,12 +34,20 @@ namespace GameJam.Visuals
             _restPosition = _panel.localPosition;
             _restScale = _panel.localScale;
             _panelRenderer = _panel.GetComponent<SpriteRenderer>();
+            _flipbook = _panel.GetComponent<SpriteFlipbook>();
             _restSortingOrder = _panelRenderer.sortingOrder;
         }
 
         /// <summary>Sets how far up the shutter is: 0 closed (full panel), 1 rolled up to the leftover strip.</summary>
         public void SetRaised(float amount)
         {
+            // Frame-based shutter: its frames already slide up inside the frame and sort by position.
+            if (_flipbook != null)
+            {
+                _flipbook.ShowAt(amount);
+                return;
+            }
+
             float height = Mathf.Lerp(1f, _raisedLeftover, Mathf.Clamp01(amount));
 
             // Squash the panel and lift it so its top edge does not move.

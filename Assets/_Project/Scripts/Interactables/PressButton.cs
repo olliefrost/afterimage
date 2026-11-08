@@ -15,6 +15,10 @@ namespace GameJam.Interactables
         [SerializeField] private SpriteRenderer _renderer;
         [SerializeField] private Color _unpressedColor = new Color(0.9f, 0.15f, 0.15f);
         [SerializeField] private Color _pressedColor = new Color(0.35f, 0.08f, 0.08f);
+        [Tooltip("Optional art for the up state. Leave empty to keep the current sprite and only tint.")]
+        [SerializeField] private Sprite _unpressedSprite;
+        [Tooltip("Optional art for the down state. Set both colours to white when using real art.")]
+        [SerializeField] private Sprite _pressedSprite;
 
         [Header("Events")]
         [Tooltip("Fired once when the button is pressed. Hook up what it powers here.")]
@@ -59,9 +63,16 @@ namespace GameJam.Interactables
 
         private void ApplyVisual()
         {
-            if (_renderer != null)
+            if (_renderer == null)
             {
-                _renderer.color = _isPressed ? _pressedColor : _unpressedColor;
+                return;
+            }
+
+            _renderer.color = _isPressed ? _pressedColor : _unpressedColor;
+            Sprite sprite = _isPressed ? _pressedSprite : _unpressedSprite;
+            if (sprite != null)
+            {
+                _renderer.sprite = sprite;
             }
         }
     }
