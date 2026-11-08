@@ -1,8 +1,10 @@
 // CloneIconView: one clone icon in the HUD's right-hand column. Shows the clone's colour and number
 // key, a faint ghost look for the empty new-clone slot, a framed row and pointer for the clone the
 // player is controlling, a blinking outline for the clone picked to control next, and a dead look
-// (shake, then red with a skull). Clicking it picks that clone. Driven by CloneColumn; visual only.
+// (shake, then red with a skull). A newly saved clone pops in, becoming controlled or picked gives a
+// bump, and a refused pick a small shake. Clicking it picks that clone. Driven by CloneColumn; visual only.
 using System;
+using GameJam.Visuals;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -52,6 +54,18 @@ namespace GameJam.UI
         [Tooltip("Furthest the icon moves sideways while shaking, in canvas pixels.")]
         [SerializeField] private float _shakeDistance = 6f;
         [SerializeField] private float _shakeSpeed = 70f;
+        [Tooltip("Shake distance for a refused pick, smaller than the death shake.")]
+        [SerializeField] private float _nudgeDistance = 3f;
+
+        [Header("Pop and punch")]
+        [Tooltip("Seconds for a newly saved icon to pop in.")]
+        [SerializeField] private float _popDuration = 0.4f;
+        [Tooltip("Scale a new icon pops in from.")]
+        [SerializeField] private float _popStartScale = 0.3f;
+        [Tooltip("Seconds of the bump when this clone becomes controlled or picked.")]
+        [SerializeField] private float _punchDuration = 0.25f;
+        [Tooltip("How much bigger the icon gets at the top of the bump (0.2 = 20%).")]
+        [SerializeField] private float _punchAmount = 0.2f;
 
         private int _slot;
         private Color _slotColour = Color.white;
@@ -59,7 +73,10 @@ namespace GameJam.UI
         private bool _isControlled;
         private bool _isPending;
         private float _shakeTimeLeft;
+        private float _shakeSize;
         private Vector2 _pointerRest;
+        private float _popElapsed = -1f;
+        private float _punchElapsed = -1f;
 
         /// <summary>Raised with this icon's slot index when the player clicks it.</summary>
         public event Action<int> Clicked;
@@ -78,7 +95,10 @@ namespace GameJam.UI
         {
             _button.onClick.RemoveListener(HandleClicked);
             _shakeTimeLeft = 0f;
+            _popElapsed = -1f;
+            _punchElapsed = -1f;
             _content.anchoredPosition = Vector2.zero;
+            _content.localScale = Vector3.one;
         }
 
         private void Update()
@@ -102,16 +122,46 @@ namespace GameJam.UI
                 _outline.enabled = Mathf.Repeat(time * _blinkRate, 1f) < 0.6f;
             }
 
-            // 3. Just died: a short sideways shake that settles.
+            // 3. Just died (or a refused pick): a short sideways shake that settles.
             float offset = 0f;
             if (_shakeTimeLeft > 0f)
             {
                 _shakeTimeLeft -= Time.unscaledDeltaTime;
                 float fade = Mathf.Clamp01(_shakeTimeLeft / _shakeDuration);
-                offset = Mathf.Sin(time * _shakeSpeed) * _shakeDistance * fade;
+                offset = Mathf.Sin(time * _shakeSpeed) * _shakeSize * fade;
             }
 
             _content.anchoredPosition = new Vector2(offset, 0f);
+            _content.localScale = Vector3.one * CurrentScale();
+        }
+
+        /// <summary>The icon's scale from a pop-in or bump in progress (1 when neither is playing).</summary>
+        private float CurrentScale()
+        {
+            float scale = 1f;
+            if (_popElapsed >= 0f)
+            {
+                _popElapsed += Time.unscaledDeltaTime;
+                float t = _popElapsed / _popDuration;
+                scale = Mathf.LerpUnclamped(_popStartScale, 1f, Ease.BackOut(t));
+                if (t >= 1f)
+                {
+                    _popElapsed = -1f;
+                }
+            }
+
+            if (_punchElapsed >= 0f)
+            {
+                _punchElapsed += Time.unscaledDeltaTime;
+                float t = _punchElapsed / _punchDuration;
+                scale *= 1f + _punchAmount * Ease.Punch(t, 1.5f);
+                if (t >= 1f)
+                {
+                    _punchElapsed = -1f;
+                }
+            }
+
+            return scale;
         }
 
         /// <summary>Binds the icon to a slot and its colour.</summary>
@@ -180,6 +230,26 @@ namespace GameJam.UI
         public void Shake()
         {
             _shakeTimeLeft = _shakeDuration;
+            _shakeSize = _shakeDistance;
+        }
+
+        /// <summary>A small "no" shake, for picking a clone that cannot be picked.</summary>
+        public void Nudge()
+        {
+            _shakeTimeLeft = _shakeDuration;
+            _shakeSize = _nudgeDistance;
+        }
+
+        /// <summary>Pops the icon in from small with an overshoot, for a newly saved clone.</summary>
+        public void Pop()
+        {
+            _popElapsed = 0f;
+        }
+
+        /// <summary>A quick bump, for becoming the controlled or picked clone.</summary>
+        public void Punch()
+        {
+            _punchElapsed = 0f;
         }
 
         private void HandleClicked()

@@ -2,7 +2,7 @@
 // frame while resting, the charge frames scrubbed as the shot builds, and the fire frames while the
 // beam shows. Sits on the Laser prefab's Emitter child. The frames are drawn facing north-east
 // (up-right on screen); a laser aiming up-left shows them mirrored, so one prefab serves both
-// Tutorial2 corridors. Visual only: it reads the emitter, never drives it.
+// Tutorial2 corridors. Each shot gives a small screen kick. Visual only: it reads the emitter, never drives it.
 using GameJam.Hazards;
 using UnityEngine;
 
@@ -26,6 +26,12 @@ namespace GameJam.Visuals
         [Tooltip("Moves the post this far along its aim, off the low wall behind it. Moving along the aim never shifts the firing line.")]
         [SerializeField] private float _standForward = 0.45f;
 
+        [Header("Feedback")]
+        [Tooltip("Screen shake from the post each time it fires; fades when the laser is off-screen.")]
+        [SerializeField] private float _fireShake = 0.035f;
+
+        private LaserPhase _lastPhase;
+
         private void Awake()
         {
             // 1. Mirror the north-east art for lasers that aim left on screen.
@@ -48,6 +54,14 @@ namespace GameJam.Visuals
         private void LateUpdate()
         {
             _renderer.sprite = CurrentFrame();
+
+            // A small kick the moment a shot goes off.
+            if (_emitter.Phase == LaserPhase.Firing && _lastPhase != LaserPhase.Firing)
+            {
+                ScreenShake.ShakeAt(transform.position, _fireShake, 0.15f);
+            }
+
+            _lastPhase = _emitter.Phase;
         }
 
         /// <summary>The frame for the emitter's phase, falling back to the idle pose if a list is empty.</summary>
