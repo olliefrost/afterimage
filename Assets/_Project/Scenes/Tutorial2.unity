@@ -6240,7 +6240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.SceneMusic
   _track: {fileID: 8300000, guid: 8e068ff0c74ddc145a9a9822f9161a34, type: 3}
-  _volume: 0.2
+  _volume: 0.5
 --- !u!4 &1601244700
 Transform:
   m_ObjectHideFlags: 0
@@ -6820,6 +6820,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf9fd2f37017c7f40a49ffb73470508b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Player.PlayerInputReader
+  _jumpEnabled: 0
   _move:
     m_Name: Move
     m_Type: 0
@@ -6865,6 +6866,16 @@ MonoBehaviour:
     m_Type: 1
     m_ExpectedControlType: 
     m_Id: 36bcb063-ff7a-49b8-afd9-dc7da108a7e1
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  _jump:
+    m_Name: Jump
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: 268905eb-1bae-4264-8542-70315f748a20
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []

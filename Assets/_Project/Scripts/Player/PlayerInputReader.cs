@@ -3,6 +3,8 @@
 // interact presses, GameStateController listens for clone (R), retry (T), mark run (F) and clone
 // select (1-5), PauseMenu listens for pause (Esc), and ChamberMap reads MapHeld (hold Tab). While the map is held
 // the player stands still. IntroSequence turns on the skip action (any key or click) while the intro plays.
+// PlayerJump consumes jump presses (Space), which exist only in chambers that tick _jumpEnabled
+// (Chamber 4 onward); elsewhere the key does nothing and has no settings row.
 // While the game is paused, GameStateController switches
 // gameplay keys off here. It also lists the keys the player may rebind (RebindTargets) and applies
 // any rebinds saved earlier; KeyRebinder changes them from the pause menu.
@@ -22,6 +24,10 @@ namespace GameJam.Player
     [DefaultExecutionOrder(-90)]
     public class PlayerInputReader : MonoBehaviour
     {
+        [Header("Chamber abilities")]
+        [Tooltip("Tick in Chamber 4 and every chamber after it: turns on the jump key and its settings row.")]
+        [SerializeField] private bool _jumpEnabled = false;
+
         [Header("Actions (empty bindings fall back to the defaults)")]
         [SerializeField] private InputAction _move = new InputAction("Move", InputActionType.Value, expectedControlType: "Vector2");
         [SerializeField] private InputAction _interact = new InputAction("Interact", InputActionType.Button);
@@ -29,6 +35,8 @@ namespace GameJam.Player
         [SerializeField] private InputAction _retry = new InputAction("Retry", InputActionType.Button);
         [Tooltip("Marks the run so a death saves it as a clone. Defaults to F.")]
         [SerializeField] private InputAction _markRun = new InputAction("Mark Run", InputActionType.Button);
+        [Tooltip("Jumps in the movement direction. Defaults to Space. Only active when Jump Enabled is ticked.")]
+        [SerializeField] private InputAction _jump = new InputAction("Jump", InputActionType.Button);
         [Tooltip("Hold to show the chamber map. The player stands still while it is held.")]
         [SerializeField] private InputAction _map = new InputAction("Map", InputActionType.Button);
         [Tooltip("One action per clone slot; element 0 selects clone 1. Defaults to the number keys 1-5.")]
@@ -50,6 +58,7 @@ namespace GameJam.Player
 
         // Set in Update, cleared when consumed in FixedUpdate, so a press between two physics steps is never lost.
         private bool _interactQueued;
+        private bool _jumpQueued;
         private bool _gameplayEnabled = true;
 
         /// <summary>Current movement direction, each axis in -1..1.</summary>
@@ -75,6 +84,12 @@ namespace GameJam.Player
 
         /// <summary>The mark run key (F by default), for the HUD's key letter.</summary>
         public RebindTarget MarkRunTarget { get; private set; }
+
+        /// <summary>The jump key (Space by default), for the jump hint. Null in chambers without jumping.</summary>
+        public RebindTarget JumpTarget { get; private set; }
+
+        /// <summary>True in chambers where the player can jump.</summary>
+        public bool JumpEnabled => _jumpEnabled;
 
         /// <summary>Raised when the clone key is pressed: end the run, keep it as a clone, restart.</summary>
         public event Action CloneRequested;
@@ -124,6 +139,11 @@ namespace GameJam.Player
                 _interactQueued = true;
             }
 
+            if (_jumpEnabled && _jump.WasPressedThisFrame() && !MapHeld)
+            {
+                _jumpQueued = true;
+            }
+
             if (_clone.WasPressedThisFrame())
             {
                 CloneRequested?.Invoke();
@@ -167,6 +187,14 @@ namespace GameJam.Player
             return pressed;
         }
 
+        /// <summary>Returns true once per jump press, then clears it. Call from FixedUpdate.</summary>
+        public bool ConsumeJump()
+        {
+            bool pressed = _jumpQueued;
+            _jumpQueued = false;
+            return pressed;
+        }
+
         /// <summary>
         /// Switches every gameplay key on or off; the pause key always stays on. Used while paused,
         /// so keys pressed in the menu do nothing, and so the keys can be rebound (an action must be
@@ -176,6 +204,7 @@ namespace GameJam.Player
         {
             _gameplayEnabled = enabled;
             _interactQueued = false;
+            _jumpQueued = false;
             MoveInput = Vector2.zero;
             MapHeld = false;
             if (isActiveAndEnabled)
@@ -203,6 +232,7 @@ namespace GameJam.Player
             SetActionEnabled(_clone, enabled);
             SetActionEnabled(_retry, enabled);
             SetActionEnabled(_markRun, enabled);
+            SetActionEnabled(_jump, enabled && _jumpEnabled);
             SetActionEnabled(_map, enabled);
             for (int i = 0; i < _selectClone.Length; i++)
             {
@@ -241,6 +271,12 @@ namespace GameJam.Player
             _rebindTargets.Add(RetryTarget);
             MarkRunTarget = new RebindTarget("MARK RUN", _markRun, 0);
             _rebindTargets.Add(MarkRunTarget);
+            if (_jumpEnabled)
+            {
+                JumpTarget = new RebindTarget("JUMP", _jump, 0);
+                _rebindTargets.Add(JumpTarget);
+            }
+
             _rebindTargets.Add(new RebindTarget("MAP (HOLD)", _map, 0));
             for (int i = 0; i < _selectClone.Length; i++)
             {
@@ -307,6 +343,11 @@ namespace GameJam.Player
             if (_markRun.bindings.Count == 0)
             {
                 _markRun.AddBinding("<Keyboard>/f");
+            }
+
+            if (_jump.bindings.Count == 0)
+            {
+                _jump.AddBinding("<Keyboard>/space");
             }
 
             // Number row keys are named "1", "2" and so on, so element i defaults to key i + 1.

@@ -1174,15 +1174,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d4c8bdd3bc3d2e49af88db6ceac9a1d, type: 3}
---- !u!1660057539 &9223372036854775807
-SceneRoots:
-  m_ObjectHideFlags: 0
-  m_Roots:
-  - {fileID: 998663643}
-  - {fileID: 933763882}
-  - {fileID: 712143708}
-  - {fileID: 1976035260}
-  - {fileID: 1950575856}
 --- !u!1 &1976035258
 GameObject:
   m_ObjectHideFlags: 0
@@ -1213,7 +1204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.SceneMusic
   _track: {fileID: 8300000, guid: 3e5da8fc02168324997a97ac714ef37c, type: 3}
-  _volume: 0.2
+  _volume: 0.5
 --- !u!4 &1976035260
 Transform:
   m_ObjectHideFlags: 0
@@ -1229,3 +1220,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 998663643}
+  - {fileID: 933763882}
+  - {fileID: 712143708}
+  - {fileID: 1976035260}
+  - {fileID: 1950575856}

@@ -8800,7 +8800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.SceneMusic
   _track: {fileID: 8300000, guid: 8a42414d53c167c418da49e02635f459, type: 3}
-  _volume: 0.2
+  _volume: 0.5
 --- !u!4 &609851535
 Transform:
   m_ObjectHideFlags: 0
@@ -11403,6 +11403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.ElevationField
   _grid: {fileID: 273170956}
   _stairs: {fileID: 1305143312}
+  _platforms: []
   _height: 1
   _raisedAreas:
   - x: 1
@@ -11421,6 +11422,7 @@ MonoBehaviour:
     y: 17
     width: 2
     height: 2
+  _levels: []
 --- !u!4 &670029711
 Transform:
   m_ObjectHideFlags: 0
@@ -24123,6 +24125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf9fd2f37017c7f40a49ffb73470508b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Player.PlayerInputReader
+  _jumpEnabled: 0
   _move:
     m_Name: Move
     m_Type: 0
@@ -24168,6 +24171,16 @@ MonoBehaviour:
     m_Type: 1
     m_ExpectedControlType: 
     m_Id: b7e3c3dc-0b0c-4640-9756-eeba79956400
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  _jump:
+    m_Name: Jump
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: 71248d44-4ab2-411e-b35e-deb6a7f52c8c
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []

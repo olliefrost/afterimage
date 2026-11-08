@@ -1,7 +1,8 @@
 // CameraFollow: keeps the main camera on the player with a little smoothing, never showing past
-// the room edges. Snaps instantly when the player teleports (new attempt, falling into the pit).
-// IntroSequence points it at other targets (Follow). Every screen shake arrives here through
-// ScreenShake (buttons, doors, deaths, the intro slam); shakes that happen off-screen fade
+// the room edges. It follows the target's drawn height on raised ground (ElevationField), so the
+// player stays on screen up on ledges. Snaps instantly when the player teleports (new attempt, falling
+// into the pit). IntroSequence points it at other targets (Follow). Every screen shake arrives here
+// through ScreenShake (buttons, doors, deaths, the intro slam); shakes that happen off-screen fade
 // with distance, and the player's GameSettings shake level scales them all.
 // Visual only: nothing in gameplay reads the camera.
 using GameJam.Core;
@@ -180,9 +181,11 @@ namespace GameJam.Visuals
             return new Vector3(x * size, y * size, 0f);
         }
 
+        /// <summary>The camera position that centres the target as drawn.</summary>
         private Vector3 DesiredPosition()
         {
-            Vector2 target = (Vector2)_target.position + _offset;
+            // Aim at where the target is drawn: its floor-plan position lifted by the ground height there.
+            Vector2 target = (Vector2)_target.position + _offset + new Vector2(0f, ElevationField.HeightAt(_target.position));
             return new Vector3(target.x, target.y, transform.position.z);
         }
 

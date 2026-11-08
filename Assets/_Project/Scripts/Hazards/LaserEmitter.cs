@@ -3,6 +3,8 @@
 // (player or clone), so a clone in front shields everyone behind it. Walls stop the beam; dead
 // clones and triggers do not. Placed in Tutorial2's corridors; reads the shared TickClock. Visuals
 // (LaserPostVisuals, LaserBeamVisuals) read Phase and the beam ends; this script draws nothing itself.
+// Continuous mode (Chamber 4's guard lasers) skips the cycle: the beam is lethal on every tick while
+// powered. SetPowered(false) switches either mode off (a held plate, wired in the inspector).
 using System.Collections.Generic;
 using GameJam.Core;
 using UnityEngine;
@@ -44,6 +46,12 @@ namespace GameJam.Hazards
         [Min(0f)]
         [SerializeField] private float _beamRadius = 0.35f;
 
+        [Header("Mode")]
+        [Tooltip("On: a constant beam that kills on every tick while powered, ignoring the timings below. Off: the charge-and-fire cycle.")]
+        [SerializeField] private bool _continuous = false;
+        [Tooltip("Whether the laser starts each attempt switched on. SetPowered changes it during an attempt.")]
+        [SerializeField] private bool _poweredAtStart = true;
+
         [Header("Timing (ticks, 50 per second)")]
         [Tooltip("Ticks from the start of the attempt before the first charge begins.")]
         [Min(0)]
@@ -69,6 +77,7 @@ namespace GameJam.Hazards
         private readonly List<RaycastHit2D> _hits = new List<RaycastHit2D>(16);
         private ContactFilter2D _filter;
         private Vector2 _aim;
+        private bool _isPowered;
 
         /// <summary>Raised when the laser enters a new phase (charging, firing, resting). Audio listens to this.</summary>
         public event System.Action<LaserPhase> PhaseChanged;
@@ -111,14 +120,37 @@ namespace GameJam.Hazards
         /// <summary>Hides the beam and the charge glow for the next attempt; the schedule restarts with the clock.</summary>
         public void ResetState()
         {
+            _isPowered = _poweredAtStart;
             SetChargeLight(0f);
             SetPhase(LaserPhase.Resting, 0f);
         }
 
+        /// <summary>
+        /// Switches the laser on or off. Off, it never fires and shows nothing; the cycle keeps counting
+        /// from tick 0 regardless, so switching a cycling laser back on keeps it in step with replays.
+        /// </summary>
+        public void SetPowered(bool powered)
+        {
+            _isPowered = powered;
+            if (!powered)
+            {
+                SetChargeLight(0f);
+                SetPhase(LaserPhase.Resting, 0f);
+            }
+        }
+
         private void FixedUpdate()
         {
-            if (!_clock.IsRunning)
+            if (!_clock.IsRunning || !_isPowered)
             {
+                return;
+            }
+
+            // Continuous: a lethal beam every tick, its frames looping over _beamTicks.
+            if (_continuous)
+            {
+                Fire();
+                SetPhase(LaserPhase.Firing, (float)(_clock.CurrentTick % Mathf.Max(1, _beamTicks)) / Mathf.Max(1, _beamTicks));
                 return;
             }
 

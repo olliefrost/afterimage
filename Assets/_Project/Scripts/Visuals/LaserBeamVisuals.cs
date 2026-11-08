@@ -2,9 +2,11 @@
 // to whatever stopped it, with an impact burst at the far end. Each segment sprite is one half-cell
 // step along the 2:1 iso diagonal, so the beam tiles pixel-exactly with no rotated pixels. Frames
 // play across the beam ticks (a hot blast fading to a thin trace). Sits on the Laser prefab's Beam
-// child and reads LaserEmitter; visual only.
+// child and reads LaserEmitter; visual only. A beam lifted onto a raised level can sort each piece on
+// the floor plan (_floorPlanDrop), so characters in front of or behind the beam overlap it correctly.
 using GameJam.Hazards;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace GameJam.Visuals
 {
@@ -33,18 +35,25 @@ namespace GameJam.Visuals
         [SerializeField] private int _sortingOrder = 5;
         [Tooltip("Unlit, so the beam glows in the dark room.")]
         [SerializeField] private Material _material;
+        [Tooltip("0 = sort the beam as drawn. Above 0: the beam is drawn this far above the floor, and each piece sorts with characters at its floor-plan point instead (outside any SortingGroup the laser sits in).")]
+        [Min(0f)]
+        [SerializeField] private float _floorPlanDrop;
 
         private SpriteRenderer[] _segments;
+        private Transform[] _anchors;
+        private Transform _impactAnchor;
+        private Transform _floorRoot;
         private bool _shown;
 
         private void Awake()
         {
             // Build the segment pool once, so firing never allocates.
             _segments = new SpriteRenderer[_maxSegments];
+            _anchors = new Transform[_maxSegments];
             for (int i = 0; i < _maxSegments; i++)
             {
                 var segment = new GameObject("Segment").AddComponent<SpriteRenderer>();
-                segment.transform.SetParent(transform, false);
+                _anchors[i] = Anchor(segment.transform, "SegmentAnchor");
                 segment.sharedMaterial = _material;
                 segment.sortingLayerName = _sortingLayer;
                 segment.sortingOrder = _sortingOrder;
@@ -53,7 +62,26 @@ namespace GameJam.Visuals
             }
 
             _impact.sortingOrder = _sortingOrder + 1;
+            _impactAnchor = Anchor(_impact.transform, "ImpactAnchor");
             _impact.enabled = false;
+        }
+
+        private void OnDisable()
+        {
+            // Floor-plan pieces sit outside this object, so they would stay lit if it switched off mid-shot.
+            if (_shown)
+            {
+                Hide();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            // The floor-plan pieces live outside this object, so take them with it.
+            if (_floorRoot != null)
+            {
+                Destroy(_floorRoot.gameObject);
+            }
         }
 
         private void LateUpdate()
@@ -94,15 +122,53 @@ namespace GameJam.Visuals
                 {
                     segment.sprite = beam;
                     segment.flipX = left;
-                    segment.transform.position = start + step * (i + 0.5f);
+                    Place(_anchors[i], segment.transform, start + step * (i + 0.5f));
                 }
             }
 
             // 3. Burst where the beam stopped.
             _impact.sprite = Pick(_impactFrames, progress);
-            _impact.transform.position = end;
+            Place(_impactAnchor, _impact.transform, end);
             _impact.enabled = true;
             _shown = true;
+        }
+
+        /// <summary>
+        /// Gives a beam sprite the object it sorts by: itself, or (with a floor-plan drop) a SortingGroup
+        /// parent that sits on the floor plan under it.
+        /// </summary>
+        private Transform Anchor(Transform sprite, string name)
+        {
+            if (_floorPlanDrop <= 0f)
+            {
+                sprite.SetParent(transform, false);
+                return sprite;
+            }
+
+            if (_floorRoot == null)
+            {
+                // A scene-root holder, so the pieces sort with characters rather than inside the laser's group.
+                _floorRoot = new GameObject(gameObject.name + " (beam on floor plan)").transform;
+            }
+
+            var anchor = new GameObject(name).transform;
+            anchor.SetParent(_floorRoot, false);
+            anchor.gameObject.AddComponent<SortingGroup>().sortingLayerName = _sortingLayer;
+            sprite.SetParent(anchor, false);
+            sprite.localPosition = new Vector3(0f, _floorPlanDrop, 0f);
+            return anchor;
+        }
+
+        /// <summary>Puts a beam sprite at <paramref name="drawnAt"/>, moving its anchor to the floor plan beneath it.</summary>
+        private void Place(Transform anchor, Transform sprite, Vector2 drawnAt)
+        {
+            if (anchor == sprite)
+            {
+                sprite.position = drawnAt;
+                return;
+            }
+
+            anchor.position = drawnAt - new Vector2(0f, _floorPlanDrop);
         }
 
         /// <summary>Hides every beam sprite once the shot is over.</summary>

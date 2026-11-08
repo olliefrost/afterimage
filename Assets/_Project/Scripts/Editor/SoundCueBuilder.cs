@@ -1,7 +1,7 @@
 // SoundCueBuilder: editor-only menu item (GameJam > Audio > Create Missing Sound Cues). Makes a
 // SoundCue asset in Audio/Cues for every clip in Audio/SFX (and every *_sting in Audio/Music) that
 // has none, with the clip assigned, so new sounds only need hooking up. Existing cues are never touched. Footstep takes
-// (sfx_step_NN) belong to the shared sfx_step cues, so they are skipped.
+// Numbered takes (sfx_step_NN, sfx_text_beep_NN) belong to a shared hand-made cue, so they are skipped.
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -28,9 +28,9 @@ namespace GameJam.EditorTools
                 string cueName = Path.GetFileNameWithoutExtension(clipPath);
                 string cuePath = $"{CueFolder}/{cueName}.asset";
 
-                // 1. skip music tracks, old clips outside the sfx_ naming, footstep takes and anything that already has a cue
+                // 1. skip music tracks, old clips outside the sfx_ naming, numbered takes (sfx_step_01, sfx_text_beep_02: those share one hand-made cue) and anything that already has a cue
                 bool isTrack = clipPath.StartsWith(MusicFolder) && !cueName.EndsWith("_sting");
-                if (isTrack || !(cueName.StartsWith("sfx_") || cueName.EndsWith("_sting")) || cueName.StartsWith("sfx_step_") || AssetDatabase.LoadAssetAtPath<SoundCue>(cuePath) != null)
+                if (isTrack || !(cueName.StartsWith("sfx_") || cueName.EndsWith("_sting")) || System.Text.RegularExpressions.Regex.IsMatch(cueName, @"_\d\d$") || AssetDatabase.LoadAssetAtPath<SoundCue>(cuePath) != null)
                 {
                     continue;
                 }

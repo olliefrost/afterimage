@@ -16,7 +16,11 @@ GameObject:
   - component: {fileID: 640825233531787264}
   - component: {fileID: 7297189259327496816}
   - component: {fileID: 8409046844957594513}
+  - component: {fileID: 3722880358620815263}
+  - component: {fileID: 3153634421849856264}
   - component: {fileID: 8642378647069382656}
+  - component: {fileID: 1178234961093252862}
+  - component: {fileID: 8223796354554941781}
   m_Layer: 0
   m_Name: Clone
   m_TagString: Untagged
@@ -189,6 +193,47 @@ MonoBehaviour:
   _duration: 0.5
   _flickerRate: 30
   _glowFlare: 4
+--- !u!114 &8409046844957594513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349804375299011067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6cca22de60e8c244b0bfa8e47c43658, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.DeathAudio
+  _player: {fileID: 0}
+  _clone: {fileID: 5291575494339755315}
+  _death: {fileID: 11400000, guid: c8a823c80f2b1bd4caae8224510031ae, type: 2}
+--- !u!114 &3722880358620815263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349804375299011067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc665992388f7e488463dba40fc8b36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Actors.ActorJump
+  _jumpTicks: 30
+  _arcHeight: 0.6
+--- !u!114 &3153634421849856264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349804375299011067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ba9d8bf026dbe34cac5887211b773e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Actors.LadderClimber
 --- !u!114 &8642378647069382656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,6 +255,38 @@ MonoBehaviour:
   _glowBoost: 3
   _shakeStrength: 0.05
   _shakeDuration: 0.2
+--- !u!114 &1178234961093252862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349804375299011067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc39d66bafba75548bc42ae1f216916e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.JumpAudio
+  _jump: {fileID: 3722880358620815263}
+  _takeOff: {fileID: 11400000, guid: 26c2dc0aa75b9604ab9e719ebf65e4ae, type: 2}
+  _land: {fileID: 11400000, guid: 9df053fa84cd7d44eb1c06a47102e76a, type: 2}
+  _volumeScale: 0.35
+--- !u!114 &8223796354554941781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349804375299011067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fce937742333234493515523b1fab53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.LadderAudio
+  _climber: {fileID: 3153634421849856264}
+  _rung: {fileID: 11400000, guid: b9e6997a3cdc05f44a1b29d60ae125cf, type: 2}
+  _stride: 0.4
+  _volumeScale: 0.5
 --- !u!1 &3125175121937554461
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,6 +400,23 @@ MonoBehaviour:
   _bobHeight: 0.03
   _bobSpeed: 16
   _stepFrames: 0000000003000000i
+  _fallGravity: 14
+  _fallFadeSeconds: 0.6
+--- !u!114 &4339434543670188265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3125175121937554461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00c6a1e797077ef47b8721800c300dd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.FootstepAudio
+  _animator: {fileID: 0}
+  _step: {fileID: 11400000, guid: ead6abbda8e90414a932c071b3e45147, type: 2}
+  _volumeScale: 0.35
 --- !u!1 &4422263530664090615
 GameObject:
   m_ObjectHideFlags: 0
@@ -780,33 +874,3 @@ MonoBehaviour:
           rid: -2
         m_Provider2DCache:
           rid: -2
---- !u!114 &8409046844957594513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2349804375299011067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6cca22de60e8c244b0bfa8e47c43658, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.DeathAudio
-  _player: {fileID: 0}
-  _clone: {fileID: 5291575494339755315}
-  _death: {fileID: 11400000, guid: c8a823c80f2b1bd4caae8224510031ae, type: 2}
---- !u!114 &4339434543670188265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3125175121937554461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00c6a1e797077ef47b8721800c300dd2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.FootstepAudio
-  _animator: {fileID: 0}
-  _step: {fileID: 11400000, guid: ead6abbda8e90414a932c071b3e45147, type: 2}
-  _volumeScale: 0.35
