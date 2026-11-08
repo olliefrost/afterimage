@@ -10883,6 +10883,8 @@ MonoBehaviour:
   _input: {fileID: 2080991564}
   _recorder: {fileID: 6883134419956444744}
   _afterimages: {fileID: 2080991562}
+  _player: {fileID: 6883134419956444746}
+  _deathResetDelay: 0.8
   _clonesStartUnlocked: 0
   _rewind: {fileID: 1469203431}
   _nextLevelDelay: 3
@@ -10933,6 +10935,16 @@ MonoBehaviour:
     m_Type: 1
     m_ExpectedControlType: 
     m_Id: 418f2e88-c304-433b-b7f9-0c9e9c7806aa
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  _markRun:
+    m_Name: Mark Run
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: f97b79ec-4254-4074-9bc6-ed9a03fea108
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []

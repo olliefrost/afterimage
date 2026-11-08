@@ -36,7 +36,7 @@ namespace GameJam.Afterimage
         /// <summary>The slot's colour, for the clone's tint and light.</summary>
         public Color SlotColour { get; private set; } = Color.white;
 
-        /// <summary>True once the clone has died this attempt.</summary>
+        /// <inheritdoc />
         public bool IsDead { get; private set; }
 
         /// <summary>The run this clone replays (set by Init), so the rewind can play it backwards.</summary>
@@ -66,7 +66,10 @@ namespace GameJam.Afterimage
             }
         }
 
-        /// <summary>Kills the clone: it stops replaying where it stands until the next attempt. Hazards call this.</summary>
+        /// <summary>
+        /// Kills the clone: it stops replaying where it stands until the next attempt. Hazards call this
+        /// through <see cref="IActor.Kill"/>; a clone that takes a laser shot shields whoever is behind it.
+        /// </summary>
         [ContextMenu("Kill")]
         public void Kill()
         {

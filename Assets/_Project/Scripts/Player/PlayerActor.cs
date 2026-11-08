@@ -1,6 +1,8 @@
-// PlayerActor: the live player's identity as an IActor, plus its reset and interaction.
+// PlayerActor: the live player's identity as an IActor, plus its reset, interaction and death.
 // Each tick it consumes an interact press and uses the Interactor; AfterimageRecorder then reads
-// InteractedThisTick so clones repeat the press on the same tick.
+// InteractedThisTick so clones repeat the press on the same tick. When a hazard kills the player it
+// raises Died, and GameStateController restarts the attempt without saving the run.
+using System;
 using GameJam.Actors;
 using GameJam.Core;
 using UnityEngine;
@@ -25,8 +27,14 @@ namespace GameJam.Player
         /// <inheritdoc />
         public bool IsClone => false;
 
+        /// <inheritdoc />
+        public bool IsDead { get; private set; }
+
         /// <summary>True if the player pressed interact during the current tick.</summary>
         public bool InteractedThisTick { get; private set; }
+
+        /// <summary>Raised once when the player is killed by a hazard.</summary>
+        public event Action Died;
 
         private void Awake()
         {
@@ -66,7 +74,21 @@ namespace GameJam.Player
             _body.linearVelocity = Vector2.zero;
             transform.position = _spawnPosition;
             InteractedThisTick = false;
+            IsDead = false;
             _input.ConsumeInteract();
+        }
+
+        /// <summary>Kills the player. GameStateController listens to <see cref="Died"/> and restarts the attempt.</summary>
+        [ContextMenu("Kill")]
+        public void Kill()
+        {
+            if (IsDead)
+            {
+                return;
+            }
+
+            IsDead = true;
+            Died?.Invoke();
         }
 
         /// <summary>Moves the player instantly, for example when falling into a pit.</summary>
