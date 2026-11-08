@@ -211,17 +211,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!114 &16096945 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5881101974662922696, guid: 343654197688a0641a734323a5d40d96, type: 3}
-  m_PrefabInstance: {fileID: 6883134419956444743}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4881562eb583960439aec6be00ba0c1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.ActorElevation
 --- !u!1 &22483265
 GameObject:
   m_ObjectHideFlags: 0
@@ -11565,6 +11554,61 @@ MonoBehaviour:
   _onReleased:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &1052740229
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1052740231}
+  - component: {fileID: 1052740230}
+  m_Layer: 0
+  m_Name: WallOcclusion
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1052740230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1052740229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49d2aa12c55106a438b3d30cc3c6044b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.WallOcclusion
+  _player: {fileID: 6883134419956444745}
+  _playerSprite: {fileID: 1783322652}
+  _grid: {fileID: 273170956}
+  _walls:
+  - {fileID: 1383586957}
+  - {fileID: 1859375617}
+  - {fileID: 1400492112}
+  _fadedAlpha: 0.3
+  _fadeSeconds: 0.25
+  _viewPadding: 0.6
+  _searchRadius: 5
+--- !u!4 &1052740231
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1052740229}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1063741132
 GameObject:
   m_ObjectHideFlags: 0
@@ -12798,7 +12842,6 @@ MonoBehaviour:
   - {fileID: 1990742092}
   - {fileID: 1311430046}
   - {fileID: 1457309239}
-  _bottomRow: 10
   _widthCells: 2
   _slideSpeed: 0.035
   _loweredColor: {r: 0.3, g: 0.9, b: 0.45, a: 0.35}
@@ -13976,8 +14019,6 @@ GameObject:
   - component: {fileID: 1400492110}
   - component: {fileID: 1400492112}
   - component: {fileID: 1400492111}
-  - component: {fileID: 1400492114}
-  - component: {fileID: 1400492113}
   m_Layer: 0
   m_Name: LedgeFace
   m_TagString: Untagged
@@ -14302,38 +14343,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!114 &1400492113
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400492109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59cb492a90645594da4a8801058335af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.HeightOcclusion
-  _player: {fileID: 16096945}
-  _fader: {fileID: 1400492114}
-  _fadeAboveHeight: 1.4
---- !u!114 &1400492114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400492109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf36f78c591724c4c81fa3ca03e1cde0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.OcclusionFader
-  _sprites: []
-  _tilemaps:
-  - {fileID: 1400492112}
-  _fadedAlpha: 0.35
-  _fadeDuration: 0.3
 --- !u!1 &1423311027
 GameObject:
   m_ObjectHideFlags: 0
@@ -17238,6 +17247,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!212 &1783322652 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 4192614582825063985, guid: 343654197688a0641a734323a5d40d96, type: 3}
+  m_PrefabInstance: {fileID: 6883134419956444743}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1825243828
 GameObject:
   m_ObjectHideFlags: 0
@@ -20244,3 +20258,4 @@ SceneRoots:
   - {fileID: 670029711}
   - {fileID: 1162136199}
   - {fileID: 1248538122}
+  - {fileID: 1052740231}
