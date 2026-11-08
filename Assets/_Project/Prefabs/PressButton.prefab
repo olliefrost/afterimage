@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 1962697088681041566}
   - component: {fileID: 6146508051482034736}
   - component: {fileID: 2692703604496547762}
+  - component: {fileID: 4783683976741597384}
   m_Layer: 0
   m_Name: PressButton
   m_TagString: Untagged
@@ -175,6 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0451f484d3b8476458c04c3b998b3cfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Interactables.PressButton
+  _requiredPower: {fileID: 0}
   _renderer: {fileID: 2451240744734893745}
   _unpressedColor: {r: 1, g: 1, b: 1, a: 1}
   _pressedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -195,6 +197,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4783683976741597384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2409447225680558834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: badb5de609c3bfc489ca640d58c13290, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.ButtonAudio
+  _button: {fileID: 0}
+  _press: {fileID: 11400000, guid: efb130204a6cefa4fa73c3b02e0a73e7, type: 2}
+  _cloneVolumeScale: 0.6
 --- !u!1 &8230573142742646996
 GameObject:
   m_ObjectHideFlags: 0

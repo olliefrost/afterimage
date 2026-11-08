@@ -115,6 +115,7 @@ GameObject:
   - component: {fileID: 4628426962043722498}
   - component: {fileID: 1369553060671219585}
   - component: {fileID: 5365777773712403699}
+  - component: {fileID: 4864173183720128037}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -239,6 +240,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4864173183720128037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4204749132953450047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b96b87b95b772e468ab8da322d43e2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.DoorAudio
+  _door: {fileID: 0}
+  _open: {fileID: 11400000, guid: 72d15e8378f6b0a4e9bc27bb551c6273, type: 2}
+  _close: {fileID: 11400000, guid: c77fbd0000b9fe141a0fe2c3f339cf8f, type: 2}
 --- !u!1 &4406049723868059142
 GameObject:
   m_ObjectHideFlags: 0

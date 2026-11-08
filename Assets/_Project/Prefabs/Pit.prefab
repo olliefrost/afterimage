@@ -396,6 +396,7 @@ GameObject:
   - component: {fileID: 5117568770969150959}
   - component: {fileID: 4283723652764457355}
   - component: {fileID: 8675722433181973990}
+  - component: {fileID: 1761378818602205554}
   m_Layer: 0
   m_Name: Pit
   m_TagString: Untagged
@@ -509,6 +510,23 @@ MonoBehaviour:
   _pitLight: {fileID: 3780610019940961148}
   _depth: 1.25
   _actorSortingOrder: -70
+--- !u!114 &1761378818602205554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6289068382436005804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7d27d69bd636243a843eea9c241930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.PitAudio
+  _pit: {fileID: 4283723652764457355}
+  _fall: {fileID: 11400000, guid: c5ecfca6f213d904cbccb6dfd3676aad, type: 2}
+  _land: {fileID: 11400000, guid: d37f61a3f23db0247919e6933e829882, type: 2}
+  _landDelay: 0.35
+  _cloneVolumeScale: 0.5
 --- !u!1 &6387570186735650454
 GameObject:
   m_ObjectHideFlags: 0

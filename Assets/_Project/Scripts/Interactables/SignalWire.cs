@@ -26,6 +26,12 @@ namespace GameJam.Interactables
         [Tooltip("Fired when the signal reaches the end of the wire.")]
         [SerializeField] private UnityEvent _onArrived = new UnityEvent();
 
+        /// <summary>Raised when a signal starts travelling along the wire.</summary>
+        public event System.Action Sent;
+
+        /// <summary>Raised when the signal reaches the end of the wire.</summary>
+        public event System.Action Arrived;
+
         private LineRenderer _line;
         private Vector3[] _points;
         private float[] _cumulativeLengths;
@@ -63,6 +69,7 @@ namespace GameJam.Interactables
             _elapsed = 0f;
             _pulse.gameObject.SetActive(true);
             _pulse.position = _points[0];
+            Sent?.Invoke();
         }
 
         /// <summary>Turns the wire off and hides the pulse for the next attempt.</summary>
@@ -95,6 +102,7 @@ namespace GameJam.Interactables
                 _pulse.gameObject.SetActive(false);
                 SetLineColor(_poweredColor);
                 _onArrived.Invoke();
+                Arrived?.Invoke();
             }
         }
 

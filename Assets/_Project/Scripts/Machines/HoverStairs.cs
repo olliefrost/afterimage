@@ -8,6 +8,7 @@
 // never change; the steps stand in front of it and climb to the blocks' top, which is the landing
 // onto the balcony. Only the edge's invisible blockers open in the stairs' columns. ElevationField
 // asks StepFraction to draw anyone on the steps or the landing at the right height.
+using System;
 using GameJam.Actors;
 using GameJam.Core;
 using GameJam.Interactables;
@@ -71,6 +72,10 @@ namespace GameJam.Machines
         private Vector3[] _stepRest;
         private int[] _edgeColumns;
         private bool[] _edgeOpen;
+        private bool _sliding;
+
+        /// <summary>Raised when the steps flip up or down, and when they start sliding to another stop.</summary>
+        public event Action Moved;
 
         /// <summary>True while the plates are flipped up into stairs.</summary>
         public bool IsRaised { get; private set; }
@@ -119,6 +124,7 @@ namespace GameJam.Machines
         {
             _body.position = _rightStop.position;
             transform.position = _rightStop.position;
+            _sliding = false;
             ApplyRaised(false);
             UpdateEdge(_rightStop.position, true);
         }
@@ -168,6 +174,7 @@ namespace GameJam.Machines
             if (raised != IsRaised)
             {
                 ApplyRaised(raised);
+                Moved?.Invoke();
             }
 
             // 2. Slide towards the stop the held plates ask for.
@@ -177,6 +184,14 @@ namespace GameJam.Machines
             Vector2 current = _body.position;
             Vector2 next = Vector2.MoveTowards(current, target, _slideSpeed);
             _body.MovePosition(next);
+
+            bool sliding = next != current;
+            if (sliding && !_sliding)
+            {
+                Moved?.Invoke();
+            }
+
+            _sliding = sliding;
 
             // 3. Carry the live player if they are standing on the stairs.
             if (next != current && _riders.Contains(_playerActor))

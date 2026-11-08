@@ -1,6 +1,7 @@
 // LaserWall: the laser fence across Chamber 3's conveyor. FuelBelt asks IsBlocked as each crate
 // crosses it and calls Burn() if the crate is destroyed; HydraulicBlock calls SetBlocked while it
 // sits in the beam. Actors can't reach the belt, so the wall only ever burns fuel.
+using System;
 using GameJam.Core;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -28,6 +29,9 @@ namespace GameJam.Machines
         [SerializeField] private int _flashTicks = 12;
 
         private int _flashTicksLeft;
+
+        /// <summary>Raised each time a crate burns in the beam.</summary>
+        public event Action Burned;
 
         /// <summary>True while the hydraulic block is holding the beam back.</summary>
         public bool IsBlocked { get; private set; }
@@ -66,6 +70,7 @@ namespace GameJam.Machines
         {
             _flashTicksLeft = _flashTicks;
             _burnFlash.intensity = _flashIntensity;
+            Burned?.Invoke();
         }
 
         /// <summary>Unblocks the beam and clears the flash for the next attempt.</summary>

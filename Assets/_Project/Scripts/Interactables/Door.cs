@@ -3,6 +3,7 @@
 // tints the door and turns on its "open" visuals (light spill or trail) so the exit reads clearly.
 // Closes again on every new attempt. OnOpened/OnClosed drive animation
 // (e.g. SpriteFlipbook.PlayForward/PlayBackward); the collider never waits for it.
+using System;
 using GameJam.Core;
 using UnityEngine;
 using UnityEngine.Events;
@@ -31,6 +32,12 @@ namespace GameJam.Interactables
 
         private bool _isOpen;
 
+        /// <summary>Raised when the door opens (used by DoorAudio).</summary>
+        public event Action Opened;
+
+        /// <summary>Raised when an open door closes (used by DoorAudio).</summary>
+        public event Action Closed;
+
         private void OnEnable()
         {
             LevelReset.Register(this);
@@ -53,6 +60,7 @@ namespace GameJam.Interactables
             _isOpen = true;
             ApplyState();
             _onOpened.Invoke();
+            Opened?.Invoke();
         }
 
         /// <summary>Shuts the door again, e.g. when the power behind its lock fails.</summary>
@@ -64,6 +72,7 @@ namespace GameJam.Interactables
             if (wasOpen)
             {
                 _onClosed.Invoke();
+                Closed?.Invoke();
             }
         }
 

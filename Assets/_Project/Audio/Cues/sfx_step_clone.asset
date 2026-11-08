@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d2379d897b6ea5478dd3546b28e58b9, type: 3}
+  m_Name: sfx_step_clone
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.SoundCue
+  _clips:
+  - {fileID: 8300000, guid: fbf23e5b608308b409b4f608f428302f, type: 3}
+  - {fileID: 8300000, guid: 54ad9e5138d306048866f87875468dcf, type: 3}
+  - {fileID: 8300000, guid: 7a1907570a1c20f4fb5ccf871093c35a, type: 3}
+  - {fileID: 8300000, guid: d68326e03d5b5af418f8f1ae66237355, type: 3}
+  - {fileID: 8300000, guid: 1e38cbe2091f9da498e3af476f29fcb0, type: 3}
+  - {fileID: 8300000, guid: 74e578c44f69e0444bcfc5c8bb0aa486, type: 3}
+  _volume: 0.4
+  _minPitch: 0.9
+  _maxPitch: 1.1
+  _volumeJitter: 0.1
+  _minGap: 0.05
+  _maxCopies: 4

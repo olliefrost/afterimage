@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1326777465777204316}
   - component: {fileID: 1771427994312075060}
+  - component: {fileID: 6025219007106560127}
   m_Layer: 0
   m_Name: Laser
   m_TagString: Untagged
@@ -61,6 +62,21 @@ MonoBehaviour:
   _chargeLightMaxIntensity: 2.5
   _beamHeight: 0.34
   _beamStartInset: 0.78
+--- !u!114 &6025219007106560127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160362603142657122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8347c39a1890b49408a3277ebde41c7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.LaserAudio
+  _emitter: {fileID: 1771427994312075060}
+  _charge: {fileID: 11400000, guid: 97a64776d37b1ca40b4e14c840d20906, type: 2}
+  _fire: {fileID: 11400000, guid: e4f454214ea563e49903e3dac36701c9, type: 2}
 --- !u!1 &3135143566129505745
 GameObject:
   m_ObjectHideFlags: 0
