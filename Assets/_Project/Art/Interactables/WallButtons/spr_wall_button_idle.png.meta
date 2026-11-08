@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 701a5f17d362cc7499bff899003db588
+guid: 16b83072e3a86534bb5a28266f8ed01f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -9051746115703902838
-    second: placeholder_iso_floor_cracked_0
+      213: 4616271111242631757
+    second: spr_wall_button_idle_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,8 +48,8 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 0
-  alignment: 9
+  spriteMeshType: 1
+  alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
@@ -115,13 +115,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: placeholder_iso_floor_cracked_0
+      name: spr_wall_button_idle_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 64
-        height: 32
+        x: 6
+        y: 8
+        width: 20
+        height: 31
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +130,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a8d6270bddcb16280800000000000000
-      internalID: -9051746115703902838
+      spriteID: d4ac38c1e1a401040800000000000000
+      internalID: 4616271111242631757
       vertices: []
       indices: 
       edges: []
@@ -149,8 +149,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      placeholder_iso_floor_cracked_0: -9051746115703902838
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f246ed328a68581449a3bb8614d21f24
+guid: bdc09901f5d809c46a359a599b989d3a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5415761150928496952
-    second: placeholder_iso_floor_moss_0
+      213: -9005954449041883883
+    second: spr_hover_step_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,9 +48,9 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 9
-  spritePivot: {x: 0.5, y: 0.5}
+  spritePivot: {x: 0.5, y: 0.25}
   spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -115,13 +115,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: placeholder_iso_floor_moss_0
+      name: spr_hover_step_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 64
-        height: 32
+        height: 53
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +130,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8392475a216a82b40800000000000000
-      internalID: 5415761150928496952
+      spriteID: 51d7289e42c640380800000000000000
+      internalID: -9005954449041883883
       vertices: []
       indices: 
       edges: []
@@ -149,8 +149,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      placeholder_iso_floor_moss_0: 5415761150928496952
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

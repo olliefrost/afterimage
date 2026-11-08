@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 26082cc885b79b04c91cf159d2c51ad9
+guid: 46c1ddf4826dce64f881a8f241913557
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8915894891894368388
-    second: placeholder_iso_floor_grass_0
+      213: 7321313306853617209
+    second: spr_generator_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,9 +48,9 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 9
-  spritePivot: {x: 0.5, y: 0.5}
+  spritePivot: {x: 0.5, y: 0.3671875}
   spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -115,13 +115,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: placeholder_iso_floor_grass_0
+      name: spr_generator_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 64
-        height: 32
+        x: 23
+        y: 26
+        width: 82
+        height: 82
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +130,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 488651e6a2f9bbb70800000000000000
-      internalID: 8915894891894368388
+      spriteID: 93ea950a9a78a9560800000000000000
+      internalID: 7321313306853617209
       vertices: []
       indices: 
       edges: []
@@ -149,8 +149,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      placeholder_iso_floor_grass_0: 8915894891894368388
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

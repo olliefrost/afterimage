@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9e22a6640bb5d714aa2188979b8acd90
+guid: e6ab70ebf5dae26458b31ddab0895559
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5160545438307321272
-    second: placeholder_iso_wall_0
+      213: -7304480717584819835
+    second: spr_wall_button_pressed_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,9 +48,9 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 0
-  alignment: 9
-  spritePivot: {x: 0.5, y: 0.125}
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -115,13 +115,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: placeholder_iso_wall_0
+      name: spr_wall_button_pressed_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 64
-        height: 128
+        x: 6
+        y: 8
+        width: 20
+        height: 31
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +130,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 84afd6ef34f0268b0800000000000000
-      internalID: -5160545438307321272
+      spriteID: 5899aa7fc7541aa90800000000000000
+      internalID: -7304480717584819835
       vertices: []
       indices: 
       edges: []
@@ -149,8 +149,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      placeholder_iso_wall_0: -5160545438307321272
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
