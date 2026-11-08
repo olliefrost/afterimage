@@ -8,7 +8,7 @@
 - Afterimages can ride moving platforms (the hovering stair plates)
 - Afterimages can set up the path for later afterimages, not just for you
 
-![Whiteboard sketch of Chamber 3](chamber-3-sketch.jpg)
+![Whiteboard sketch of Chamber 3](chamber_3_design.jpg)
 
 ## Camera
 
@@ -80,11 +80,31 @@ Isometric, facing northwest, as in the sketch. Corners are referred to as:
 - **Hovering plates:** Their movement (flipping up, sliding left, sliding to the middle) should be readable from the isometric camera.
 - **Raised buttons and plates:** Need to be clearly visible from the floor so the player knows the stairs are there to reach them.
 
+## Decisions
+
+- **Power controls everything:** without power the plates, stairs and exit door do nothing. Power
+  stays on only while fuel keeps arriving, so if Afterimage 1 lets go of the block, the room loses
+  power and everything after it unravels.
+- **Plates and buttons:** standing on a ledge plate moves the stairs; the button on the wall above
+  each ledge plate is pressed with E (an afterimage can do it). The exit door opens once both
+  buttons have been pressed while the room is powered; each button has a cable to the door that
+  lights when it is pressed.
+- **Raised balcony:** the plates by the back wall and the exit door sit on a balcony one wall-block
+  high, split into three bays by pillars. Its front edge is solid except where the raised stairs
+  stand; the 4 plates flip up into 4 steps leading onto it, with rails so you only get on at the
+  bottom and off at the top. Characters on the balcony or the steps are drawn at that height.
+- **Hydraulic mechanism:** a fixed base pushes the block out on a piston arm along a floor channel
+  until it caps the laser lens. A pedal on the floor drives it; let go and the block springs back
+  against the base.
+- **Visible wiring:** cables run from the generator to every plate and the exit door and light up
+  when the room is powered. Each plate has its own cable to what it moves (pedal → piston, plates →
+  the stairs' stops), and a stop's floor marker lights up when the stairs will go there.
+- **Fuel:** a steady stream of crates, one about every 1.2 seconds.
+- **Exit door:** opens once both ledge buttons are pressed while the room is powered, and closes
+  again if the power is lost. The buttons can only be pressed while the room is powered.
+- **Afterimage 4's timing:** it boards the stairs once they flip up; they only slide left when
+  Afterimage 3 reaches the top right plate after climbing, which gives Afterimage 4 time to get on.
+
 ## Open questions
 
-- Does the power need to be on before the bottom right pressure plate and the stairs work?
-- Which action opens the exit door: the top left button and plate, or all buttons and plates being held?
-- Does Afterimage 3 need to hold both the top right button and the pressure plate, or just one of them?
-- What timing does Afterimage 4 need to get on the stairs behind Afterimage 3 before they move left?
-- If Afterimage 1 lets go of the hydraulic block (or is destroyed), does the room lose power and everything after it unravel?
-- What does the fuel look like, and is there a steady supply on the belt?
+- What should the fuel and the generator look like in the final art?

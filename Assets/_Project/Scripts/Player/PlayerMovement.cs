@@ -1,5 +1,6 @@
 // PlayerMovement: moves the live player around the room on each fixed tick from PlayerInputReader.
-// Its resulting position is what AfterimageRecorder samples for clones to replay.
+// Its resulting position is what AfterimageRecorder samples for clones to replay. Moving platforms
+// (Chamber 3's hover stairs) add their own movement through AddCarry before it runs each tick.
 using GameJam.Core;
 using UnityEngine;
 
@@ -20,9 +21,19 @@ namespace GameJam.Player
         [SerializeField] private float _isoVerticalScale = 0.5f;
 
         private Rigidbody2D _body;
+        private Vector2 _carry;
 
         /// <summary>Last non-zero movement direction, for sprites and recording.</summary>
         public Vector2 Facing { get; private set; } = Vector2.down;
+
+        /// <summary>
+        /// Moves the player along with a platform this tick, on top of their own walking. Platforms
+        /// call it from FixedUpdate before this script runs.
+        /// </summary>
+        public void AddCarry(Vector2 delta)
+        {
+            _carry += delta;
+        }
 
         private void Awake()
         {
@@ -33,6 +44,7 @@ namespace GameJam.Player
         {
             if (!_clock.IsRunning)
             {
+                _carry = Vector2.zero;
                 return;
             }
 
@@ -44,7 +56,8 @@ namespace GameJam.Player
 
             // Screen-relative input, squashed vertically so movement matches the isometric floor.
             Vector2 velocity = new Vector2(direction.x, direction.y * _isoVerticalScale) * _moveSpeed;
-            _body.MovePosition(_body.position + velocity * Time.fixedDeltaTime);
+            _body.MovePosition(_body.position + velocity * Time.fixedDeltaTime + _carry);
+            _carry = Vector2.zero;
         }
     }
 }

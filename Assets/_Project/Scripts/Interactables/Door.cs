@@ -1,6 +1,7 @@
-// Door: blocks the way until Open() is called (usually by SignalWire.OnArrived). Opening removes
-// the blocking collider, tints the door and turns on its "open" visuals (light spill or trail)
-// so the exit reads clearly. Closes again on every new attempt. OnOpened/OnClosed drive animation
+// Door: blocks the way until Open() is called (usually by SignalWire.OnArrived, or a gate such as
+// Chamber 3's AllOnGate, which can also Close() it again). Opening removes the blocking collider,
+// tints the door and turns on its "open" visuals (light spill or trail) so the exit reads clearly.
+// Closes again on every new attempt. OnOpened/OnClosed drive animation
 // (e.g. SpriteFlipbook.PlayForward/PlayBackward); the collider never waits for it.
 using GameJam.Core;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace GameJam.Interactables
         [Header("Events")]
         [Tooltip("Fired when the door opens, e.g. SpriteFlipbook.PlayForward.")]
         [SerializeField] private UnityEvent _onOpened = new UnityEvent();
-        [Tooltip("Fired when an open door closes on reset, e.g. SpriteFlipbook.PlayBackward.")]
+        [Tooltip("Fired when an open door closes (reset or Close), e.g. SpriteFlipbook.PlayBackward.")]
         [SerializeField] private UnityEvent _onClosed = new UnityEvent();
 
         private bool _isOpen;
@@ -54,8 +55,8 @@ namespace GameJam.Interactables
             _onOpened.Invoke();
         }
 
-        /// <summary>Closes the door for the next attempt.</summary>
-        public void ResetState()
+        /// <summary>Shuts the door again, e.g. when the power behind its lock fails.</summary>
+        public void Close()
         {
             bool wasOpen = _isOpen;
             _isOpen = false;
@@ -64,6 +65,12 @@ namespace GameJam.Interactables
             {
                 _onClosed.Invoke();
             }
+        }
+
+        /// <summary>Closes the door for the next attempt.</summary>
+        public void ResetState()
+        {
+            Close();
         }
 
         private void ApplyState()

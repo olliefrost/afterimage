@@ -113,6 +113,10 @@ namespace GameJam.Afterimage
         /// </summary>
         public void EndRun(Recording run, bool keep)
         {
+            // 0. A run with no recorded ticks (saved on the very first tick) has nowhere to put the
+            //    clone, so it is thrown away like a retry.
+            keep = keep && run.Frames.Count > 0;
+
             // 1. Store the run in the slot the player was controlling.
             bool wasNewSlot = ControlledSlot == _slots.Count;
             if (keep)

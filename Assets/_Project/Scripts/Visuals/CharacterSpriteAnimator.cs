@@ -1,8 +1,9 @@
 // CharacterSpriteAnimator: sits on a character's Visual child (player or clone). It works out
 // facing from how the character moved this frame, picks one of 8 directions from a
 // CharacterSpriteSet, loops that direction's run frames while moving and shows its idle sprite when
-// still. Directions without run frames fall back to the idle sprite with a small walk bob.
-// Visual only, so it needs no link to input or recordings.
+// still. Directions without run frames fall back to the idle sprite with a small walk bob. It also
+// adds the ground height from ActorElevation (if the Body has one), since it owns this sprite's
+// position. Visual only, so it needs no link to input or recordings.
 using UnityEngine;
 
 namespace GameJam.Visuals
@@ -37,6 +38,7 @@ namespace GameJam.Visuals
         public bool FaceAgainstMotion { get; set; }
 
         private Transform _body;
+        private ActorElevation _elevation;
         private Vector3 _lastBodyPosition;
         private Vector3 _restLocalPosition;
         private int _direction;
@@ -45,6 +47,7 @@ namespace GameJam.Visuals
         private void Awake()
         {
             _body = transform.parent != null ? transform.parent : transform;
+            _elevation = GetComponentInParent<ActorElevation>();
             _lastBodyPosition = _body.position;
             _restLocalPosition = transform.localPosition;
             _direction = _startDirection;
@@ -91,8 +94,10 @@ namespace GameJam.Visuals
                 _renderer.sprite = sprites.Idle;
             }
 
+            // 4. Stand on whatever ground height the level has here (Chamber 3's balcony and steps).
             float bob = isMoving && !hasRun ? Mathf.Abs(Mathf.Sin(_walkTime * _bobSpeed)) * _bobHeight : 0f;
-            transform.localPosition = _restLocalPosition + new Vector3(0f, bob, 0f);
+            float ground = _elevation != null ? _elevation.Height : 0f;
+            transform.localPosition = _restLocalPosition + new Vector3(0f, bob + ground, 0f);
         }
 
         /// <summary>Maps a world move to a direction index (0 = east, counter-clockwise), undoing the iso squash.</summary>
