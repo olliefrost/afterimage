@@ -65,6 +65,18 @@ namespace GameJam.Core
             LoadScene(next < SceneManager.sceneCountInBuildSettings ? next : TitleSceneIndex, caption);
         }
 
+        /// <summary>Ends the game after the Ending's credits: forgets the save (so Continue is gone) and wipes to the title.</summary>
+        public static void FinishGame()
+        {
+            if (IsChangingScene)
+            {
+                return;
+            }
+
+            SaveProgress.Clear();
+            LoadScene(TitleSceneIndex, null);
+        }
+
         /// <summary>True once after a new game started, then false, so the intro plays a single time.</summary>
         public static bool ConsumeIntro()
         {

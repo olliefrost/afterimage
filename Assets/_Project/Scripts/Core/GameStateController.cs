@@ -64,6 +64,10 @@ namespace GameJam.Core
         [Tooltip("Optional rewind shown between attempts (Rewind prefab). Empty = the room resets instantly.")]
         [SerializeField] private RewindEffect _rewind;
 
+        [Header("Progress")]
+        [Tooltip("Save this scene as the Continue point on start. Off in the Ending, so Continue never lands in the final trap.")]
+        [SerializeField] private bool _savesProgress = true;
+
         [Header("Level complete")]
         [Tooltip("Seconds the player stands still at the exit before the screen wipes to the next chamber.")]
         [SerializeField] private float _exitDelay = 0.4f;
@@ -123,7 +127,10 @@ namespace GameJam.Core
 
         private IEnumerator Start()
         {
-            SaveProgress.SaveChamber(SceneManager.GetActiveScene().buildIndex);
+            if (_savesProgress)
+            {
+                SaveProgress.SaveChamber(SceneManager.GetActiveScene().buildIndex);
+            }
 
             // An intro claimed the start in Awake: the attempt begins when it calls FinishIntro.
             if (State == GameState.Intro)
@@ -171,6 +178,16 @@ namespace GameJam.Core
             _input.SetGameplayEnabled(true);
             _clock.Restart();
             SetState(GameState.Playing);
+        }
+
+        /// <summary>
+        /// Takes control away for a closing cutscene (the Ending's trap): stops the clock and the
+        /// gameplay keys and holds the Intro state, so R, T, F and 1-5 stay dead from here on.
+        /// </summary>
+        public void EnterCutscene()
+        {
+            _clock.Stop();
+            BeginIntro();
         }
 
         private void OnDestroy()
