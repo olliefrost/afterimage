@@ -1,7 +1,9 @@
-// SignalWire: shows cause and effect. Send() moves a red pulse along the wire's LineRenderer path,
-// lighting the wire behind it as it goes, then flashes the whole wire and fires OnArrived (wired in
-// the inspector, e.g. to Door.Open). Driven by fixed ticks so a clone's press opens the door on
-// exactly the same tick as the original run; the flicker and flash on top are visual only.
+// SignalWire: shows cause and effect. Send() runs a bright charge front and pulse along the wire's
+// LineRenderer path, lighting the wire behind it, then flashes the whole wire and fires OnArrived (wired
+// in the inspector, e.g. to Door.Open); once arrived it stays lit with a looping pulse. It uses the same
+// look as Visuals/SignalCable (grey off, cyan on), so every wire in the game reads alike. Driven by
+// fixed ticks so a clone's press opens the door on exactly the same tick as the original run; the
+// flicker, flash and looping pulse are visual only.
 using GameJam.Core;
 using GameJam.Visuals;
 using UnityEngine;
@@ -21,15 +23,17 @@ namespace GameJam.Interactables
         [Header("Tuning")]
         [Tooltip("Seconds the signal takes to travel the whole wire.")]
         [SerializeField] private float _travelTime = 1.2f;
-        [SerializeField] private Color _idleColor = new Color(0.35f, 0.08f, 0.08f);
-        [SerializeField] private Color _poweredColor = new Color(1f, 0.15f, 0.15f);
+        [SerializeField] private Color _idleColor = new Color(0.18f, 0.2f, 0.22f);
+        [SerializeField] private Color _poweredColor = new Color(0.35f, 0.85f, 1f);
 
         [Header("Feedback")]
-        [Tooltip("Colour the whole wire flashes when the signal arrives, fading to the powered colour.")]
-        [SerializeField] private Color _arrivalFlashColor = new Color(1f, 0.75f, 0.6f);
+        [Tooltip("Colour of the travelling front, and of the whole wire's flash when the signal arrives.")]
+        [SerializeField] private Color _arrivalFlashColor = new Color(0.85f, 1f, 1f);
         [SerializeField] private float _arrivalFlashTime = 0.35f;
         [Tooltip("How much the travelling pulse flickers in size (0.3 = up to 30%).")]
         [SerializeField] private float _pulseFlicker = 0.3f;
+        [Tooltip("Units per second the pulse loops along the wire once the signal has arrived.")]
+        [SerializeField] private float _pulseSpeed = 2.5f;
         [Tooltip("Screen shake from the wire's end when the signal arrives.")]
         [SerializeField] private float _arrivalShake = 0.025f;
 
@@ -46,6 +50,7 @@ namespace GameJam.Interactables
         private bool _isPowered;
         private Vector3 _pulseScale;
         private float _flashTimeLeft;
+        private float _pulseDistance;
 
         // Reused so lighting the wire each tick does not allocate new key arrays.
         private Gradient _gradient;
@@ -57,7 +62,7 @@ namespace GameJam.Interactables
             _line = GetComponent<LineRenderer>();
             _pulseScale = _pulse.localScale;
             _gradient = new Gradient();
-            _colorKeys = new GradientColorKey[4];
+            _colorKeys = new GradientColorKey[5];
             _alphaKeys = new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, 1f) };
             CachePath();
         }
@@ -121,8 +126,8 @@ namespace GameJam.Interactables
             {
                 _isSending = false;
                 _isPowered = true;
-                _pulse.gameObject.SetActive(false);
                 _pulse.localScale = _pulseScale;
+                _pulseDistance = _totalLength;
                 _flashTimeLeft = _arrivalFlashTime;
                 SetLineColor(_arrivalFlashColor);
                 ScreenShake.ShakeAt(_points[_points.Length - 1], _arrivalShake, 0.15f);
@@ -132,25 +137,36 @@ namespace GameJam.Interactables
 
         private void Update()
         {
-            // The arrival flash fades back to the powered colour over real frames; visual only.
-            if (_flashTimeLeft <= 0f)
+            if (!_isPowered)
             {
                 return;
             }
 
-            _flashTimeLeft -= Time.deltaTime;
-            float t = 1f - Mathf.Clamp01(_flashTimeLeft / _arrivalFlashTime);
-            SetLineColor(Color.Lerp(_arrivalFlashColor, _poweredColor, Ease.OutCubic(t)));
+            // 1. While lit, the pulse keeps looping from the source end, like a powered SignalCable.
+            if (_totalLength > 0f)
+            {
+                _pulseDistance = Mathf.Repeat(_pulseDistance + _pulseSpeed * Time.deltaTime, _totalLength);
+                _pulse.position = PointAlongPath(_pulseDistance);
+            }
+
+            // 2. The arrival flash fades back to the powered colour over real frames.
+            if (_flashTimeLeft > 0f)
+            {
+                _flashTimeLeft -= Time.deltaTime;
+                float t = 1f - Mathf.Clamp01(_flashTimeLeft / _arrivalFlashTime);
+                SetLineColor(Color.Lerp(_arrivalFlashColor, _poweredColor, Ease.OutCubic(t)));
+            }
         }
 
-        /// <summary>Colours the wire powered up to <paramref name="progress"/> (0-1 of its length) and idle after.</summary>
+        /// <summary>Colours the wire powered up to <paramref name="progress"/> (0-1 of its length), with a bright front at that point, and idle after.</summary>
         private void LightUpTo(float progress)
         {
-            float edge = Mathf.Clamp(progress, 0.001f, 0.998f);
+            float edge = Mathf.Clamp(progress, 0.02f, 0.97f);
             _colorKeys[0] = new GradientColorKey(_poweredColor, 0f);
-            _colorKeys[1] = new GradientColorKey(_poweredColor, edge);
-            _colorKeys[2] = new GradientColorKey(_idleColor, edge + 0.001f);
-            _colorKeys[3] = new GradientColorKey(_idleColor, 1f);
+            _colorKeys[1] = new GradientColorKey(_poweredColor, edge - 0.02f);
+            _colorKeys[2] = new GradientColorKey(_arrivalFlashColor, edge);
+            _colorKeys[3] = new GradientColorKey(_idleColor, edge + 0.02f);
+            _colorKeys[4] = new GradientColorKey(_idleColor, 1f);
             _gradient.SetKeys(_colorKeys, _alphaKeys);
             _line.colorGradient = _gradient;
         }
