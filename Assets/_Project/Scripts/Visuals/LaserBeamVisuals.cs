@@ -69,7 +69,8 @@ namespace GameJam.Visuals
         private void OnDisable()
         {
             // Floor-plan pieces sit outside this object, so they would stay lit if it switched off mid-shot.
-            if (_shown)
+            // On a scene unload Unity may destroy them first; then there is nothing left to hide.
+            if (_shown && (_floorPlanDrop <= 0f || _floorRoot != null))
             {
                 Hide();
             }
