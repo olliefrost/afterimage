@@ -153,7 +153,7 @@ namespace GameJam.Story
 
             _shutter.SetRaised(0f);
             _door.ResetState();
-            _camera.Shake(_slamShakeTime, _slamShakeStrength);
+            ScreenShake.Shake(_slamShakeStrength, _slamShakeTime);
             _dialogue.Hide(false);
         }
 

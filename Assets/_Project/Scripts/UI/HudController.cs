@@ -4,7 +4,8 @@
 // after the player presses a hinted button until they make their first clone. The T (retry)
 // button restarts without saving. The F (record) button marks the run so dying saves it as a
 // clone; it turns red with a blinking dot while marked. All three buttons show their current key,
-// which follows rebinds made in the pause menu. The clone icons are handled by CloneColumn.
+// which follows rebinds made in the pause menu. Each button bumps when its action goes through and
+// shakes "no" when it is refused (HudButtonFeedback). The clone icons are handled by CloneColumn.
 using GameJam.Afterimage;
 using GameJam.Core;
 using GameJam.Interactables;
@@ -48,6 +49,11 @@ namespace GameJam.UI
         [Tooltip("Small text under F: whether dying will save this run.")]
         [SerializeField] private Text _recordCaption;
 
+        [Header("Button feedback")]
+        [SerializeField] private HudButtonFeedback _cloneFeedback;
+        [SerializeField] private HudButtonFeedback _retryFeedback;
+        [SerializeField] private HudButtonFeedback _recordFeedback;
+
         [Header("Pulse")]
         [SerializeField] private float _pulseSpeed = 6f;
         [Tooltip("How much bigger the clone button grows at the peak of a pulse (0.2 = 20%).")]
@@ -61,13 +67,7 @@ namespace GameJam.UI
         [Tooltip("Blinks per second of the record dot while the run is marked.")]
         [SerializeField] private float _recordBlinkRate = 2f;
 
-        private RectTransform _cloneButtonRect;
         private bool _isPulsing;
-
-        private void Awake()
-        {
-            _cloneButtonRect = _cloneButton.GetComponent<RectTransform>();
-        }
 
         private void OnEnable()
         {
@@ -76,6 +76,7 @@ namespace GameJam.UI
             _recordButton.onClick.AddListener(_game.ToggleRunMark);
             _afterimages.Changed += HandleClonesChanged;
             _game.RunMarkedChanged += HandleRunMarkedChanged;
+            _game.RunActionHandled += HandleRunAction;
             _rebinder.Changed += RefreshKeyLabels;
             for (int i = 0; i < _pulseTriggers.Length; i++)
             {
@@ -94,6 +95,7 @@ namespace GameJam.UI
             _recordButton.onClick.RemoveListener(_game.ToggleRunMark);
             _afterimages.Changed -= HandleClonesChanged;
             _game.RunMarkedChanged -= HandleRunMarkedChanged;
+            _game.RunActionHandled -= HandleRunAction;
             _rebinder.Changed -= RefreshKeyLabels;
             for (int i = 0; i < _pulseTriggers.Length; i++)
             {
@@ -104,11 +106,12 @@ namespace GameJam.UI
         private void Update()
         {
             // Both effects are purely visual, so unscaled real time is fine here.
-            // Only touch the scale while pulsing, so CloneHudReveal can animate the button in.
+            // The pulse goes through the button's feedback, which only writes the scale while
+            // something plays, so CloneHudReveal can still animate the button in.
             if (_isPulsing)
             {
                 float scale = 1f + _pulseAmount * (0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * _pulseSpeed));
-                _cloneButtonRect.localScale = new Vector3(scale, scale, 1f);
+                _cloneFeedback.SetBaseScale(scale);
             }
 
             // The record dot blinks while the run is marked, like a recording light.
@@ -142,7 +145,7 @@ namespace GameJam.UI
             if (_afterimages.CloneCount > 0 && _isPulsing)
             {
                 _isPulsing = false;
-                _cloneButtonRect.localScale = Vector3.one;
+                _cloneFeedback.SetBaseScale(1f);
             }
 
             int controlled = _afterimages.ControlledSlot;
@@ -161,6 +164,28 @@ namespace GameJam.UI
                 _cloneCaption.text = atLimit ? $"SAVE CLONE {controlled + 1} · MAX {_afterimages.MaxClones}" : $"SAVE CLONE {controlled + 1}";
             }
             _retryCaption.text = hasPending ? $"RETRY → {pending + 1}" : "RETRY";
+        }
+
+        /// <summary>Bumps the button whose action went through, or shakes it "no" if it was refused.</summary>
+        private void HandleRunAction(RunAction action, int slot, bool accepted)
+        {
+            HudButtonFeedback feedback;
+            switch (action)
+            {
+                case RunAction.Save: feedback = _cloneFeedback; break;
+                case RunAction.Retry: feedback = _retryFeedback; break;
+                case RunAction.Mark: feedback = _recordFeedback; break;
+                default: return;
+            }
+
+            if (accepted)
+            {
+                feedback.Punch();
+            }
+            else
+            {
+                feedback.Deny();
+            }
         }
 
         /// <summary>Draws the current save, retry and record keys on their buttons.</summary>

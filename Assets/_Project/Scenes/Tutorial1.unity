@@ -721,6 +721,8 @@ MonoBehaviour:
   _offset: {x: 0, y: 0.5}
   _snapDistance: 3
   _glideTime: 0.6
+  _shakeFrequency: 28
+  _shakeFalloff: 4
 --- !u!114 &172000552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11435,6 +11437,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUD
       objectReference: {fileID: 0}
+    - target: {fileID: 3007547856768168518, guid: c4516bc42c8140441b0942080dde60f1, type: 3}
+      propertyPath: _game
+      value: 
+      objectReference: {fileID: 2080991563}
+    - target: {fileID: 3007547856768168518, guid: c4516bc42c8140441b0942080dde60f1, type: 3}
+      propertyPath: _afterimages
+      value: 
+      objectReference: {fileID: 2080991562}
     - target: {fileID: 5219738577503899583, guid: c4516bc42c8140441b0942080dde60f1, type: 3}
       propertyPath: _game
       value: 
@@ -11776,6 +11786,18 @@ PrefabInstance:
       propertyPath: _clock
       value: 
       objectReference: {fileID: 2080991561}
+    - target: {fileID: 2895865533707419532, guid: 343654197688a0641a734323a5d40d96, type: 3}
+      propertyPath: _clock
+      value: 
+      objectReference: {fileID: 2080991561}
+    - target: {fileID: 2895865533707419532, guid: 343654197688a0641a734323a5d40d96, type: 3}
+      propertyPath: _input
+      value: 
+      objectReference: {fileID: 2080991564}
+    - target: {fileID: 2895865533707419532, guid: 343654197688a0641a734323a5d40d96, type: 3}
+      propertyPath: _rebinder
+      value: 
+      objectReference: {fileID: 2080991566}
     - target: {fileID: 6041139356397592413, guid: 343654197688a0641a734323a5d40d96, type: 3}
       propertyPath: m_Name
       value: Player

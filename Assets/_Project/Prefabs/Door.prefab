@@ -115,6 +115,8 @@ GameObject:
   - component: {fileID: 4628426962043722498}
   - component: {fileID: 1369553060671219585}
   - component: {fileID: 5365777773712403699}
+  - component: {fileID: 6423274923587461409}
+  - component: {fileID: 4430345617340914049}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -224,6 +226,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6423274923587461409}
+        m_TargetAssemblyTypeName: GameJam.Visuals.ShakeOnEvent, Assembly-CSharp
+        m_MethodName: Shake
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5258235310385324784}
+        m_TargetAssemblyTypeName: GameJam.Visuals.LightFlash, Assembly-CSharp
+        m_MethodName: Flash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onClosed:
     m_PersistentCalls:
       m_Calls:
@@ -239,6 +265,48 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 4430345617340914049}
+        m_TargetAssemblyTypeName: GameJam.Visuals.ShakeOnEvent, Assembly-CSharp
+        m_MethodName: Shake
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &6423274923587461409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4204749132953450047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff0614529f2aa94285845f9a0073706, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.ShakeOnEvent
+  _strength: 0.035
+  _duration: 0.3
+  _positional: 1
+--- !u!114 &4430345617340914049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4204749132953450047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff0614529f2aa94285845f9a0073706, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.ShakeOnEvent
+  _strength: 0.05
+  _duration: 0.2
+  _positional: 1
 --- !u!1 &4406049723868059142
 GameObject:
   m_ObjectHideFlags: 0
@@ -249,6 +317,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3695407302440298459}
   - component: {fileID: 6634517028595751604}
+  - component: {fileID: 5258235310385324784}
   m_Layer: 0
   m_Name: DoorSpill
   m_TagString: Untagged
@@ -343,6 +412,21 @@ MonoBehaviour:
           rid: -2
         m_Provider2DCache:
           rid: -2
+--- !u!114 &5258235310385324784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4406049723868059142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37666cb417c7e644796c3989894a2b39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.LightFlash
+  _light: {fileID: 0}
+  _boost: 1.5
+  _duration: 0.5
 --- !u!1 &6590471245518690826
 GameObject:
   m_ObjectHideFlags: 0
