@@ -4,16 +4,16 @@
 // balcony: to the middle while the middle plate is held, else to the left while the left plate is
 // held, else back to the right. Anyone on them is carried: the live player through
 // PlayerMovement.AddCarry, clones through their recorded positions.
-// Height is visual only: physics stays flat. The balcony's front edge is a row of wall blocks; the
-// raised stairs remove the blocks in their columns so the top step leads onto the balcony, and
-// ElevationField asks StepFraction to draw anyone on the steps at the right height.
+// Height is visual only: physics stays flat. The balcony's front edge is a row of wall blocks that
+// never change; the steps stand in front of it and climb to the blocks' top, which is the landing
+// onto the balcony. Only the edge's invisible blockers open in the stairs' columns. ElevationField
+// asks StepFraction to draw anyone on the steps or the landing at the right height.
 using GameJam.Actors;
 using GameJam.Core;
 using GameJam.Interactables;
 using GameJam.Player;
 using GameJam.Visuals;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace GameJam.Machines
 {
@@ -37,7 +37,7 @@ namespace GameJam.Machines
         [SerializeField] private Transform _rightStop;
         [SerializeField] private Transform _leftStop;
         [SerializeField] private Transform _middleStop;
-        [Tooltip("The stairs' footprint; anyone inside is on the stairs, and the live player is carried.")]
+        [Tooltip("The stairs' footprint, covering the steps AND the landing row; anyone inside is on the stairs (which keeps them raised), and the live player is carried.")]
         [SerializeField] private ActorZone _riders;
         [SerializeField] private PlayerMovement _player;
         [Tooltip("Rails along the stairs' sides, so you get on at the bottom and off at the top only.")]
@@ -46,18 +46,14 @@ namespace GameJam.Machines
         [SerializeField] private Collider2D[] _edgeFillers;
 
         [Header("Balcony front edge")]
-        [Tooltip("One blocker per grid column of the balcony's front edge.")]
+        [Tooltip("One invisible blocker per grid column of the balcony's front edge; the ones the raised stairs reach open up.")]
         [SerializeField] private Collider2D[] _edgeBlockers;
-        [Tooltip("The front edge's wall blocks; the ones under the raised stairs are removed.")]
-        [SerializeField] private Tilemap _edgeTiles;
-        [Tooltip("Grid row of the front edge (the top step's row).")]
+        [Tooltip("Grid row of the front edge; its blocks' tops are the landing at the head of the stairs.")]
         [SerializeField] private int _edgeRow = 14;
 
         [Header("Steps")]
-        [Tooltip("The step plates, bottom step first. Each is lifted one rise per step while raised.")]
+        [Tooltip("Each step's art, bottom step first, lifted one rise per step while raised. Its parent keeps the floor-plan sort point. The steps fill the rows just below the edge row.")]
         [SerializeField] private Transform[] _steps;
-        [Tooltip("Grid row of the bottom step.")]
-        [SerializeField] private int _bottomRow = 11;
         [Tooltip("Width of the stairs along the balcony, in grid columns.")]
         [SerializeField] private float _widthCells = 2f;
 
@@ -74,11 +70,16 @@ namespace GameJam.Machines
         private SpriteRenderer[][] _stepSprites;
         private Vector3[] _stepRest;
         private int[] _edgeColumns;
-        private TileBase[] _edgeTileArt;
         private bool[] _edgeOpen;
 
         /// <summary>True while the plates are flipped up into stairs.</summary>
         public bool IsRaised { get; private set; }
+
+        // The steps sit directly in front of the edge, one row each, so the bottom row follows from them.
+        private int BottomRow => _edgeRow - _steps.Length;
+
+        // Columns within this distance of the stairs' centre count as reached: shared by the open edge and the landing.
+        private float Reach => (_widthCells + 1f) * 0.5f - 0.01f;
 
         private void Awake()
         {
@@ -93,14 +94,12 @@ namespace GameJam.Machines
                 _stepRest[i] = _steps[i].localPosition;
             }
 
-            // Each edge blocker knows its own column, and the wall tile it hides, so the list can be in any order.
+            // Each edge blocker knows its own column, so the list can be in any order.
             _edgeColumns = new int[_edgeBlockers.Length];
-            _edgeTileArt = new TileBase[_edgeBlockers.Length];
             _edgeOpen = new bool[_edgeBlockers.Length];
             for (int i = 0; i < _edgeBlockers.Length; i++)
             {
                 _edgeColumns[i] = Mathf.FloorToInt(CellOf(_edgeBlockers[i].bounds.center).x);
-                _edgeTileArt[i] = _edgeTiles.GetTile(new Vector3Int(_edgeColumns[i], _edgeRow, 0));
             }
         }
 
@@ -125,8 +124,9 @@ namespace GameJam.Machines
         }
 
         /// <summary>
-        /// How far up the stairs a world position is: 0 to 1 by whole steps, or -1 if it is not on
-        /// the raised stairs. ElevationField uses it to draw characters climbing.
+        /// How far up the stairs a world position is: 0 to 1 by whole steps, 1 on the landing (the
+        /// edge blocks' top in the stairs' columns), or -1 if it is not on the raised stairs.
+        /// ElevationField uses it to draw characters climbing.
         /// </summary>
         public float StepFraction(Vector2 worldPosition)
         {
@@ -136,15 +136,23 @@ namespace GameJam.Machines
             }
 
             Vector3 cell = CellOf(worldPosition);
-            float centreColumn = CellOf(_body.position).x;
-            bool inColumns = Mathf.Abs(cell.x - centreColumn) <= _widthCells * 0.5f;
-            float row = cell.y - _bottomRow;
-            if (!inColumns || row < 0f || row >= _steps.Length)
+            float offset = Mathf.Abs(cell.x - CellOf(_body.position).x);
+            float row = cell.y - BottomRow;
+            if (row < 0f || cell.y >= _edgeRow + 1)
             {
                 return -1f;
             }
 
-            return (Mathf.Floor(row) + 1f) / _steps.Length;
+            // The landing on top of the edge blocks is full height wherever the edge is open, so
+            // it uses the same column reach as UpdateEdge; the steps themselves are exactly their width.
+            bool onLanding = cell.y >= _edgeRow;
+            float limit = onLanding ? Reach : _widthCells * 0.5f;
+            if (offset > limit)
+            {
+                return -1f;
+            }
+
+            return onLanding ? 1f : (Mathf.Floor(row) + 1f) / _steps.Length;
         }
 
         private void FixedUpdate()
@@ -201,17 +209,16 @@ namespace GameJam.Machines
         }
 
         /// <summary>
-        /// Opens the edge columns the raised stairs overlap and closes the rest, tiles included.
-        /// Only changed columns are touched, unless <paramref name="force"/> redraws them all.
-        /// While sliding, a partly covered column is closed off by the edge fillers instead.
+        /// Opens the edge blockers in the columns the raised stairs reach and closes the rest; the
+        /// wall art never changes. Only changed columns are touched, unless <paramref name="force"/>
+        /// sets them all. While sliding, a partly covered column is closed off by the edge fillers.
         /// </summary>
         private void UpdateEdge(Vector2 stairsPosition, bool force)
         {
             float centreColumn = CellOf(stairsPosition).x;
-            float reach = (_widthCells + 1f) * 0.5f - 0.01f;
             for (int i = 0; i < _edgeBlockers.Length; i++)
             {
-                bool open = IsRaised && Mathf.Abs(_edgeColumns[i] + 0.5f - centreColumn) < reach;
+                bool open = IsRaised && Mathf.Abs(_edgeColumns[i] + 0.5f - centreColumn) < Reach;
                 if (open == _edgeOpen[i] && !force)
                 {
                     continue;
@@ -219,7 +226,6 @@ namespace GameJam.Machines
 
                 _edgeOpen[i] = open;
                 _edgeBlockers[i].enabled = !open;
-                _edgeTiles.SetTile(new Vector3Int(_edgeColumns[i], _edgeRow, 0), open ? null : _edgeTileArt[i]);
             }
         }
 
