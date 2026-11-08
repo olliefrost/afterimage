@@ -2,6 +2,7 @@
 // Tutorial1's pit. The Ending lights them one after another from the door towards the sister's
 // hologram, then cuts them all when the trap springs. EndingSequence drives it. Visual only.
 using System.Collections;
+using GameJam.Audio;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -15,6 +16,8 @@ namespace GameJam.Visuals
         [SerializeField] private Light2D[] _lights;
         [Tooltip("Seconds each pool takes to fade up once it starts.")]
         [SerializeField] private float _fadeTime = 0.35f;
+        [Tooltip("Optional click played as each pool starts to come on.")]
+        [SerializeField] private SoundCue _lightOn;
 
         private float[] _fullIntensity;
 
@@ -35,8 +38,16 @@ namespace GameJam.Visuals
             // 1. Pool i starts at its slice of the total time and takes _fadeTime to reach full.
             float fade = Mathf.Max(0.01f, _fadeTime);
             float step = _lights.Length > 1 ? Mathf.Max(0f, seconds - fade) / (_lights.Length - 1) : 0f;
+            int clicked = 0;
             for (float t = 0f; t < seconds; t += Time.deltaTime)
             {
+                // A click as each pool starts, in order.
+                while (clicked < _lights.Length && t >= clicked * step)
+                {
+                    AudioManager.Play(_lightOn);
+                    clicked++;
+                }
+
                 for (int i = 0; i < _lights.Length; i++)
                 {
                     float k = Mathf.Clamp01((t - i * step) / fade);

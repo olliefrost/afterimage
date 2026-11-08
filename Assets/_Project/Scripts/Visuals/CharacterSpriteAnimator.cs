@@ -8,6 +8,7 @@
 // drops the character into a chasm (Hazards.Falling) the sprite and its shadow fall out of sight and
 // fade, until the actor lives again or the rewind takes over. Visual only, so it needs no link to
 // input or recordings.
+using System;
 using GameJam.Actors;
 using GameJam.Core;
 using GameJam.Hazards;
@@ -34,6 +35,10 @@ namespace GameJam.Visuals
         [SerializeField] private float _bobHeight = 0.05f;
         [SerializeField] private float _bobSpeed = 16f;
 
+        [Header("Footsteps")]
+        [Tooltip("Run frames where a foot lands and a step sound plays. The run has 6 frames, so 0 and 3 is left foot, right foot.")]
+        [SerializeField] private int[] _stepFrames = { 0, 3 };
+
         [Header("Falling into a chasm")]
         [Tooltip("Downward acceleration of the falling sprite, in units per second squared.")]
         [SerializeField] private float _fallGravity = 14f;
@@ -42,6 +47,8 @@ namespace GameJam.Visuals
 
         // Ignore tiny moves (physics jitter) so the sprite does not flicker between directions.
         private const float MinMoveSqr = 0.000001f;
+        // A jump this big in one frame is a teleport (clone respawn, intro), not a step.
+        private const float TeleportSqr = 0.25f;
         private const float DegreesPerDirection = 360f / CharacterSpriteSet.DirectionCount;
 
         /// <summary>
@@ -61,6 +68,10 @@ namespace GameJam.Visuals
             }
         }
 
+        /// <summary>Raised on each foot contact while running forwards (used by FootstepAudio).</summary>
+        public event Action Stepped;
+
+        private int _lastRunFrame = -1;
         private Transform _body;
         private ActorElevation _elevation;
         private ActorJump _jump;
@@ -118,7 +129,7 @@ namespace GameJam.Visuals
             DirectionSprites sprites = _sprites.Get(_direction);
             bool airborne = _jump != null && _jump.IsAirborne;
             bool climbing = !airborne && _climber != null && _climber.IsClimbing;
-            bool animated = ShowFrame(sprites, isMoving, airborne, climbing);
+            bool animated = ShowFrame(sprites, isMoving, airborne, climbing, delta.sqrMagnitude);
 
             // 4. Stand on whatever ground height the level has here (balconies, ladders), plus the jump arc.
             //    Without frames for what the character is doing, a small bob shows it moving.
@@ -204,7 +215,7 @@ namespace GameJam.Visuals
         }
 
         /// <summary>Shows this frame's sprite. Returns false when it fell back to the idle sprite while moving.</summary>
-        private bool ShowFrame(DirectionSprites sprites, bool isMoving, bool airborne, bool climbing)
+        private bool ShowFrame(DirectionSprites sprites, bool isMoving, bool airborne, bool climbing, float moveSqr)
         {
             // The climb art faces up-left; every other state draws unmirrored.
             _renderer.flipX = false;
@@ -234,6 +245,7 @@ namespace GameJam.Visuals
             if (isMoving && hasRun)
             {
                 int frame = (int)(_walkTime * _sprites.RunFramesPerSecond) % sprites.Run.Length;
+                RaiseStepIfContact(frame, moveSqr);
                 if (FaceAgainstMotion)
                 {
                     frame = sprites.Run.Length - 1 - frame;
@@ -244,9 +256,24 @@ namespace GameJam.Visuals
             else
             {
                 _renderer.sprite = sprites.Idle;
+                _lastRunFrame = -1;
             }
 
             return !isMoving || hasRun;
+        }
+
+        /// <summary>
+        /// Raises <see cref="Stepped"/> when the run frame changes onto one of <c>_stepFrames</c>. Skipped in the
+        /// reversed rewind and on teleports, so only real running makes footsteps.
+        /// </summary>
+        private void RaiseStepIfContact(int frame, float moveSqr)
+        {
+            bool newFrame = frame != _lastRunFrame;
+            _lastRunFrame = frame;
+            if (newFrame && !FaceAgainstMotion && moveSqr < TeleportSqr && Array.IndexOf(_stepFrames, frame) >= 0)
+            {
+                Stepped?.Invoke();
+            }
         }
 
         /// <summary>Maps a world move to a direction index (0 = east, counter-clockwise), undoing the iso squash.</summary>

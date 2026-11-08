@@ -2,6 +2,7 @@
 // Ending scene, wired to EndingSequence; hidden until Show). Show pops it up with a line of text, Hide pops it away. The Ending uses it for her
 // "...?" and "Sis?". Real time, visual only.
 using System.Collections;
+using GameJam.Audio;
 using GameJam.Visuals;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,10 @@ namespace GameJam.UI
         [SerializeField] private RectTransform _bubble;
         [SerializeField] private CanvasGroup _group;
         [SerializeField] private Text _label;
+
+        [Header("Audio")]
+        [Tooltip("Played once as the bubble pops up (the text beeps).")]
+        [SerializeField] private SoundCue _voice;
 
         [Header("Timing")]
         [SerializeField] private float _popTime = 0.18f;
@@ -33,6 +38,7 @@ namespace GameJam.UI
         public void Show(string text)
         {
             _label.text = text;
+            AudioManager.Play(_voice);
             Animate(1f);
         }
 

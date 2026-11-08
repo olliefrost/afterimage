@@ -3787,6 +3787,7 @@ GameObject:
   - component: {fileID: 214461994}
   - component: {fileID: 214461993}
   - component: {fileID: 214461996}
+  - component: {fileID: 214461997}
   m_Layer: 0
   m_Name: HydraulicPedal
   m_TagString: Untagged
@@ -4401,6 +4402,7 @@ GameObject:
   - component: {fileID: 223182351}
   - component: {fileID: 223182353}
   - component: {fileID: 223182352}
+  - component: {fileID: 223182354}
   m_Layer: 0
   m_Name: PowerGenerator
   m_TagString: Untagged
@@ -5123,6 +5125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 263380008}
   - component: {fileID: 263380009}
+  - component: {fileID: 263380010}
   m_Layer: 0
   m_Name: HydraulicBlock
   m_TagString: Untagged
@@ -19345,6 +19348,7 @@ GameObject:
   - component: {fileID: 852518150}
   - component: {fileID: 852518148}
   - component: {fileID: 852518152}
+  - component: {fileID: 852518153}
   m_Layer: 0
   m_Name: SlideMiddlePlate_TopLeft
   m_TagString: Untagged
@@ -22354,6 +22358,7 @@ GameObject:
   - component: {fileID: 1037349833}
   - component: {fileID: 1037349835}
   - component: {fileID: 1037349836}
+  - component: {fileID: 1037349837}
   m_Layer: 0
   m_Name: SlideLeftPlate_TopRight
   m_TagString: Untagged
@@ -23428,6 +23433,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1125211175}
   - component: {fileID: 1125211174}
+  - component: {fileID: 1125211176}
   m_Layer: 0
   m_Name: LaserWall
   m_TagString: Untagged
@@ -23487,6 +23493,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1131224795}
   - component: {fileID: 1131224794}
+  - component: {fileID: 1131224796}
   m_Layer: 0
   m_Name: DoorLock
   m_TagString: Untagged
@@ -26893,6 +26900,7 @@ GameObject:
   - component: {fileID: 1305143312}
   - component: {fileID: 1305143316}
   - component: {fileID: 1305143315}
+  - component: {fileID: 1305143317}
   m_Layer: 0
   m_Name: HoverStairs
   m_TagString: Untagged
@@ -27375,6 +27383,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1315002819}
   - component: {fileID: 1315002820}
+  - component: {fileID: 1315002821}
   m_Layer: 0
   m_Name: FuelBelt
   m_TagString: Untagged
@@ -31235,6 +31244,7 @@ GameObject:
   - component: {fileID: 1498996128}
   - component: {fileID: 1498996130}
   - component: {fileID: 1498996131}
+  - component: {fileID: 1498996132}
   m_Layer: 0
   m_Name: RaisePlate_FrontLeft
   m_TagString: Untagged
@@ -40672,6 +40682,7 @@ GameObject:
   - component: {fileID: 2080991563}
   - component: {fileID: 2080991562}
   - component: {fileID: 2080991566}
+  - component: {fileID: 2080991567}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -42346,4 +42357,314 @@ SceneRoots:
   - {fileID: 1756435778}
   - {fileID: 1131308752}
   - {fileID: 1637225436}
+  - {fileID: 609851535}
   - {fileID: 871182666}
+--- !u!114 &214461997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214461991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466fb309c3514ff43a7d59147786b327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.HoldPlateAudio
+  _plate: {fileID: 214461993}
+  _down: {fileID: 11400000, guid: 4cb2c475ce892b343aea90c38a1f4318, type: 2}
+  _up: {fileID: 11400000, guid: 3173df500e01f1e4a9b20c76e887b6b3, type: 2}
+--- !u!114 &223182354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223182347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 043a0a150acf6124ea945687433d0444, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.GeneratorAudio
+  _generator: {fileID: 223182348}
+  _powerOn: {fileID: 11400000, guid: 2012fa78f2e76554f91dbbf43df50b4b, type: 2}
+  _powerOff: {fileID: 11400000, guid: 9206fa1127a37ba469d8a074ad848dcc, type: 2}
+  _hum: {fileID: 8300000, guid: cfb6bbe8c074af149800aba0ad7dc5b8, type: 3}
+  _humVolume: 0.18
+--- !u!114 &263380010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263380007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466fb309c3514ff43a7d59147786b327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.HoldPlateAudio
+  _plate: {fileID: 214461993}
+  _down: {fileID: 11400000, guid: e6556b3f3622da1449cc4b7e40734f5e, type: 2}
+  _up: {fileID: 11400000, guid: aba4d5ae408951a48afb3f63298e6b6a, type: 2}
+--- !u!1 &609851533
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 609851535}
+  - component: {fileID: 609851534}
+  m_Layer: 0
+  m_Name: Music
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &609851534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609851533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca7d4fe15809eea4db8d9c68ccb9d646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.SceneMusic
+  _track: {fileID: 8300000, guid: 8a42414d53c167c418da49e02635f459, type: 3}
+  _volume: 0.5
+--- !u!4 &609851535
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609851533}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &852518153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852518147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466fb309c3514ff43a7d59147786b327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.HoldPlateAudio
+  _plate: {fileID: 852518148}
+  _down: {fileID: 11400000, guid: 4cb2c475ce892b343aea90c38a1f4318, type: 2}
+  _up: {fileID: 11400000, guid: 3173df500e01f1e4a9b20c76e887b6b3, type: 2}
+--- !u!114 &1037349837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1037349831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466fb309c3514ff43a7d59147786b327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.HoldPlateAudio
+  _plate: {fileID: 1037349835}
+  _down: {fileID: 11400000, guid: 4cb2c475ce892b343aea90c38a1f4318, type: 2}
+  _up: {fileID: 11400000, guid: 3173df500e01f1e4a9b20c76e887b6b3, type: 2}
+--- !u!114 &1125211176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1125211173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a27322acb4f6a544bbbfe4fb465511f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.LaserWallAudio
+  _wall: {fileID: 1125211174}
+  _burn: {fileID: 11400000, guid: c507c328d01b0a342a4071654a57e1a5, type: 2}
+--- !u!114 &1131224796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131224793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 480a98a597b167846a26565c33dccf6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.GateAudio
+  _gate: {fileID: 1131224794}
+  _open: {fileID: 11400000, guid: 85b6cb220c03dc3478c61e02ab3f7b1e, type: 2}
+  _close: {fileID: 11400000, guid: 51aa2dfc845b79b46b486292eb86fbce, type: 2}
+--- !u!114 &1305143317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305143311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 370de783eb64a4540852e0c288aebf87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.StairsAudio
+  _stairs: {fileID: 1305143312}
+  _move: {fileID: 11400000, guid: cac58a7f6b2de6d47a9a3dfaf90b2324, type: 2}
+--- !u!82 &1315002821
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315002818}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: ee4390da02a0ed040af3aad00fc033ec, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.12
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1498996132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498996126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466fb309c3514ff43a7d59147786b327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.HoldPlateAudio
+  _plate: {fileID: 1498996130}
+  _down: {fileID: 11400000, guid: 4cb2c475ce892b343aea90c38a1f4318, type: 2}
+  _up: {fileID: 11400000, guid: 3173df500e01f1e4a9b20c76e887b6b3, type: 2}
+--- !u!114 &2080991567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080991560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d34402fc3fe7dc49ac6e407a0d702dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.GameAudio
+  _state: {fileID: 2080991563}
+  _afterimages: {fileID: 2080991562}
+  _input: {fileID: 2080991564}
+  _rebinder: {fileID: 2080991566}
+  _cloneSave: {fileID: 11400000, guid: 0b2daede8319dc1468187581cb2cb156, type: 2}
+  _retry: {fileID: 11400000, guid: 14ecd09e3efa67a43b5ab96e076f48a7, type: 2}
+  _rewindLoop: {fileID: 11400000, guid: bfa7673690c31d34e8d3e33438bd7b65, type: 2}
+  _rewindEnd: {fileID: 11400000, guid: 2fb7985eb2f571449935c7ddb0e34b32, type: 2}
+  _levelComplete: {fileID: 11400000, guid: d7c44eb052d122f44987d8dbec38c339, type: 2}
+  _clonesUnlocked: {fileID: 11400000, guid: fcda8d168f2f76c49a2fd809df4c1807, type: 2}
+  _cloneSpawn: {fileID: 11400000, guid: 93b02a8f3a0eff64b978d5448a2b18bd, type: 2}
+  _clonePick: {fileID: 11400000, guid: a470a48926621cf44977ce7cd2d0bd81, type: 2}
+  _runMarkOn: {fileID: 11400000, guid: 90201c6884600164692a316664b3d767, type: 2}
+  _runMarkOff: {fileID: 11400000, guid: ededaac34e13f0743a939fafb88cee42, type: 2}
+  _pause: {fileID: 11400000, guid: bbe6a937890d32546872ff7b4ec19e3b, type: 2}
+  _resume: {fileID: 11400000, guid: 9826b2942610843408c53abe001a2a04, type: 2}
+  _mapOpen: {fileID: 11400000, guid: 3ad8ca848b41552459deffa12ddc5b6e, type: 2}
+  _mapClose: {fileID: 11400000, guid: acc90cc1266ba9344a6e0376dca01966, type: 2}
+  _rebind: {fileID: 11400000, guid: 7fb4bc6d13dfb924ebc94e7104ca2c94, type: 2}

@@ -823,6 +823,11 @@ MonoBehaviour:
   _player: {fileID: 6883134419956444746}
   _camera: {fileID: 172000551}
   _pullBack: {fileID: 172000555}
+  _doorSlam: {fileID: 11400000, guid: 71d0f739400a7c24ab7e7ee6dfffc73a, type: 2}
+  _hologramGlitch: {fileID: 11400000, guid: c8a823c80f2b1bd4caae8224510031ae, type: 2}
+  _blackout: {fileID: 11400000, guid: 51aa2dfc845b79b46b486292eb86fbce, type: 2}
+  _cageSlam: {fileID: 11400000, guid: 4cd8b40b4fca5a843b29c2fdb530a08c, type: 2}
+  _musicFadeOut: 0.3
   _door: {fileID: 1433719106}
   _shutter: {fileID: 1433719110}
   _cameraFocus: {fileID: 2044439031}
@@ -7447,6 +7452,52 @@ MonoBehaviour:
           rid: -2
         m_Provider2DCache:
           rid: -2
+--- !u!1 &1162827425
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1162827427}
+  - component: {fileID: 1162827426}
+  m_Layer: 0
+  m_Name: Music
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1162827426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162827425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca7d4fe15809eea4db8d9c68ccb9d646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.SceneMusic
+  _track: {fileID: 8300000, guid: 8a42414d53c167c418da49e02635f459, type: 3}
+  _volume: 0.5
+--- !u!4 &1162827427
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162827425}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1282415989
 GameObject:
   m_ObjectHideFlags: 0
@@ -8727,6 +8778,7 @@ MonoBehaviour:
   _bubble: {fileID: 52618558}
   _group: {fileID: 52618555}
   _label: {fileID: 419764982}
+  _voice: {fileID: 11400000, guid: 93f0f2d9b28fce74cbb5b2be086c67c1, type: 2}
   _popTime: 0.18
 --- !u!224 &1409551427
 RectTransform:
@@ -10036,6 +10088,7 @@ MonoBehaviour:
   _fadeTime: 1.5
   _lettersPerSecond: 20
   _lineHold: 1.1
+  _typeBeep: {fileID: 11400000, guid: 93f0f2d9b28fce74cbb5b2be086c67c1, type: 2}
   _credits: 'DEVELOPED BY
 
     Ollie
@@ -11702,6 +11755,7 @@ GameObject:
   - component: {fileID: 2080991563}
   - component: {fileID: 2080991562}
   - component: {fileID: 2080991566}
+  - component: {fileID: 2080991567}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -11778,6 +11832,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf9fd2f37017c7f40a49ffb73470508b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Player.PlayerInputReader
+  _jumpEnabled: 0
   _move:
     m_Name: Move
     m_Type: 0
@@ -11823,6 +11878,16 @@ MonoBehaviour:
     m_Type: 1
     m_ExpectedControlType: 
     m_Id: f97b79ec-4254-4074-9bc6-ed9a03fea108
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  _jump:
+    m_Name: Jump
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: 3293bf25-9f4f-4fc8-951f-4900f252a73c
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
@@ -11933,6 +11998,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Player.KeyRebinder
   _input: {fileID: 2080991564}
   _matchWaitSeconds: 0.1
+--- !u!114 &2080991567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080991560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d34402fc3fe7dc49ac6e407a0d702dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.GameAudio
+  _state: {fileID: 2080991563}
+  _afterimages: {fileID: 2080991562}
+  _input: {fileID: 2080991564}
+  _rebinder: {fileID: 2080991566}
+  _cloneSave: {fileID: 11400000, guid: 0b2daede8319dc1468187581cb2cb156, type: 2}
+  _retry: {fileID: 11400000, guid: 14ecd09e3efa67a43b5ab96e076f48a7, type: 2}
+  _rewindLoop: {fileID: 11400000, guid: bfa7673690c31d34e8d3e33438bd7b65, type: 2}
+  _rewindEnd: {fileID: 11400000, guid: 2fb7985eb2f571449935c7ddb0e34b32, type: 2}
+  _levelComplete: {fileID: 11400000, guid: d7c44eb052d122f44987d8dbec38c339, type: 2}
+  _clonesUnlocked: {fileID: 11400000, guid: fcda8d168f2f76c49a2fd809df4c1807, type: 2}
+  _cloneSpawn: {fileID: 11400000, guid: 93b02a8f3a0eff64b978d5448a2b18bd, type: 2}
+  _clonePick: {fileID: 11400000, guid: a470a48926621cf44977ce7cd2d0bd81, type: 2}
+  _runMarkOn: {fileID: 11400000, guid: 90201c6884600164692a316664b3d767, type: 2}
+  _runMarkOff: {fileID: 11400000, guid: ededaac34e13f0743a939fafb88cee42, type: 2}
+  _pause: {fileID: 11400000, guid: bbe6a937890d32546872ff7b4ec19e3b, type: 2}
+  _resume: {fileID: 11400000, guid: 9826b2942610843408c53abe001a2a04, type: 2}
+  _mapOpen: {fileID: 11400000, guid: 3ad8ca848b41552459deffa12ddc5b6e, type: 2}
+  _mapClose: {fileID: 11400000, guid: acc90cc1266ba9344a6e0376dca01966, type: 2}
+  _rebind: {fileID: 11400000, guid: 7fb4bc6d13dfb924ebc94e7104ca2c94, type: 2}
 --- !u!1 &2082428565
 GameObject:
   m_ObjectHideFlags: 0
@@ -12053,6 +12149,7 @@ MonoBehaviour:
   - {fileID: 937450322}
   - {fileID: 273661098}
   _fadeTime: 0.35
+  _lightOn: {fileID: 11400000, guid: 848f661880c513e40bcd6650e43e0738, type: 2}
 --- !u!4 &2139968311
 Transform:
   m_ObjectHideFlags: 0
@@ -12489,3 +12586,4 @@ SceneRoots:
   - {fileID: 2082428568}
   - {fileID: 827452795}
   - {fileID: 1568129159}
+  - {fileID: 1162827427}

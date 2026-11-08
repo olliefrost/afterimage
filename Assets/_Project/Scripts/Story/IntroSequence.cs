@@ -4,6 +4,7 @@
 // GameStateController.FinishIntro starts the first attempt, so nothing here is recorded.
 // It runs only after New Game or Restart Game (SceneFlow.ConsumeIntro); any key or click skips it.
 using System.Collections;
+using GameJam.Audio;
 using GameJam.Core;
 using GameJam.Interactables;
 using GameJam.Player;
@@ -49,6 +50,12 @@ namespace GameJam.Story
         [Tooltip("Camera shake when the door slams: seconds and strength in world units.")]
         [SerializeField] private float _slamShakeTime = 0.3f;
         [SerializeField] private float _slamShakeStrength = 0.08f;
+
+        [Header("Audio")]
+        [Tooltip("The shutter hitting the floor.")]
+        [SerializeField] private SoundCue _doorSlam;
+        [Tooltip("The hit that starts the game, played with the slam.")]
+        [SerializeField] private SoundCue _introSting;
 
         [Header("Testing")]
         [Tooltip("Play the intro whenever this scene starts, not only after New Game.")]
@@ -153,6 +160,8 @@ namespace GameJam.Story
 
             _shutter.SetRaised(0f);
             _door.ResetState();
+            AudioManager.Play(_doorSlam);
+            AudioManager.Play(_introSting);
             ScreenShake.Shake(_slamShakeStrength, _slamShakeTime);
             _dialogue.Hide(false);
         }

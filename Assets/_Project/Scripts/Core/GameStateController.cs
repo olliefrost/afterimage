@@ -80,6 +80,9 @@ namespace GameJam.Core
         /// <summary>Raised whenever <see cref="State"/> changes.</summary>
         public event Action<GameState> StateChanged;
 
+        /// <summary>Raised as an attempt ends and the rewind begins; true if the run is saved into a clone (used by GameAudio).</summary>
+        public event Action<bool> AttemptEnding;
+
         /// <summary>
         /// True once the player may save, retry and pick clones in this chamber. Read straight from the
         /// serialized flag, so it is already right when other objects' OnEnable runs before this Awake.
@@ -371,6 +374,11 @@ namespace GameJam.Core
         private IEnumerator ResetRoom(bool saveRun)
         {
             Recording run = _recorder.TakeRecording();
+
+            // An empty run (saved on the very first tick) is thrown away by EndRun, so treat it as a retry
+            // for the sounds and the rewind too.
+            saveRun = saveRun && run.Frames.Count > 0;
+            AttemptEnding?.Invoke(saveRun);
 
             // 1. Show time running backwards (visual only) while the slots still describe the ended run.
             if (_rewind != null)

@@ -593,8 +593,11 @@ GameObject:
   - component: {fileID: 6692619486509140547}
   - component: {fileID: 6333028894531836677}
   - component: {fileID: 1283183867159029381}
+  - component: {fileID: 2007813505568609625}
   - component: {fileID: 8981966795197542112}
   - component: {fileID: 9014800727321072980}
+  - component: {fileID: 5960497149728652787}
+  - component: {fileID: 7840660259395058687}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -756,6 +759,21 @@ MonoBehaviour:
   _clock: {fileID: 0}
   _movement: {fileID: 6984559729356717397}
   _actor: {fileID: 6333028894531836677}
+--- !u!114 &2007813505568609625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6041139356397592413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6cca22de60e8c244b0bfa8e47c43658, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.DeathAudio
+  _player: {fileID: 6333028894531836677}
+  _clone: {fileID: 0}
+  _death: {fileID: 11400000, guid: 5ea7fa8bd133c9441952c8e8c2183a6a, type: 2}
 --- !u!114 &8981966795197542112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -782,6 +800,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba9d8bf026dbe34cac5887211b773e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Actors.LadderClimber
+--- !u!114 &5960497149728652787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6041139356397592413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc39d66bafba75548bc42ae1f216916e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.JumpAudio
+  _jump: {fileID: 8981966795197542112}
+  _takeOff: {fileID: 11400000, guid: 26c2dc0aa75b9604ab9e719ebf65e4ae, type: 2}
+  _land: {fileID: 11400000, guid: 9df053fa84cd7d44eb1c06a47102e76a, type: 2}
+  _volumeScale: 1
+--- !u!114 &7840660259395058687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6041139356397592413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fce937742333234493515523b1fab53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.LadderAudio
+  _climber: {fileID: 9014800727321072980}
+  _rung: {fileID: 11400000, guid: b9e6997a3cdc05f44a1b29d60ae125cf, type: 2}
+  _stride: 0.4
+  _volumeScale: 1
 --- !u!1 &7493812006511999100
 GameObject:
   m_ObjectHideFlags: 0
@@ -1001,6 +1051,7 @@ GameObject:
   - component: {fileID: 24965287722393036}
   - component: {fileID: 4192614582825063985}
   - component: {fileID: 635761061728136558}
+  - component: {fileID: 4647054285464068928}
   - component: {fileID: 6954688607800928948}
   m_Layer: 0
   m_Name: Visual
@@ -1102,6 +1153,24 @@ MonoBehaviour:
   _startDirection: 6
   _bobHeight: 0.03
   _bobSpeed: 16
+  _stepFrames: 0000000003000000i
+  _fallGravity: 14
+  _fallFadeSeconds: 0.6
+--- !u!114 &4647054285464068928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8874460663669757031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00c6a1e797077ef47b8721800c300dd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.FootstepAudio
+  _animator: {fileID: 0}
+  _step: {fileID: 11400000, guid: 9df053fa84cd7d44eb1c06a47102e76a, type: 2}
+  _volumeScale: 1
 --- !u!114 &6954688607800928948
 MonoBehaviour:
   m_ObjectHideFlags: 0

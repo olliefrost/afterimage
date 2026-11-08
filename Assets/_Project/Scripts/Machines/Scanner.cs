@@ -28,6 +28,9 @@ namespace GameJam.Machines
 
         private int _ticksInside;
 
+        /// <summary>Raised once when a scan completes. Audio listens to this.</summary>
+        public event System.Action Scanned;
+
         /// <summary>True once a scan has completed this attempt.</summary>
         public bool IsScanned { get; private set; }
 
@@ -73,6 +76,7 @@ namespace GameJam.Machines
             }
 
             IsScanned = true;
+            Scanned?.Invoke();
             _onScanned.Invoke();
         }
     }

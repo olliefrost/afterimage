@@ -3,6 +3,7 @@
 // finish the game (clears the save and wipes to the title). Holding any key or the mouse button
 // speeds the credits up; Esc skips straight to the title. Real time, visual only.
 using System.Collections;
+using GameJam.Audio;
 using GameJam.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -32,6 +33,8 @@ namespace GameJam.UI
         [SerializeField] private float _lettersPerSecond = 20f;
         [Tooltip("Seconds each line stays after it is typed.")]
         [SerializeField] private float _lineHold = 1.1f;
+        [Tooltip("Optional beep on every second typed letter of the end card.")]
+        [SerializeField] private SoundCue _typeBeep;
 
         [Header("Credits")]
         [TextArea(4, 10)]
@@ -77,9 +80,17 @@ namespace GameJam.UI
             // 2. Type each end-card line, hold, then clear it.
             foreach (string line in _cardLines)
             {
+                int lastCount = 0;
                 for (float shown = 0f; shown < line.Length && !_skip; shown += Time.unscaledDeltaTime * _lettersPerSecond)
                 {
-                    _cardText.text = line.Substring(0, Mathf.Min(line.Length, (int)shown));
+                    int count = Mathf.Min(line.Length, (int)shown);
+                    _cardText.text = line.Substring(0, count);
+                    if (count > lastCount && count % 2 == 0)
+                    {
+                        AudioManager.Play(_typeBeep);
+                    }
+
+                    lastCount = count;
                     yield return null;
                 }
 

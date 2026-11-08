@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3771088353052132579}
   - component: {fileID: 7361252946080219919}
   - component: {fileID: 1180744003658758297}
+  - component: {fileID: 6386981070648231207}
   - component: {fileID: 1125857646171843794}
   m_Layer: 5
   m_Name: MenuButton
@@ -240,3 +241,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: BUTTON
+--- !u!114 &6386981070648231207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7241819350519848981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee52013fe77da2442abf4fa5da5e7e29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.UiButtonAudio
+  _hover: {fileID: 11400000, guid: bcde26ebb77afc849a69dd8e61c8914b, type: 2}
+  _click: {fileID: 11400000, guid: d8dacbbb25921554197cb60bde00ad6e, type: 2}

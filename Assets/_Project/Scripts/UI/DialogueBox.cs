@@ -1,8 +1,9 @@
 // DialogueBox: a speech panel at the bottom centre of the screen (DialogueBox prefab). Show types a
 // line out letter by letter under a speaker name after the box pops up; Hide fades it away.
 // IntroSequence uses it for the guard's shout; it is generic so later speech can reuse it. Runs on
-// real time so it never depends on the game's time scale. Visual only.
+// real time so it never depends on the game's time scale. Visual only (plus an optional typing tick).
 using System.Collections;
+using GameJam.Audio;
 using GameJam.Visuals;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,10 @@ namespace GameJam.UI
         [SerializeField] private CanvasGroup _group;
         [SerializeField] private Text _speaker;
         [SerializeField] private Text _line;
+
+        [Header("Audio")]
+        [Tooltip("Plays on every second letter typed.")]
+        [SerializeField] private SoundCue _tick;
 
         [Header("Timing")]
         [Tooltip("Letters typed per second.")]
@@ -68,10 +73,24 @@ namespace GameJam.UI
 
             // 2. Reveal one more letter at the typing speed.
             float shown = 0f;
+            int sinceTick = 0;
+            int lastCount = 0;
             while (shown < line.Length)
             {
                 shown += Time.unscaledDeltaTime * _lettersPerSecond;
-                _line.text = line.Substring(0, Mathf.Min(line.Length, (int)shown));
+                int count = Mathf.Min(line.Length, (int)shown);
+                _line.text = line.Substring(0, count);
+
+                // A tick on every second new letter keeps the typing from sounding like a buzz. Counting
+                // letters since the last tick (not even totals) keeps it steady when a frame adds several.
+                sinceTick += count - lastCount;
+                if (sinceTick >= 2)
+                {
+                    AudioManager.Play(_tick);
+                    sinceTick = 0;
+                }
+
+                lastCount = count;
                 yield return null;
             }
 

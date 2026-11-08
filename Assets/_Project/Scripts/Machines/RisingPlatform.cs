@@ -33,6 +33,12 @@ namespace GameJam.Machines
         private bool _wantUp;
         private int _ticksUp;
 
+        /// <summary>Raised when the platform starts to rise.</summary>
+        public event System.Action Rising;
+
+        /// <summary>Raised when the platform starts to drop.</summary>
+        public event System.Action Lowering;
+
         /// <summary>0 = down in the chasm, 1 = fully up. Moves one step per tick.</summary>
         public float Progress { get; private set; }
 
@@ -76,8 +82,14 @@ namespace GameJam.Machines
         /// <summary>Starts the platform rising (and its drop timer, if it has one).</summary>
         public void Raise()
         {
+            // Only the first call starts a rise; a repeat call restarts the drop timer but is not a new rise.
+            bool startsRising = !_wantUp;
             _wantUp = true;
             _ticksUp = 0;
+            if (startsRising)
+            {
+                Rising?.Invoke();
+            }
         }
 
         /// <summary>Drops the platform: anyone on it falls, and the gap closes again.</summary>
@@ -89,6 +101,7 @@ namespace GameJam.Machines
             }
 
             _wantUp = false;
+            Lowering?.Invoke();
 
             // Whoever stands on it now has nothing under them. A jumper passing over is fine.
             if (IsRaised)

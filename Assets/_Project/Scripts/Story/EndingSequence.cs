@@ -5,6 +5,7 @@
 // drops. She says "...?", the camera pulls back to the two-way mirror, which only now lights up to
 // show the scientists, and EndCredits takes over. Always plays; only the arrival can be skipped.
 using System.Collections;
+using GameJam.Audio;
 using GameJam.Core;
 using GameJam.Interactables;
 using GameJam.Player;
@@ -24,6 +25,18 @@ namespace GameJam.Story
         [SerializeField] private PlayerActor _player;
         [SerializeField] private CameraFollow _camera;
         [SerializeField] private CameraPullBack _pullBack;
+
+        [Header("Audio")]
+        [Tooltip("The shutter hitting the floor behind her.")]
+        [SerializeField] private SoundCue _doorSlam;
+        [Tooltip("The sister's hologram glitching out.")]
+        [SerializeField] private SoundCue _hologramGlitch;
+        [Tooltip("Every lamp and the guide strip cutting out.")]
+        [SerializeField] private SoundCue _blackout;
+        [Tooltip("The cage hitting the floor.")]
+        [SerializeField] private SoundCue _cageSlam;
+        [Tooltip("Seconds the music takes to fade out when the hologram glitches (the silence before the trap).")]
+        [SerializeField] private float _musicFadeOut = 0.3f;
 
         [Header("Arrival")]
         [SerializeField] private Door _door;
@@ -218,6 +231,7 @@ namespace GameJam.Story
 
             _shutter.SetRaised(0f);
             _door.ResetState();
+            AudioManager.Play(_doorSlam);
             ScreenShake.Shake(0.08f, 0.3f);
         }
 
@@ -261,6 +275,8 @@ namespace GameJam.Story
             // 2. The hologram glitches out while she is drawn to its centre, so she is inside the cage
             //    whichever way she came in.
             _hologram.GlitchOut();
+            AudioManager.Play(_hologramGlitch);
+            AudioManager.StopMusic(_musicFadeOut);
             Vector2 centre = _hologram.transform.position;
             float slideSpeed = Mathf.Max(0.1f, _slideSpeed);
             for (float waited = 0f;
@@ -281,6 +297,7 @@ namespace GameJam.Story
 
             _guideStrip.SetAll(false);
 
+            AudioManager.Play(_blackout);
             ScreenShake.Shake(_blackoutShakeStrength, 0.3f);
             yield return new WaitForSeconds(0.5f);
             _spotlight.enabled = true;
@@ -289,6 +306,8 @@ namespace GameJam.Story
             {
                 yield return null;
             }
+
+            AudioManager.Play(_cageSlam);
 
             yield return new WaitForSeconds(0.6f);
 

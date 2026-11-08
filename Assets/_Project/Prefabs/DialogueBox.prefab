@@ -349,5 +349,7 @@ MonoBehaviour:
   _group: {fileID: 2996481239450230662}
   _speaker: {fileID: 4989217838077731329}
   _line: {fileID: 4356170777629203331}
+  _tick: {fileID: 11400000, guid: 93f0f2d9b28fce74cbb5b2be086c67c1, type: 2}
   _lettersPerSecond: 28
   _fadeTime: 0.2
+  _popStartScale: 0.85

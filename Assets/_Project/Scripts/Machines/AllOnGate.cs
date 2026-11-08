@@ -3,6 +3,7 @@
 // door uses it: both ledge buttons pressed and the room powered opens the door, losing power closes it.
 // Runs late in each tick (after players, clones and lasers) so clones' replayed presses are seen on
 // the same tick as the original run. It is itself a signal source, so a cable can show the lock.
+using System;
 using GameJam.Core;
 using UnityEngine;
 using UnityEngine.Events;
@@ -25,6 +26,9 @@ namespace GameJam.Machines
         [SerializeField] private UnityEvent _onNoLongerAllOn = new UnityEvent();
 
         private ISignalSource[] _signals;
+
+        /// <summary>Raised when the gate turns on (true) or off (false).</summary>
+        public event Action<bool> Changed;
 
         /// <summary>True while every source is on.</summary>
         public bool IsOn { get; private set; }
@@ -78,6 +82,7 @@ namespace GameJam.Machines
             }
 
             IsOn = allOn;
+            Changed?.Invoke(allOn);
             (allOn ? _onAllOn : _onNoLongerAllOn).Invoke();
         }
     }

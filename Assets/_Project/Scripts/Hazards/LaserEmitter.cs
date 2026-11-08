@@ -79,6 +79,9 @@ namespace GameJam.Hazards
         private Vector2 _aim;
         private bool _isPowered;
 
+        /// <summary>Raised when the laser enters a new phase (charging, firing, resting). Audio listens to this.</summary>
+        public event System.Action<LaserPhase> PhaseChanged;
+
         /// <summary>This tick's part of the cycle: resting (before the first charge and after each beam), charging or firing.</summary>
         public LaserPhase Phase { get; private set; }
 
@@ -193,8 +196,13 @@ namespace GameJam.Hazards
         /// <summary>Records the cycle position for visuals; gameplay never reads it.</summary>
         private void SetPhase(LaserPhase phase, float progress)
         {
+            bool changed = phase != Phase;
             Phase = phase;
             PhaseProgress = progress;
+            if (changed)
+            {
+                PhaseChanged?.Invoke(phase);
+            }
         }
 
         /// <summary>Casts the beam, kills whoever it reaches first, and records where the drawn beam runs.</summary>

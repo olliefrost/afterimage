@@ -24,6 +24,12 @@ namespace GameJam.Actors
         private Collider2D[] _colliders;
         private int _ticksLeft;
 
+        /// <summary>Raised when a jump starts (player key press or a clone's recorded jump). Audio listens to this.</summary>
+        public event System.Action Started;
+
+        /// <summary>Raised when a jump ends by running out of ticks, not when a reset cuts it short.</summary>
+        public event System.Action Landed;
+
         /// <summary>True while the actor is in the air.</summary>
         public bool IsAirborne => _ticksLeft > 0;
 
@@ -76,6 +82,7 @@ namespace GameJam.Actors
             Direction = direction.sqrMagnitude > 0f ? direction.normalized : Vector2.down;
             StartedThisTick = true;
             SetGapsIgnored(true);
+            Started?.Invoke();
         }
 
         /// <summary>Lands at once when the room resets, so nobody starts the next attempt mid-air.</summary>
@@ -99,6 +106,7 @@ namespace GameJam.Actors
             if (_ticksLeft == 0)
             {
                 Land();
+                Landed?.Invoke();
             }
         }
 

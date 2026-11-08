@@ -3770,6 +3770,7 @@ GameObject:
   - component: {fileID: 85243358}
   - component: {fileID: 85243355}
   - component: {fileID: 85243357}
+  - component: {fileID: 85243359}
   m_Layer: 0
   m_Name: FlyingPlatform5
   m_TagString: Untagged
@@ -3843,6 +3844,21 @@ SortingGroup:
   m_SortingOrder: -1
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0
+--- !u!114 &85243359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85243354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32dea86bd4fd1c5408bc47da6861cad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.PlatformAudio
+  _platform: {fileID: 85243355}
+  _rise: {fileID: 11400000, guid: 1079b8ec431b13c4cacce5a6a1a485a8, type: 2}
+  _lower: {fileID: 11400000, guid: aba4d5ae408951a48afb3f63298e6b6a, type: 2}
 --- !u!1 &85899281
 GameObject:
   m_ObjectHideFlags: 0
@@ -7165,6 +7181,7 @@ GameObject:
   - component: {fileID: 170401581}
   - component: {fileID: 170401580}
   - component: {fileID: 170401579}
+  - component: {fileID: 170401583}
   m_Layer: 0
   m_Name: EntryDoor
   m_TagString: Untagged
@@ -7269,6 +7286,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 373657697}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &170401583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170401578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b96b87b95b772e468ab8da322d43e2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.DoorAudio
+  _door: {fileID: 170401580}
+  _open: {fileID: 11400000, guid: 72d15e8378f6b0a4e9bc27bb551c6273, type: 2}
+  _close: {fileID: 11400000, guid: c77fbd0000b9fe141a0fe2c3f339cf8f, type: 2}
 --- !u!1 &170796214
 GameObject:
   m_ObjectHideFlags: 0
@@ -31167,6 +31199,7 @@ GameObject:
   - component: {fileID: 724768967}
   - component: {fileID: 724768968}
   - component: {fileID: 724768966}
+  - component: {fileID: 724768969}
   m_Layer: 0
   m_Name: FlyingPlatform1
   m_TagString: Untagged
@@ -31240,6 +31273,21 @@ MonoBehaviour:
   _gap: {fileID: 167565660}
   _moveTicks: 25
   _autoLowerTicks: 100
+--- !u!114 &724768969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724768964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32dea86bd4fd1c5408bc47da6861cad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.PlatformAudio
+  _platform: {fileID: 724768968}
+  _rise: {fileID: 11400000, guid: 1079b8ec431b13c4cacce5a6a1a485a8, type: 2}
+  _lower: {fileID: 11400000, guid: aba4d5ae408951a48afb3f63298e6b6a, type: 2}
 --- !u!1 &728079491
 GameObject:
   m_ObjectHideFlags: 0
@@ -48099,6 +48147,7 @@ GameObject:
   - component: {fileID: 1143548250}
   - component: {fileID: 1143548252}
   - component: {fileID: 1143548251}
+  - component: {fileID: 1143548253}
   m_Layer: 0
   m_Name: DipLift
   m_TagString: Untagged
@@ -48160,6 +48209,21 @@ MonoBehaviour:
   _gap: {fileID: 897372748}
   _moveTicks: 25
   _autoLowerTicks: 0
+--- !u!114 &1143548253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1143548249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32dea86bd4fd1c5408bc47da6861cad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.PlatformAudio
+  _platform: {fileID: 1143548252}
+  _rise: {fileID: 11400000, guid: 1079b8ec431b13c4cacce5a6a1a485a8, type: 2}
+  _lower: {fileID: 11400000, guid: aba4d5ae408951a48afb3f63298e6b6a, type: 2}
 --- !u!1 &1144407156
 GameObject:
   m_ObjectHideFlags: 0
@@ -59546,6 +59610,7 @@ GameObject:
   - component: {fileID: 1414728558}
   - component: {fileID: 1414728559}
   - component: {fileID: 1414728557}
+  - component: {fileID: 1414728560}
   m_Layer: 0
   m_Name: FlyingPlatform4
   m_TagString: Untagged
@@ -59619,6 +59684,21 @@ MonoBehaviour:
   _gap: {fileID: 1331638724}
   _moveTicks: 25
   _autoLowerTicks: 100
+--- !u!114 &1414728560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414728555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32dea86bd4fd1c5408bc47da6861cad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.PlatformAudio
+  _platform: {fileID: 1414728559}
+  _rise: {fileID: 11400000, guid: 1079b8ec431b13c4cacce5a6a1a485a8, type: 2}
+  _lower: {fileID: 11400000, guid: aba4d5ae408951a48afb3f63298e6b6a, type: 2}
 --- !u!1 &1415186229
 GameObject:
   m_ObjectHideFlags: 0
@@ -63776,6 +63856,7 @@ GameObject:
   - component: {fileID: 1531185200}
   - component: {fileID: 1531185201}
   - component: {fileID: 1531185199}
+  - component: {fileID: 1531185202}
   m_Layer: 0
   m_Name: FlyingPlatform3
   m_TagString: Untagged
@@ -63849,6 +63930,21 @@ MonoBehaviour:
   _gap: {fileID: 902224233}
   _moveTicks: 25
   _autoLowerTicks: 100
+--- !u!114 &1531185202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531185197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32dea86bd4fd1c5408bc47da6861cad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.PlatformAudio
+  _platform: {fileID: 1531185201}
+  _rise: {fileID: 11400000, guid: 1079b8ec431b13c4cacce5a6a1a485a8, type: 2}
+  _lower: {fileID: 11400000, guid: aba4d5ae408951a48afb3f63298e6b6a, type: 2}
 --- !u!1 &1535696433
 GameObject:
   m_ObjectHideFlags: 0
@@ -66430,6 +66526,7 @@ GameObject:
   - component: {fileID: 1590926897}
   - component: {fileID: 1590926896}
   - component: {fileID: 1590926895}
+  - component: {fileID: 1590926899}
   m_Layer: 0
   m_Name: PressurePlate
   m_TagString: Untagged
@@ -66659,6 +66756,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1391290335}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1590926899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1590926894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466fb309c3514ff43a7d59147786b327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.HoldPlateAudio
+  _plate: {fileID: 1590926895}
+  _down: {fileID: 11400000, guid: 4cb2c475ce892b343aea90c38a1f4318, type: 2}
+  _up: {fileID: 11400000, guid: 3173df500e01f1e4a9b20c76e887b6b3, type: 2}
 --- !u!1 &1591077411
 GameObject:
   m_ObjectHideFlags: 0
@@ -78937,6 +79049,7 @@ GameObject:
   - component: {fileID: 1925666789}
   - component: {fileID: 1925666788}
   - component: {fileID: 1925666787}
+  - component: {fileID: 1925666790}
   m_Layer: 0
   m_Name: ScanArea
   m_TagString: Untagged
@@ -79064,6 +79177,20 @@ PolygonCollider2D:
       - {x: 0, y: 0.1500001}
       - {x: -0.3000002, y: 0}
   m_UseDelaunayMesh: 1
+--- !u!114 &1925666790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1925666785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80b6c82f5f9062948b4d2c1ec78d479e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.ScannerAudio
+  _scanner: {fileID: 1925666787}
+  _done: {fileID: 11400000, guid: 2927bfed92abe51489ca026f7eca536c, type: 2}
 --- !u!1 &1926119769
 GameObject:
   m_ObjectHideFlags: 0
@@ -83657,6 +83784,7 @@ GameObject:
   - component: {fileID: 2053899822}
   - component: {fileID: 2053899823}
   - component: {fileID: 2053899821}
+  - component: {fileID: 2053899824}
   m_Layer: 0
   m_Name: FlyingPlatform2
   m_TagString: Untagged
@@ -83730,6 +83858,21 @@ MonoBehaviour:
   _gap: {fileID: 1926119769}
   _moveTicks: 25
   _autoLowerTicks: 100
+--- !u!114 &2053899824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2053899819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32dea86bd4fd1c5408bc47da6861cad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.PlatformAudio
+  _platform: {fileID: 2053899823}
+  _rise: {fileID: 11400000, guid: 1079b8ec431b13c4cacce5a6a1a485a8, type: 2}
+  _lower: {fileID: 11400000, guid: aba4d5ae408951a48afb3f63298e6b6a, type: 2}
 --- !u!1 &2056575431
 GameObject:
   m_ObjectHideFlags: 0
@@ -84536,6 +84679,8 @@ GameObject:
   - component: {fileID: 2080991563}
   - component: {fileID: 2080991562}
   - component: {fileID: 2080991566}
+  - component: {fileID: 2080991568}
+  - component: {fileID: 2080991567}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -84570,7 +84715,7 @@ MonoBehaviour:
   _clock: {fileID: 2080991561}
   _clonePrefab: {fileID: 5291575494339755315, guid: be6f3e565cba2704792c237567b239ce, type: 3}
   _cloneParent: {fileID: 1679370523}
-  _maxClones: 4
+  _maxClones: 5
   _slotColours:
   - {r: 0.25, g: 0.55, b: 1, a: 1}
   - {r: 0.3, g: 0.9, b: 0.4, a: 1}
@@ -84778,6 +84923,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Player.KeyRebinder
   _input: {fileID: 2080991564}
   _matchWaitSeconds: 0.1
+--- !u!114 &2080991567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080991560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aea2788a40399d4095061b748b803e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.FallAudio
+  _fall: {fileID: 11400000, guid: c5ecfca6f213d904cbccb6dfd3676aad, type: 2}
+  _cloneVolumeScale: 0.5
+--- !u!114 &2080991568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080991560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d34402fc3fe7dc49ac6e407a0d702dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.GameAudio
+  _state: {fileID: 2080991563}
+  _afterimages: {fileID: 2080991562}
+  _input: {fileID: 2080991564}
+  _rebinder: {fileID: 2080991566}
+  _cloneSave: {fileID: 11400000, guid: 0b2daede8319dc1468187581cb2cb156, type: 2}
+  _retry: {fileID: 11400000, guid: 14ecd09e3efa67a43b5ab96e076f48a7, type: 2}
+  _rewindLoop: {fileID: 11400000, guid: bfa7673690c31d34e8d3e33438bd7b65, type: 2}
+  _rewindEnd: {fileID: 11400000, guid: 2fb7985eb2f571449935c7ddb0e34b32, type: 2}
+  _levelComplete: {fileID: 11400000, guid: d7c44eb052d122f44987d8dbec38c339, type: 2}
+  _clonesUnlocked: {fileID: 11400000, guid: fcda8d168f2f76c49a2fd809df4c1807, type: 2}
+  _cloneSpawn: {fileID: 11400000, guid: 93b02a8f3a0eff64b978d5448a2b18bd, type: 2}
+  _clonePick: {fileID: 11400000, guid: a470a48926621cf44977ce7cd2d0bd81, type: 2}
+  _runMarkOn: {fileID: 11400000, guid: 90201c6884600164692a316664b3d767, type: 2}
+  _runMarkOff: {fileID: 11400000, guid: ededaac34e13f0743a939fafb88cee42, type: 2}
+  _pause: {fileID: 11400000, guid: bbe6a937890d32546872ff7b4ec19e3b, type: 2}
+  _resume: {fileID: 11400000, guid: 9826b2942610843408c53abe001a2a04, type: 2}
+  _mapOpen: {fileID: 11400000, guid: 3ad8ca848b41552459deffa12ddc5b6e, type: 2}
+  _mapClose: {fileID: 11400000, guid: acc90cc1266ba9344a6e0376dca01966, type: 2}
+  _rebind: {fileID: 11400000, guid: 7fb4bc6d13dfb924ebc94e7104ca2c94, type: 2}
 --- !u!1 &2084307217
 GameObject:
   m_ObjectHideFlags: 0
@@ -85687,6 +85877,52 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 1
   m_BlendShapeWeights: []
+--- !u!1 &2103274261
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2103274263}
+  - component: {fileID: 2103274262}
+  m_Layer: 0
+  m_Name: Music
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2103274262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2103274261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca7d4fe15809eea4db8d9c68ccb9d646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.SceneMusic
+  _track: {fileID: 8300000, guid: 8a42414d53c167c418da49e02635f459, type: 3}
+  _volume: 0.5
+--- !u!4 &2103274263
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2103274261}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2104250736
 GameObject:
   m_ObjectHideFlags: 0
@@ -87549,3 +87785,4 @@ SceneRoots:
   - {fileID: 65938209}
   - {fileID: 1059667375}
   - {fileID: 1650955605}
+  - {fileID: 2103274263}
