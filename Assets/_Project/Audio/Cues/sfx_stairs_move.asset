@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Audio.SoundCue
   _clips:
   - {fileID: 8300000, guid: 6e42362b7df0279408ae7685900ca0f5, type: 3}
-  _volume: 1
+  _volume: 0.7
   _minPitch: 0.9
   _maxPitch: 1.1
   _volumeJitter: 0.1

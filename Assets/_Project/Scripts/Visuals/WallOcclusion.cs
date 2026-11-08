@@ -1,8 +1,8 @@
-// WallOcclusion: makes individual wall tiles see-through while they hide the live player or the floor
-// right around them (for example a pressure plate they are standing on), and turns them solid again
-// once the player moves away. Only tiles not behind the player on the grid can fade, so nothing changes
-// until a wall actually blocks the view. Snaps every wall solid on a level reset. Visual only; one per
-// level scene.
+// WallOcclusion: makes individual wall tiles see-through while they hide the live player, and turns
+// them solid again once the player moves away. Only tiles strictly in front of the player on the grid
+// can fade, and the overlap test uses each sprite's drawn (opaque) pixels rather than its padded
+// canvas, so walking up to or along a wall never fades it. Snaps every wall solid on a level reset.
+// Visual only; one per level scene.
 using System.Collections.Generic;
 using GameJam.Core;
 using UnityEngine;
@@ -44,6 +44,7 @@ namespace GameJam.Visuals
 
         private readonly Dictionary<long, FadedTile> _faded = new Dictionary<long, FadedTile>();
         private readonly List<long> _keys = new List<long>();
+        private readonly Dictionary<Sprite, Rect> _drawnRects = new Dictionary<Sprite, Rect>();
 
         private void Awake()
         {
@@ -72,13 +73,19 @@ namespace GameJam.Visuals
         }
 
         /// <summary>
-        /// Each frame: marks the wall tiles that overlap the player's view area and are not behind
-        /// them, then eases every tracked tile towards faded or solid.
+        /// Each frame: marks the wall tiles in front of the player whose drawn pixels cover the player's
+        /// drawn pixels, then eases every tracked tile towards faded or solid.
         /// </summary>
         private void Update()
         {
-            // 1. The area that must stay visible: the drawn player plus a margin around their feet.
-            Rect view = ToRect(_playerSprite.bounds);
+            // 1. The area that must stay visible: the player's drawn pixels, plus optional padding.
+            if (_playerSprite.sprite == null)
+            {
+                return;
+            }
+
+            Rect view = DrawnRect(_playerSprite.sprite, _playerSprite.flipX);
+            view.center += (Vector2)_playerSprite.transform.position;
             view.xMin -= _viewPadding;
             view.yMin -= _viewPadding;
             view.xMax += _viewPadding;
@@ -96,7 +103,8 @@ namespace GameJam.Visuals
                 _faded[_keys[i]] = tile;
             }
 
-            // 3. Wall tiles on the player's row or nearer the camera that overlap the view are wanted faded.
+            // 3. Wall tiles nearer the camera than the player whose drawn pixels overlap the view are wanted faded.
+            //    Tiles on the player's own row sit beside them on screen, never in front.
             for (int m = 0; m < _walls.Length; m++)
             {
                 Tilemap map = _walls[m];
@@ -105,7 +113,7 @@ namespace GameJam.Visuals
                     for (int y = -_searchRadius; y <= _searchRadius; y++)
                     {
                         Vector3Int cell = new Vector3Int(playerCell.x + x, playerCell.y + y, 0);
-                        if (cell.x + cell.y > playerDepth)
+                        if (cell.x + cell.y >= playerDepth)
                         {
                             continue;
                         }
@@ -117,7 +125,7 @@ namespace GameJam.Visuals
                         }
 
                         Vector3 centre = map.GetCellCenterWorld(cell);
-                        Rect tileRect = ToRect(sprite.bounds);
+                        Rect tileRect = DrawnRect(sprite, false);
                         tileRect.center += new Vector2(centre.x, centre.y);
                         if (tileRect.Overlaps(view))
                         {
@@ -187,10 +195,68 @@ namespace GameJam.Visuals
             map.SetColor(cell, colour);
         }
 
-        /// <summary>A 2D screen-plane rectangle from 3D bounds, so depth (z) never affects the overlap test.</summary>
-        private static Rect ToRect(Bounds bounds)
+        /// <summary>
+        /// The rectangle a sprite actually draws (its opaque pixels), in local units around its pivot.
+        /// PixelLab art sits on canvases with wide transparent margins, so the sprite's own bounds would
+        /// overlap things it never covers. Measured once per sprite by copying its texture through a
+        /// render texture (the textures are not CPU-readable), then cached.
+        /// </summary>
+        private Rect DrawnRect(Sprite sprite, bool flipX)
         {
-            return new Rect(bounds.min.x, bounds.min.y, bounds.size.x, bounds.size.y);
+            if (!_drawnRects.TryGetValue(sprite, out Rect rect))
+            {
+                rect = MeasureOpaque(sprite);
+                _drawnRects[sprite] = rect;
+            }
+
+            return flipX ? new Rect(-rect.xMax, rect.yMin, rect.width, rect.height) : rect;
+        }
+
+        /// <summary>Finds the opaque pixel bounds inside a sprite's texture rect, in units relative to its pivot.</summary>
+        private static Rect MeasureOpaque(Sprite sprite)
+        {
+            // 1. Copy the texture to a readable one through the GPU.
+            Texture2D source = sprite.texture;
+            RenderTexture temp = RenderTexture.GetTemporary(source.width, source.height, 0, RenderTextureFormat.ARGB32);
+            Graphics.Blit(source, temp);
+            RenderTexture previous = RenderTexture.active;
+            RenderTexture.active = temp;
+            Rect area = sprite.textureRect;
+            Texture2D copy = new Texture2D((int)area.width, (int)area.height, TextureFormat.ARGB32, false);
+            copy.ReadPixels(area, 0, 0);
+            copy.Apply();
+            RenderTexture.active = previous;
+            RenderTexture.ReleaseTemporary(temp);
+
+            // 2. Scan for the opaque pixels.
+            int minX = int.MaxValue, minY = int.MaxValue, maxX = -1, maxY = -1;
+            Color32[] pixels = copy.GetPixels32();
+            for (int y = 0; y < copy.height; y++)
+            {
+                for (int x = 0; x < copy.width; x++)
+                {
+                    if (pixels[y * copy.width + x].a > 127)
+                    {
+                        minX = Mathf.Min(minX, x);
+                        maxX = Mathf.Max(maxX, x);
+                        minY = Mathf.Min(minY, y);
+                        maxY = Mathf.Max(maxY, y);
+                    }
+                }
+            }
+
+            Destroy(copy);
+
+            // 3. Fall back to the full sprite if it has no opaque pixels; otherwise convert pixels to units.
+            if (maxX < 0)
+            {
+                Bounds b = sprite.bounds;
+                return new Rect(b.min.x, b.min.y, b.size.x, b.size.y);
+            }
+
+            float ppu = sprite.pixelsPerUnit;
+            Vector2 pivot = sprite.pivot;
+            return Rect.MinMaxRect((minX - pivot.x) / ppu, (minY - pivot.y) / ppu, (maxX + 1 - pivot.x) / ppu, (maxY + 1 - pivot.y) / ppu);
         }
 
         /// <summary>A unique number for a tile in one of the wall maps.</summary>

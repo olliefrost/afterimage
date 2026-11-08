@@ -59,10 +59,10 @@ namespace GameJam.UI
             _quitButton.onClick.RemoveListener(SceneFlow.QuitGame);
         }
 
-        /// <summary>Esc: ignored while rebinding, back from Settings, otherwise pause or resume.</summary>
+        /// <summary>Esc: ignored while rebinding or changing scene, back from Settings, otherwise pause or resume.</summary>
         private void HandlePauseKey()
         {
-            if (_rebinder.IsRebinding)
+            if (_rebinder.IsRebinding || SceneFlow.IsChangingScene)
             {
                 return;
             }

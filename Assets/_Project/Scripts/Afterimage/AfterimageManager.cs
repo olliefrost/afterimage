@@ -92,17 +92,19 @@ namespace GameJam.Afterimage
         /// <summary>
         /// Picks a slot to control from the next restart: any saved slot, or the new slot to go back
         /// to making new clones. Picking the pending slot again cancels it; picking the slot already
-        /// controlled clears the pick.
+        /// controlled clears the pick. Returns false if the slot cannot be picked (nothing saved there
+        /// and it is not the next new slot), so the HUD can show the refusal.
         /// </summary>
-        public void SelectSlot(int slot)
+        public bool SelectSlot(int slot)
         {
             if (slot < 0 || (slot >= _slots.Count && !IsNewSlot(slot)))
             {
-                return;
+                return false;
             }
 
             PendingSlot = slot == PendingSlot || slot == ControlledSlot ? NoSlot : slot;
             Changed?.Invoke();
+            return true;
         }
 
         /// <summary>

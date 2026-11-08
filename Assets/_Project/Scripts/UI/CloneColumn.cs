@@ -23,6 +23,11 @@ namespace GameJam.UI
         [Tooltip("One pre-placed icon per clone slot, top to bottom. Icons past the next new clone are hidden.")]
         [SerializeField] private CloneIconView[] _icons;
 
+        // Last shown state, so Refresh can animate only what changed.
+        private int _shownCount;
+        private int _shownControlled;
+        private int _shownPending;
+
         private void OnEnable()
         {
             // 1. Bind each icon to its slot and listen for clicks (icons past the limit can show as locked).
@@ -37,6 +42,10 @@ namespace GameJam.UI
             _afterimages.Changed += Refresh;
             _afterimages.CloneDied += HandleCloneDied;
             _rebinder.Changed += RefreshKeyLabels;
+            _game.RunActionHandled += HandleRunAction;
+            _shownCount = _afterimages.CloneCount;
+            _shownControlled = _afterimages.ControlledSlot;
+            _shownPending = _afterimages.PendingSlot;
             Refresh();
             RefreshKeyLabels();
         }
@@ -51,6 +60,7 @@ namespace GameJam.UI
             _afterimages.Changed -= Refresh;
             _afterimages.CloneDied -= HandleCloneDied;
             _rebinder.Changed -= RefreshKeyLabels;
+            _game.RunActionHandled -= HandleRunAction;
         }
 
         /// <summary>Shows each clone's current select key on its badge.</summary>
@@ -88,6 +98,61 @@ namespace GameJam.UI
                     _icons[i].Show(isSaved, _afterimages.IsSlotDead(i), i == controlled, i == pending);
                 }
             }
+
+            AnimateChanges(controlled, pending);
+        }
+
+        /// <summary>
+        /// Pops in a newly saved clone's icon and bumps the icon that just became controlled or
+        /// picked, so each change catches the eye.
+        /// </summary>
+        private void AnimateChanges(int controlled, int pending)
+        {
+            int count = _afterimages.CloneCount;
+            if (count > _shownCount && count - 1 < _icons.Length)
+            {
+                _icons[count - 1].Pop();
+            }
+
+            if (controlled != _shownControlled && IsShown(controlled))
+            {
+                _icons[controlled].Punch();
+            }
+
+            if (pending != _shownPending && IsShown(pending))
+            {
+                _icons[pending].Punch();
+            }
+
+            _shownCount = count;
+            _shownControlled = controlled;
+            _shownPending = pending;
+        }
+
+        /// <summary>
+        /// A refused pick (1-5 or a click) gives that icon a small "no" shake. A slot past the clone
+        /// limit has no icon of its own, so the padlock icon shakes instead.
+        /// </summary>
+        private void HandleRunAction(RunAction action, int slot, bool accepted)
+        {
+            if (action != RunAction.Select || accepted)
+            {
+                return;
+            }
+
+            if (IsShown(slot))
+            {
+                _icons[slot].Nudge();
+            }
+            else if (slot >= _afterimages.MaxClones && IsShown(_afterimages.MaxClones))
+            {
+                _icons[_afterimages.MaxClones].Nudge();
+            }
+        }
+
+        private bool IsShown(int slot)
+        {
+            return slot >= 0 && slot < _icons.Length && _icons[slot].gameObject.activeSelf;
         }
 
         private void HandleCloneDied(int slot)

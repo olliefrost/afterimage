@@ -76,7 +76,7 @@ namespace GameJam.Audio
             _state.AttemptEnding += HandleAttemptEnding;
             _state.StateChanged += HandleStateChanged;
             _state.ClonesUnlockedNow += HandleClonesUnlocked;
-            _state.ClonePicked += HandleClonePicked;
+            _state.RunActionHandled += HandleRunAction;
             _state.RunMarkedChanged += HandleRunMarkedChanged;
             _rebinder.Changed += HandleRebound;
         }
@@ -86,7 +86,7 @@ namespace GameJam.Audio
             _state.AttemptEnding -= HandleAttemptEnding;
             _state.StateChanged -= HandleStateChanged;
             _state.ClonesUnlockedNow -= HandleClonesUnlocked;
-            _state.ClonePicked -= HandleClonePicked;
+            _state.RunActionHandled -= HandleRunAction;
             _state.RunMarkedChanged -= HandleRunMarkedChanged;
             _rebinder.Changed -= HandleRebound;
 
@@ -160,9 +160,13 @@ namespace GameJam.Audio
             AudioManager.Play(_clonesUnlocked);
         }
 
-        private void HandleClonePicked(int slot)
+        /// <summary>Plays the pick blip when a clone is chosen (keys 1-5 or a click) and the pick is accepted.</summary>
+        private void HandleRunAction(RunAction action, int slot, bool accepted)
         {
-            AudioManager.Play(_clonePick);
+            if (action == RunAction.Select && accepted)
+            {
+                AudioManager.Play(_clonePick);
+            }
         }
 
         private void HandleRunMarkedChanged(bool marked)
