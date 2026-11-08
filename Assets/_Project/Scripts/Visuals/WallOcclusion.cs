@@ -37,8 +37,8 @@ namespace GameJam.Visuals
         [SerializeField] private float _fadedAlpha = 0.3f;
         [Tooltip("Seconds a tile takes to fade out or back in.")]
         [SerializeField] private float _fadeSeconds = 0.25f;
-        [Tooltip("Extra space around the player's sprite that is kept visible, so the floor they stand on (and a plate there) shows.")]
-        [SerializeField] private float _viewPadding = 0.6f;
+        [Tooltip("Extra space around the player's sprite that also counts as hidden. Keep at 0 so walls fade only when they actually cover the character.")]
+        [SerializeField] private float _viewPadding = 0f;
         [Tooltip("How many grid cells around the player are checked.")]
         [SerializeField] private int _searchRadius = 5;
 
