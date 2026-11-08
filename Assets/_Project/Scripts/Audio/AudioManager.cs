@@ -32,6 +32,7 @@ namespace GameJam.Audio
         private int _activeMusic;
         private AudioClip _track;
         private float[] _trackVolumes;
+        private float _musicFade = MusicFadeSeconds;
         private float _duck = 1f;
         private float _duckTarget = 1f;
 
@@ -102,6 +103,16 @@ namespace GameJam.Audio
             if (_instance != null)
             {
                 _instance.StartTrack(track, volume);
+            }
+        }
+
+        /// <summary>Fades the music out to silence over <paramref name="seconds"/> (the Ending's trap).</summary>
+        public static void StopMusic(float seconds)
+        {
+            if (_instance != null)
+            {
+                _instance._musicFade = Mathf.Max(0.01f, seconds);
+                _instance._track = null;
             }
         }
 
@@ -180,7 +191,7 @@ namespace GameJam.Audio
 
             // 2. Ease the pause duck and crossfade the music sources.
             _duck = Mathf.MoveTowards(_duck, _duckTarget, DuckSpeed * Time.unscaledDeltaTime);
-            float step = Time.unscaledDeltaTime / MusicFadeSeconds;
+            float step = Time.unscaledDeltaTime / _musicFade;
             for (int i = 0; i < _musicSources.Length; i++)
             {
                 // The active source fades up and the other fades out, then stops.
@@ -268,6 +279,7 @@ namespace GameJam.Audio
             }
 
             // Each source keeps its own volume, so the fading-out track does not jump to the new one's level.
+            _musicFade = MusicFadeSeconds;
             _track = track;
             _activeMusic = 1 - _activeMusic;
             _trackVolumes[_activeMusic] = volume;
