@@ -32,8 +32,8 @@
 
 - **Visual style and palette:** Post-technology/deserted world, overgrown, relic/half broken tech, Portal 2 inspired
 - **Asset list (sprites, UI, backgrounds):** UI: tintable clone icon, dead (skull) overlay, selected outline, key badge, R and T buttons (see `gui.md`). Rest TBD
-- **Sound effects and music:** TBD
-- **Asset sources and licences:** TBD
+- **Sound effects and music:** planned in `sounds.md` (tone, full SFX and music list with code hooks, implementation)
+- **Asset sources and licences:** free sources for audio listed in `sounds.md`; every external asset is recorded in `CREDITS.md`
 - **Inspiration (not copying but general style):** Portal 2 (world and puzzle chamber concept), classic isometric room games (view)
 - **Placeholder art:** generated in-engine (`placeholder_iso_*` in `Assets/_Project/Art/Placeholders/`) at the final scale, so real art can replace it file by file
 
