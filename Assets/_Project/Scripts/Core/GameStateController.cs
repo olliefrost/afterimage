@@ -29,6 +29,15 @@ namespace GameJam.Core
         LevelComplete
     }
 
+    /// <summary>The run controls the player can use, reported by <see cref="GameStateController.RunActionHandled"/>.</summary>
+    public enum RunAction
+    {
+        Save,
+        Retry,
+        Mark,
+        Select
+    }
+
     /// <summary>
     /// Runs attempts: each new attempt optionally keeps the last run as a clone, resets every
     /// <see cref="IResettable"/> and replays all saved clones from tick 0.
@@ -83,6 +92,16 @@ namespace GameJam.Core
 
         /// <summary>Raised whenever <see cref="RunMarked"/> changes, for the HUD's record button.</summary>
         public event Action<bool> RunMarkedChanged;
+
+        /// <summary>
+        /// Raised when the player uses R, T, F or 1-5 (key or HUD click) during play: which action, the
+        /// slot for Select (else -1) and whether it was accepted. The HUD punches or shakes its button;
+        /// sounds can hook here later. Presses outside play (rewind, pause, intro) are not reported.
+        /// </summary>
+        public event Action<RunAction, int, bool> RunActionHandled;
+
+        /// <summary>Raised the moment the live player dies, with whether the run will be saved as a clone.</summary>
+        public event Action<bool> PlayerDied;
 
         private void OnEnable()
         {
@@ -198,7 +217,7 @@ namespace GameJam.Core
         /// </summary>
         public void RequestClone()
         {
-            StartNewAttempt(true);
+            StartNewAttempt(true, RunAction.Save);
         }
 
         /// <summary>
@@ -207,18 +226,19 @@ namespace GameJam.Core
         /// </summary>
         public void RequestRetry()
         {
-            StartNewAttempt(false);
+            StartNewAttempt(false, RunAction.Retry);
         }
 
         /// <summary>Picks (or un-picks) the clone to control from the next restart. Used by keys 1-5 and the HUD icons.</summary>
         public void RequestSelect(int slot)
         {
-            if (State != GameState.Playing || !ClonesUnlocked)
+            if (!CanUseRunControls(RunAction.Select, slot))
             {
                 return;
             }
 
-            _afterimages.SelectSlot(slot);
+            bool accepted = _afterimages.SelectSlot(slot);
+            RunActionHandled?.Invoke(RunAction.Select, slot, accepted);
         }
 
         /// <summary>
@@ -228,12 +248,33 @@ namespace GameJam.Core
         /// </summary>
         public void ToggleRunMark()
         {
-            if (State != GameState.Playing || !ClonesUnlocked)
+            if (!CanUseRunControls(RunAction.Mark, -1))
             {
                 return;
             }
 
             SetRunMarked(!RunMarked);
+            RunActionHandled?.Invoke(RunAction.Mark, -1, true);
+        }
+
+        /// <summary>
+        /// True if R, T, F and 1-5 work right now (playing, clones unlocked). A press while playing
+        /// with clones still locked is reported as refused; presses outside play are just ignored.
+        /// </summary>
+        private bool CanUseRunControls(RunAction action, int slot)
+        {
+            if (State != GameState.Playing)
+            {
+                return false;
+            }
+
+            if (!ClonesUnlocked)
+            {
+                RunActionHandled?.Invoke(action, slot, false);
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -269,13 +310,14 @@ namespace GameJam.Core
         }
 
         /// <summary>Starts a new attempt from the player's request, keeping the finished run as a clone if asked.</summary>
-        private void StartNewAttempt(bool saveRun)
+        private void StartNewAttempt(bool saveRun, RunAction action)
         {
-            if (State != GameState.Playing || !ClonesUnlocked)
+            if (!CanUseRunControls(action, -1))
             {
                 return;
             }
 
+            RunActionHandled?.Invoke(action, -1, true);
             SetState(GameState.Resetting);
             _clock.Stop();
             StartCoroutine(ResetRoom(saveRun));
@@ -294,6 +336,7 @@ namespace GameJam.Core
 
             SetState(GameState.Resetting);
             _clock.Stop();
+            PlayerDied?.Invoke(RunMarked);
             StartCoroutine(ResetAfterDeath(RunMarked));
         }
 

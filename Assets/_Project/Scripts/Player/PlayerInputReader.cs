@@ -61,6 +61,12 @@ namespace GameJam.Player
         /// <summary>Every key the player may rebind, in the order the settings menu lists them.</summary>
         public IReadOnlyList<RebindTarget> RebindTargets => _rebindTargets;
 
+        /// <summary>True while gameplay keys work (off while paused, in the intro and between chambers).</summary>
+        public bool GameplayEnabled => _gameplayEnabled;
+
+        /// <summary>The interact key (E by default), for the interact prompt's key letter.</summary>
+        public RebindTarget InteractTarget { get; private set; }
+
         /// <summary>The save clone key (R by default), for the HUD's key letter.</summary>
         public RebindTarget CloneTarget { get; private set; }
 
@@ -227,7 +233,8 @@ namespace GameJam.Player
             _rebindTargets.Add(new RebindTarget("MOVE DOWN", _move, FindCompositePart(_move, "Down")));
             _rebindTargets.Add(new RebindTarget("MOVE LEFT", _move, FindCompositePart(_move, "Left")));
             _rebindTargets.Add(new RebindTarget("MOVE RIGHT", _move, FindCompositePart(_move, "Right")));
-            _rebindTargets.Add(new RebindTarget("INTERACT", _interact, 0));
+            InteractTarget = new RebindTarget("INTERACT", _interact, 0);
+            _rebindTargets.Add(InteractTarget);
             CloneTarget = new RebindTarget("SAVE CLONE", _clone, 0);
             _rebindTargets.Add(CloneTarget);
             RetryTarget = new RebindTarget("RETRY", _retry, 0);

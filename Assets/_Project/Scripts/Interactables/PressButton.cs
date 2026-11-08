@@ -58,10 +58,16 @@ namespace GameJam.Interactables
             LevelReset.Unregister(this);
         }
 
+        /// <summary>True while the button is up and, if it needs power, powered.</summary>
+        public bool CanInteract(IActor actor)
+        {
+            return !_isPressed && (_power == null || _power.IsOn);
+        }
+
         /// <summary>Presses the button if it is not already down (and, if it needs power, the power is on).</summary>
         public void Interact(IActor actor)
         {
-            if (_isPressed || (_power != null && !_power.IsOn))
+            if (!CanInteract(actor))
             {
                 return;
             }
