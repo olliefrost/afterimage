@@ -38,8 +38,9 @@ namespace GameJam.Actors
         /// <summary>
         /// Kills every living actor in the zone this tick, for hazards that close on whoever is inside
         /// (a door shutting, a platform dropping). Skips anyone in <paramref name="spare"/>'s answer, e.g. mid-jump.
+        /// <paramref name="kill"/> replaces the plain IActor.Kill() (a fall uses Hazards.Falling.Kill to show it).
         /// </summary>
-        public void KillAll(System.Predicate<IActor> spare = null)
+        public void KillAll(System.Predicate<IActor> spare = null, System.Action<IActor> kill = null)
         {
             // Kill() can trigger a level restart, so work from the end of a list nothing else changes this tick.
             for (int i = _actors.Count - 1; i >= 0; i--)
@@ -47,7 +48,14 @@ namespace GameJam.Actors
                 IActor actor = _actors[i];
                 if (!actor.IsDead && (spare == null || !spare(actor)))
                 {
-                    actor.Kill();
+                    if (kill != null)
+                    {
+                        kill(actor);
+                    }
+                    else
+                    {
+                        actor.Kill();
+                    }
                 }
             }
         }

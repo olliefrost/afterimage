@@ -4,8 +4,13 @@
 // still. Directions without run frames fall back to the idle sprite with a small walk bob. It also
 // adds the ground height from ActorElevation (if the Body has one), since it owns this sprite's
 // position. Mid-jump (ActorJump) it plays the jump frames along the arc; on a ladder (LadderClimber)
-// it loops the climb frames. Visual only, so it needs no link to input or recordings.
+// it loops the climb frames and keeps the art on the ladder's face (Ladder.HugOffset). When a hazard
+// drops the character into a chasm (Hazards.Falling) the sprite and its shadow fall out of sight and
+// fade, until the actor lives again or the rewind takes over. Visual only, so it needs no link to
+// input or recordings.
 using GameJam.Actors;
+using GameJam.Core;
+using GameJam.Hazards;
 using UnityEngine;
 
 namespace GameJam.Visuals
@@ -29,6 +34,12 @@ namespace GameJam.Visuals
         [SerializeField] private float _bobHeight = 0.05f;
         [SerializeField] private float _bobSpeed = 16f;
 
+        [Header("Falling into a chasm")]
+        [Tooltip("Downward acceleration of the falling sprite, in units per second squared.")]
+        [SerializeField] private float _fallGravity = 14f;
+        [Tooltip("Seconds the falling sprite takes to fade out (the room restarts after the death delay).")]
+        [SerializeField] private float _fallFadeSeconds = 0.6f;
+
         // Ignore tiny moves (physics jitter) so the sprite does not flicker between directions.
         private const float MinMoveSqr = 0.000001f;
         private const float DegreesPerDirection = 360f / CharacterSpriteSet.DirectionCount;
@@ -37,7 +48,18 @@ namespace GameJam.Visuals
         /// While true (the rewind between attempts) the character faces against its motion and its run
         /// plays backwards, so it looks like a tape running in reverse rather than running away.
         /// </summary>
-        public bool FaceAgainstMotion { get; set; }
+        public bool FaceAgainstMotion
+        {
+            get => _faceAgainstMotion;
+            set
+            {
+                _faceAgainstMotion = value;
+                if (value)
+                {
+                    EndFall();
+                }
+            }
+        }
 
         private Transform _body;
         private ActorElevation _elevation;
@@ -47,6 +69,13 @@ namespace GameJam.Visuals
         private Vector3 _restLocalPosition;
         private int _direction;
         private float _walkTime;
+        private bool _faceAgainstMotion;
+        private IActor _actor;
+        private SpriteRenderer _shadow;
+        private bool _falling;
+        private float _fallTime;
+        private float _spriteAlpha;
+        private float _shadowAlpha;
 
         private void Awake()
         {
@@ -54,6 +83,9 @@ namespace GameJam.Visuals
             _elevation = GetComponentInParent<ActorElevation>();
             _jump = GetComponentInParent<ActorJump>();
             _climber = GetComponentInParent<LadderClimber>();
+            _actor = GetComponentInParent<IActor>();
+            Transform shadow = _body.Find("Shadow");
+            _shadow = shadow != null ? shadow.GetComponent<SpriteRenderer>() : null;
             _lastBodyPosition = _body.position;
             _restLocalPosition = transform.localPosition;
             _direction = _startDirection;
@@ -93,12 +125,90 @@ namespace GameJam.Visuals
             float bob = isMoving && !animated ? Mathf.Abs(Mathf.Sin(_walkTime * _bobSpeed)) * _bobHeight : 0f;
             float ground = _elevation != null ? _elevation.Height : 0f;
             float arc = airborne ? _jump.ArcHeight : 0f;
-            transform.localPosition = _restLocalPosition + new Vector3(0f, bob + ground + arc, 0f);
+            Vector2 hug = climbing && _climber.Current != null ? _climber.Current.HugOffset(_body.position) : Vector2.zero;
+            transform.localPosition = _restLocalPosition + new Vector3(hug.x, hug.y + bob + ground + arc - FallDrop(), 0f);
+        }
+
+        private void OnEnable()
+        {
+            Falling.Fell += HandleFell;
+        }
+
+        private void OnDisable()
+        {
+            Falling.Fell -= HandleFell;
+            EndFall();
+        }
+
+        /// <summary>Starts the fall when it is this character that went over the edge.</summary>
+        private void HandleFell(IActor actor)
+        {
+            if (_falling || actor != _actor)
+            {
+                return;
+            }
+
+            _falling = true;
+            _fallTime = 0f;
+            _spriteAlpha = _renderer.color.a;
+            _shadowAlpha = _shadow != null ? _shadow.color.a : 0f;
+        }
+
+        /// <summary>
+        /// How far below the ground the falling sprite is this frame, fading it (and its shadow) as it
+        /// goes. Ends the fall once the actor is alive again (the room reset).
+        /// </summary>
+        private float FallDrop()
+        {
+            if (!_falling)
+            {
+                return 0f;
+            }
+
+            if (_actor == null || !_actor.IsDead)
+            {
+                EndFall();
+                return 0f;
+            }
+
+            _fallTime += Time.deltaTime;
+            float fade = 1f - Mathf.Clamp01(_fallTime / _fallFadeSeconds);
+            SetAlpha(_renderer, _spriteAlpha * fade);
+            SetAlpha(_shadow, _shadowAlpha * fade);
+            return 0.5f * _fallGravity * _fallTime * _fallTime;
+        }
+
+        /// <summary>Puts the sprite and shadow back as they were before the fall.</summary>
+        private void EndFall()
+        {
+            if (!_falling)
+            {
+                return;
+            }
+
+            _falling = false;
+            SetAlpha(_renderer, _spriteAlpha);
+            SetAlpha(_shadow, _shadowAlpha);
+            transform.localPosition = _restLocalPosition;
+        }
+
+        /// <summary>Sets one sprite's opacity, if it exists.</summary>
+        private static void SetAlpha(SpriteRenderer sprite, float alpha)
+        {
+            if (sprite != null)
+            {
+                Color c = sprite.color;
+                c.a = alpha;
+                sprite.color = c;
+            }
         }
 
         /// <summary>Shows this frame's sprite. Returns false when it fell back to the idle sprite while moving.</summary>
         private bool ShowFrame(DirectionSprites sprites, bool isMoving, bool airborne, bool climbing)
         {
+            // The climb art faces up-left; every other state draws unmirrored.
+            _renderer.flipX = false;
+
             // 1. In the air: the jump frames once across the jump.
             if (airborne)
             {
@@ -109,10 +219,12 @@ namespace GameJam.Visuals
                 return true;
             }
 
-            // 2. On a ladder: loop the climb frames while moving, show the first one while still.
+            // 2. On a ladder: loop the climb frames while moving, show the first one while still, mirrored
+            //    for ladders that climb up-right on screen.
             Sprite[] climb = _sprites.Climb;
             if (climbing && climb != null && climb.Length > 0)
             {
+                _renderer.flipX = _climber.Current != null && _climber.Current.ScreenAxis.x > 0f;
                 _renderer.sprite = climb[(int)(_walkTime * _sprites.ClimbFramesPerSecond) % climb.Length];
                 return true;
             }

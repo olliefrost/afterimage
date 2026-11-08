@@ -1,9 +1,11 @@
 // ActorElevation: sits on a character's Body (player and clone) and lifts the Body's children
 // (shadow, lights) to the ground height ElevationField reports, easing between heights so climbing
-// steps looks smooth. The sprite child is moved by CharacterSpriteAnimator, which adds Height itself.
+// steps looks smooth. A jumper never sinks mid-air (a gap below reads as height 0), so jumping up a
+// row of platforms draws a clean rise. The sprite child is moved by CharacterSpriteAnimator, which adds Height itself.
 // It leaves the Body alone, so the character still sorts by its feet on the floor plan and
 // ActorPitDepth (which moves the Body) keeps working. Visual only.
 using System.Collections.Generic;
+using GameJam.Actors;
 using UnityEngine;
 
 namespace GameJam.Visuals
@@ -20,6 +22,7 @@ namespace GameJam.Visuals
         private readonly List<Transform> _lifted = new List<Transform>();
         private readonly List<Vector3> _restPositions = new List<Vector3>();
         private Vector2 _lastFeet;
+        private ActorJump _jump;
 
         /// <summary>Current drawn height above the floor, in units.</summary>
         public float Height { get; private set; }
@@ -38,6 +41,7 @@ namespace GameJam.Visuals
                 _restPositions.Add(child.localPosition);
             }
 
+            _jump = GetComponentInParent<ActorJump>();
             _lastFeet = Feet();
         }
 
@@ -49,6 +53,11 @@ namespace GameJam.Visuals
             bool teleported = (feet - _lastFeet).sqrMagnitude > _teleportDistance * _teleportDistance;
             _lastFeet = feet;
             float target = ElevationField.HeightAt(feet);
+            if (_jump != null && _jump.IsAirborne)
+            {
+                target = Mathf.Max(target, Height);
+            }
+
             if (Mathf.Approximately(Height, target))
             {
                 return;

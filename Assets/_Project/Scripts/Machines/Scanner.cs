@@ -37,6 +37,9 @@ namespace GameJam.Machines
         /// <summary>0 to 1 while a scan is running, 1 once done, for the sweep visual.</summary>
         public float ScanProgress => IsScanned ? 1f : (float)_ticksInside / _scanTicks;
 
+        /// <summary>True while a living actor stands inside, so the booth can turn see-through.</summary>
+        public bool IsOccupied => _zone.HasLivingActor;
+
         private void OnEnable()
         {
             LevelReset.Register(this);

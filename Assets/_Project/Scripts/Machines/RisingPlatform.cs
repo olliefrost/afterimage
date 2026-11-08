@@ -29,6 +29,7 @@ namespace GameJam.Machines
         [Min(0)]
         [SerializeField] private int _autoLowerTicks = 0;
 
+        private Collider2D _surfaceArea;
         private bool _wantUp;
         private int _ticksUp;
 
@@ -48,6 +49,17 @@ namespace GameJam.Machines
         public bool Supports(IActor actor)
         {
             return IsRaised && _surface.Contains(actor);
+        }
+
+        /// <summary>True if <paramref name="point"/> lies on the platform's footprint, raised or not (for drawing heights).</summary>
+        public bool Covers(Vector2 point)
+        {
+            return _surfaceArea.OverlapPoint(point);
+        }
+
+        private void Awake()
+        {
+            _surfaceArea = _surface.GetComponent<Collider2D>();
         }
 
         private void OnEnable()
@@ -81,7 +93,7 @@ namespace GameJam.Machines
             // Whoever stands on it now has nothing under them. A jumper passing over is fine.
             if (IsRaised)
             {
-                _surface.KillAll(ActorJump.IsActorAirborne);
+                _surface.KillAll(ActorJump.IsActorAirborne, Falling.Kill);
             }
 
             _gap.SetActive(true);
@@ -98,7 +110,10 @@ namespace GameJam.Machines
 
         private void FixedUpdate()
         {
-            if (!_clock.IsRunning)
+            // A drop still finishes while the room is frozen after a death, so the platform is seen to
+            // fall away under whoever was on it (the reset puts it back).
+            bool finishingDrop = !_wantUp && Progress > 0f;
+            if (!_clock.IsRunning && !finishingDrop)
             {
                 return;
             }

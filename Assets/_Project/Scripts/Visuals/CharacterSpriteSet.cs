@@ -57,6 +57,12 @@ namespace GameJam.Visuals
             return _directions[direction];
         }
 
+        /// <summary>Replaces the climb frames; used by the editor builder.</summary>
+        public void SetClimb(Sprite[] climb)
+        {
+            _climb = climb;
+        }
+
         /// <summary>Replaces all directions; used by the editor builder.</summary>
         public void SetDirections(DirectionSprites[] directions)
         {

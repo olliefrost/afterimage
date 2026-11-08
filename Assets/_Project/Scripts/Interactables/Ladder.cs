@@ -1,9 +1,9 @@
-// Ladder: a climbable strip from the floor up to a raised ledge (Chamber 4's ladder to the plate).
-// Walking into it starts climbing: PlayerMovement locks the player to the ladder's axis at climb
-// speed, ElevationField draws anyone on it at a height that grows from the bottom to the top, and
-// CharacterSpriteAnimator shows the climb frames. Like all heights, the climb is visual: physics
-// only moves the actor a short way across the ladder's footprint. Side rails (walls in the scene)
-// stop people stepping off halfway.
+// Ladder: a climbable strip from one height to another (Chamber 4 has two, floor to landing and
+// landing to the plate ledge). Walking into it starts climbing: PlayerMovement locks the player to
+// the ladder's axis at climb speed, ElevationField draws anyone on it between _bottomHeight and
+// _topHeight, and CharacterSpriteAnimator shows the climb frames. Like all heights, the climb is
+// visual: physics only moves the actor a short way across the ladder's footprint. Side walls in the
+// scene stop people stepping off halfway.
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +27,10 @@ namespace GameJam.Interactables
         [SerializeField] private float _climbSeconds = 1.2f;
         [Tooltip("Matches PlayerMovement's iso vertical scale, so keys map onto the ladder the way they look on screen.")]
         [SerializeField] private float _isoVerticalScale = 0.5f;
+        [Tooltip("Ground height at the bottom end, in units.")]
+        [SerializeField] private float _bottomHeight = 0f;
+        [Tooltip("Ground height at the top end, in units.")]
+        [SerializeField] private float _topHeight = 1.5f;
 
         private Collider2D _area;
 
@@ -58,6 +62,26 @@ namespace GameJam.Interactables
         {
             Vector2 span = (Vector2)(_top.position - _bottom.position);
             return Mathf.Clamp01(Vector2.Dot(point - (Vector2)_bottom.position, span) / span.sqrMagnitude);
+        }
+
+        /// <summary>
+        /// Where someone at <paramref name="point"/> should be drawn on the floor plan, relative to
+        /// <paramref name="point"/>, so they hug the ladder: physics carries them across the ladder's cell,
+        /// but the art stays on the wall face (the bottom end) and only steps onto the ledge over the last
+        /// quarter of the climb.
+        /// </summary>
+        public Vector2 HugOffset(Vector2 point)
+        {
+            float t = Fraction(point);
+            Vector2 span = (Vector2)(_top.position - _bottom.position);
+            float stepOff = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.75f, 1f, t));
+            return -span * t * (1f - stepOff);
+        }
+
+        /// <summary>The drawn height of someone at <paramref name="point"/> on this ladder.</summary>
+        public float HeightAt(Vector2 point)
+        {
+            return Mathf.Lerp(_bottomHeight, _topHeight, Fraction(point));
         }
 
         private void Awake()
