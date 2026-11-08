@@ -24,11 +24,11 @@ Isometric, facing northwest, as in the sketch. Corners are referred to as:
 ## Room layout
 
 - **Entrance:** Corridor from the Chamber 2 door, coming into the bottom of the room near corner 1.
-- **Power generator:** Near the middle of the room. Needs a fuel source to run. When it's powered, the room becomes powered.
-- **Conveyor belt:** Carries fuel into the power generator.
-- **Laser wall:** Crosses the conveyor belt and burns the fuel before it reaches the generator.
+- **Power generator:** In the front-right corner, at the end of the conveyor belt. Needs a fuel source to run. When it's powered, the room becomes powered.
+- **Conveyor belt:** Runs along the right-hand wall, behind a low guard, and carries fuel down into the power generator. Keeping it against the wall leaves the middle of the room open.
+- **Laser wall:** A laser turret beside the belt fires across it and burns the fuel before it reaches the generator.
 - **Hydraulic block:** Next to the laser wall. It can be pushed into the laser field to block the lasers, but it doesn't stay there on its own. Something has to hold it in place. (Originally a spring-loaded block. Hydraulic is the current preference.)
-- **Bottom right pressure plate (floor, near corner 4):** Flips up the hovering stair plates so they become stairs.
+- **Raise plate (floor, near the entrance, corner 1):** Flips up the hovering stair plates so they become stairs.
 - **Hovering stair plates:** A row of 4 plates near corner 3. When flipped up they act as stairs. They can move between the right side, the left side and the middle.
 - **Top right button and pressure plate (raised, on the back wall near corner 3):** Reached by the stairs. The pressure plate here moves the hovering plates to the left side.
 - **Top left button and pressure plate (raised, on the back wall near corner 2):** Reached by the stairs once they've moved left. Moves the stairs to the middle.
@@ -42,7 +42,7 @@ Isometric, facing northwest, as in the sketch. Corners are referred to as:
 2. **Spot the problem.** Fuel travels along the conveyor belt towards the power generator but gets burnt by the laser wall.
 3. **Block the lasers (Afterimage 1).** Push the hydraulic block into the laser field and hold it there. This run becomes Afterimage 1, which keeps holding the block so it stays in the lasers' way.
 4. **Power the room.** With the lasers blocked, fuel reaches the generator and the room gets powered.
-5. **Raise the stairs (Afterimage 2).** Stand on the bottom right pressure plate. The hovering plates flip up and become stairs. This run becomes Afterimage 2, which keeps standing on the plate.
+5. **Raise the stairs (Afterimage 2).** Stand on the raise plate by the entrance. The hovering plates flip up and become stairs. This run becomes Afterimage 2, which keeps standing on the plate.
 6. **Top right (Afterimage 3).** Climb the stairs and go to the top right pressure plate, then hold the button. This run becomes Afterimage 3.
 7. **Ride the stairs left (Afterimage 4).** Stay on the stairs behind Afterimage 3. When Afterimage 3 is on the top right pressure plate, the hovering plates move to the left side, carrying you with them. Press the top left button and pressure plate. This moves the stairs to the middle. This run becomes Afterimage 4.
 8. **Exit.** With all four afterimages doing their jobs, the final you climbs the stairs in the middle and goes through the now open door. Chamber complete.
@@ -52,7 +52,7 @@ Isometric, facing northwest, as in the sketch. Corners are referred to as:
 | Afterimage | Job | What it unlocks |
 |---|---|---|
 | 1 | Holds the hydraulic block in the laser field | Fuel reaches the generator and the room is powered |
-| 2 | Stands on the bottom right pressure plate | Hovering plates flip up into stairs |
+| 2 | Stands on the raise plate by the entrance | Hovering plates flip up into stairs |
 | 3 | Climbs the stairs, stands on the top right plate and holds the button | Stairs move to the left side |
 | 4 | Rides the stairs left, then presses the top left button and plate | Stairs move to the middle |
 | Final you | Climbs the middle stairs | Reaches the open door |
@@ -82,6 +82,9 @@ Isometric, facing northwest, as in the sketch. Corners are referred to as:
 
 ## Decisions
 
+- **Room dressing:** two pillars frame the stair hall, a rubble pile sits in the middle, and crates,
+  debris and overgrowth fill the corners. Cables run
+  along the walls rather than across the floor, and the room is lit in pools.
 - **Power controls everything:** without power the plates, stairs and exit door do nothing. Power
   stays on only while fuel keeps arriving, so if Afterimage 1 lets go of the block, the room loses
   power and everything after it unravels.
@@ -93,9 +96,9 @@ Isometric, facing northwest, as in the sketch. Corners are referred to as:
   high, split into three bays by pillars. Its front edge is solid except where the raised stairs
   stand; the 4 plates flip up into 4 steps leading onto it, with rails so you only get on at the
   bottom and off at the top. Characters on the balcony or the steps are drawn at that height.
-- **Hydraulic mechanism:** a fixed base pushes the block out on a piston arm along a floor channel
-  until it caps the laser lens. A pedal on the floor drives it; let go and the block springs back
-  against the base.
+- **Hydraulic mechanism:** a fixed base pushes the block up the belt's guard line on a hydraulic ram
+  into the beam between the turret and the belt. A pedal on the floor drives it; let go and the
+  block springs back against the base.
 - **Visible wiring:** cables run from the generator to every plate and the exit door and light up
   when the room is powered. Each plate has its own cable to what it moves (pedal → piston, plates →
   the stairs' stops), and a stop's floor marker lights up when the stairs will go there.
