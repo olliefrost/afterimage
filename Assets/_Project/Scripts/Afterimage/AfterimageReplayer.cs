@@ -1,5 +1,6 @@
 // AfterimageReplayer: drives one clone. Each tick it moves to the recorded position and repeats
-// any recorded interact through its own Interactor. Once the run ends it stands still; if it is
+// any recorded interact through its own Interactor, and starts any recorded jump on its ActorJump
+// (so chasms and dropping platforms treat it as airborne). Once the run ends it stands still; if it is
 // killed it stops replaying for the rest of the attempt.
 // Spawned and set up by AfterimageManager at the start of each attempt; CloneTint reads its colour.
 using System;
@@ -20,6 +21,9 @@ namespace GameJam.Afterimage
         private Rigidbody2D _body;
         private TickClock _clock;
         private Recording _recording;
+
+        // Optional: only clones of a player that can jump have one (the Clone prefab does).
+        private ActorJump _jump;
 
         /// <inheritdoc />
         public Transform Transform => transform;
@@ -48,6 +52,7 @@ namespace GameJam.Afterimage
         private void Awake()
         {
             _body = GetComponent<Rigidbody2D>();
+            _jump = GetComponent<ActorJump>();
         }
 
         /// <summary>Gives the clone its run, clock and slot, and places it at the run's first position.</summary>
@@ -103,6 +108,12 @@ namespace GameJam.Afterimage
             if (frame.Interacted)
             {
                 _interactor.TryInteract(this, frame.Position);
+            }
+
+            // The positions already carry the jump; this makes the clone count as airborne and draws the arc.
+            if (frame.Jumped && _jump != null)
+            {
+                _jump.Begin(frame.Facing);
             }
         }
     }

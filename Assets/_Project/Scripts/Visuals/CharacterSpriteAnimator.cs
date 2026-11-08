@@ -3,7 +3,9 @@
 // CharacterSpriteSet, loops that direction's run frames while moving and shows its idle sprite when
 // still. Directions without run frames fall back to the idle sprite with a small walk bob. It also
 // adds the ground height from ActorElevation (if the Body has one), since it owns this sprite's
-// position. Visual only, so it needs no link to input or recordings.
+// position. Mid-jump (ActorJump) it plays the jump frames along the arc; on a ladder (LadderClimber)
+// it loops the climb frames. Visual only, so it needs no link to input or recordings.
+using GameJam.Actors;
 using UnityEngine;
 
 namespace GameJam.Visuals
@@ -39,6 +41,8 @@ namespace GameJam.Visuals
 
         private Transform _body;
         private ActorElevation _elevation;
+        private ActorJump _jump;
+        private LadderClimber _climber;
         private Vector3 _lastBodyPosition;
         private Vector3 _restLocalPosition;
         private int _direction;
@@ -48,6 +52,8 @@ namespace GameJam.Visuals
         {
             _body = transform.parent != null ? transform.parent : transform;
             _elevation = GetComponentInParent<ActorElevation>();
+            _jump = GetComponentInParent<ActorJump>();
+            _climber = GetComponentInParent<LadderClimber>();
             _lastBodyPosition = _body.position;
             _restLocalPosition = transform.localPosition;
             _direction = _startDirection;
@@ -76,8 +82,42 @@ namespace GameJam.Visuals
                 _walkTime = 0f;
             }
 
-            // 3. Show a run frame, or the idle sprite plus a bob when this direction has no run frames.
+            // 3. Pick the sprite: jump frames in the air, climb frames on a ladder, else run or idle.
             DirectionSprites sprites = _sprites.Get(_direction);
+            bool airborne = _jump != null && _jump.IsAirborne;
+            bool climbing = !airborne && _climber != null && _climber.IsClimbing;
+            bool animated = ShowFrame(sprites, isMoving, airborne, climbing);
+
+            // 4. Stand on whatever ground height the level has here (balconies, ladders), plus the jump arc.
+            //    Without frames for what the character is doing, a small bob shows it moving.
+            float bob = isMoving && !animated ? Mathf.Abs(Mathf.Sin(_walkTime * _bobSpeed)) * _bobHeight : 0f;
+            float ground = _elevation != null ? _elevation.Height : 0f;
+            float arc = airborne ? _jump.ArcHeight : 0f;
+            transform.localPosition = _restLocalPosition + new Vector3(0f, bob + ground + arc, 0f);
+        }
+
+        /// <summary>Shows this frame's sprite. Returns false when it fell back to the idle sprite while moving.</summary>
+        private bool ShowFrame(DirectionSprites sprites, bool isMoving, bool airborne, bool climbing)
+        {
+            // 1. In the air: the jump frames once across the jump.
+            if (airborne)
+            {
+                bool hasJump = sprites.Jump != null && sprites.Jump.Length > 0;
+                _renderer.sprite = hasJump
+                    ? sprites.Jump[Mathf.Min((int)(_jump.Progress * sprites.Jump.Length), sprites.Jump.Length - 1)]
+                    : sprites.Idle;
+                return true;
+            }
+
+            // 2. On a ladder: loop the climb frames while moving, show the first one while still.
+            Sprite[] climb = _sprites.Climb;
+            if (climbing && climb != null && climb.Length > 0)
+            {
+                _renderer.sprite = climb[(int)(_walkTime * _sprites.ClimbFramesPerSecond) % climb.Length];
+                return true;
+            }
+
+            // 3. Walking: run frames, or idle (with the caller's bob) for directions without them.
             bool hasRun = sprites.Run != null && sprites.Run.Length > 0;
             if (isMoving && hasRun)
             {
@@ -94,10 +134,7 @@ namespace GameJam.Visuals
                 _renderer.sprite = sprites.Idle;
             }
 
-            // 4. Stand on whatever ground height the level has here (Chamber 3's balcony and steps).
-            float bob = isMoving && !hasRun ? Mathf.Abs(Mathf.Sin(_walkTime * _bobSpeed)) * _bobHeight : 0f;
-            float ground = _elevation != null ? _elevation.Height : 0f;
-            transform.localPosition = _restLocalPosition + new Vector3(0f, bob + ground, 0f);
+            return !isMoving || hasRun;
         }
 
         /// <summary>Maps a world move to a direction index (0 = east, counter-clockwise), undoing the iso squash.</summary>

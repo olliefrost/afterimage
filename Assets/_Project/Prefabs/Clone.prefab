@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 5291575494339755315}
   - component: {fileID: 640825233531787264}
   - component: {fileID: 7297189259327496816}
+  - component: {fileID: 3722880358620815263}
+  - component: {fileID: 3153634421849856264}
   m_Layer: 0
   m_Name: Clone
   m_TagString: Untagged
@@ -187,6 +189,32 @@ MonoBehaviour:
   _duration: 0.5
   _flickerRate: 30
   _glowFlare: 4
+--- !u!114 &3722880358620815263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349804375299011067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc665992388f7e488463dba40fc8b36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Actors.ActorJump
+  _jumpTicks: 30
+  _arcHeight: 0.6
+--- !u!114 &3153634421849856264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349804375299011067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ba9d8bf026dbe34cac5887211b773e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Actors.LadderClimber
 --- !u!1 &3125175121937554461
 GameObject:
   m_ObjectHideFlags: 0

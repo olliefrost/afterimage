@@ -12,7 +12,7 @@ namespace GameJam.Actors
 {
     /// <summary>Tracks one actor's jump: airborne time, direction and the visual arc.</summary>
     [DefaultExecutionOrder(-5)]
-    public class ActorJump : MonoBehaviour
+    public class ActorJump : MonoBehaviour, IResettable
     {
         [Header("Tuning")]
         [Tooltip("Ticks a jump lasts (50 per second).")]
@@ -33,23 +33,11 @@ namespace GameJam.Actors
         /// <summary>Unit direction of the current jump, screen-relative like movement input.</summary>
         public Vector2 Direction { get; private set; }
 
-        /// <summary>Ticks a jump lasts, so movement can spread the hop distance across it.</summary>
-        public int JumpTicks => _jumpTicks;
+        /// <summary>0 to 1 through the current jump (0 when not jumping), for scrubbing jump frames.</summary>
+        public float Progress => IsAirborne ? 1f - (float)_ticksLeft / _jumpTicks : 0f;
 
-        /// <summary>Current drawn height above the ground, in units (0 when not jumping).</summary>
-        public float ArcHeight
-        {
-            get
-            {
-                if (!IsAirborne)
-                {
-                    return 0f;
-                }
-
-                float t = 1f - (float)_ticksLeft / _jumpTicks;
-                return 4f * _arcHeight * t * (1f - t);
-            }
-        }
+        /// <summary>Current drawn height above the ground, in units: a parabola peaking mid-jump.</summary>
+        public float ArcHeight => 4f * _arcHeight * Progress * (1f - Progress);
 
         /// <summary>True if <paramref name="actor"/> is mid-jump. Actors without an ActorJump never are.</summary>
         public static bool IsActorAirborne(IActor actor)
@@ -66,11 +54,13 @@ namespace GameJam.Actors
         private void OnEnable()
         {
             JumpGap.Added += OnGapAdded;
+            LevelReset.Register(this);
         }
 
         private void OnDisable()
         {
             JumpGap.Added -= OnGapAdded;
+            LevelReset.Unregister(this);
             Land();
         }
 
@@ -88,9 +78,10 @@ namespace GameJam.Actors
             SetGapsIgnored(true);
         }
 
-        /// <summary>Ends any jump at once, e.g. when the room resets mid-air.</summary>
-        public void Cancel()
+        /// <summary>Lands at once when the room resets, so nobody starts the next attempt mid-air.</summary>
+        public void ResetState()
         {
+            StartedThisTick = false;
             Land();
         }
 

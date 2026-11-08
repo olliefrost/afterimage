@@ -1,6 +1,7 @@
 // ElevationField: answers "how high is the ground here?" for a level with raised areas (Chamber 3's
-// balcony and hover stairs). ActorElevation asks it every frame to lift characters' art. Visual only:
+// balcony and hover stairs, Chamber 4's ladders). ActorElevation asks it every frame to lift characters' art. Visual only:
 // physics and recordings stay flat. Levels without a field have height 0 everywhere.
+using GameJam.Interactables;
 using GameJam.Machines;
 using UnityEngine;
 
@@ -14,7 +15,6 @@ namespace GameJam.Visuals
         [SerializeField] private GridLayout _grid;
         [Tooltip("Optional moving stairs that climb from the floor to the raised areas.")]
         [SerializeField] private HoverStairs _stairs;
-
         [Header("Raised areas")]
         [Tooltip("Height of the raised areas in units. The hover stairs' steps climb to this height too.")]
         [SerializeField] private float _height = 1.5f;
@@ -45,7 +45,7 @@ namespace GameJam.Visuals
             }
         }
 
-        /// <summary>The ground height at a point: the stairs' step height first, then any raised area, else the floor.</summary>
+        /// <summary>The ground height at a point: the stairs' step height first, then a ladder, then any raised area, else the floor.</summary>
         private float Sample(Vector2 worldPosition)
         {
             // 1. On the raised stairs: one rise per step.
@@ -58,7 +58,14 @@ namespace GameJam.Visuals
                 }
             }
 
-            // 2. On a raised area: full height.
+            // 2. On a ladder: the climb so far.
+            Ladder ladder = Ladder.At(worldPosition);
+            if (ladder != null)
+            {
+                return _height * ladder.Fraction(worldPosition);
+            }
+
+            // 3. On a raised area: full height.
             Vector3 cell = _grid.LocalToCellInterpolated(_grid.WorldToLocal(worldPosition));
             for (int i = 0; i < _raisedAreas.Length; i++)
             {
