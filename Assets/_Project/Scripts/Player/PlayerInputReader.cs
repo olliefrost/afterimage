@@ -1,8 +1,13 @@
-// PlayerInputReader: the only script that reads raw input (Input System package).
+// PlayerInputReader: the only script that reads gameplay input (Input System package).
 // It turns keys into plain data and events: PlayerMovement reads MoveInput, PlayerActor consumes
 // interact presses, GameStateController listens for clone (R), retry (T), mark run (F) and clone
-// select (1-5).
+// select (1-5), PauseMenu listens for pause (Esc), and ChamberMap reads MapHeld (hold Tab). While the map is held
+// the player stands still. IntroSequence turns on the skip action (any key or click) while the intro plays.
+// While the game is paused, GameStateController switches
+// gameplay keys off here. It also lists the keys the player may rebind (RebindTargets) and applies
+// any rebinds saved earlier; KeyRebinder changes them from the pause menu.
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,8 +15,11 @@ namespace GameJam.Player
 {
     /// <summary>
     /// Reads keyboard input and exposes it as data. Bindings can be changed in the inspector;
-    /// any action left without bindings gets the default keys (WASD/arrows, E, R, T, F, 1-5).
+    /// any action left without bindings gets the default keys (WASD/arrows, E, R, T, F, 1-5, Tab, Esc).
+    /// Saved rebinds from the settings menu are applied on top of those defaults. Runs early so the
+    /// keys and rebind targets exist before the HUD reads them in its OnEnable.
     /// </summary>
+    [DefaultExecutionOrder(-90)]
     public class PlayerInputReader : MonoBehaviour
     {
         [Header("Actions (empty bindings fall back to the defaults)")]
@@ -21,6 +29,8 @@ namespace GameJam.Player
         [SerializeField] private InputAction _retry = new InputAction("Retry", InputActionType.Button);
         [Tooltip("Marks the run so a death saves it as a clone. Defaults to F.")]
         [SerializeField] private InputAction _markRun = new InputAction("Mark Run", InputActionType.Button);
+        [Tooltip("Hold to show the chamber map. The player stands still while it is held.")]
+        [SerializeField] private InputAction _map = new InputAction("Map", InputActionType.Button);
         [Tooltip("One action per clone slot; element 0 selects clone 1. Defaults to the number keys 1-5.")]
         [SerializeField] private InputAction[] _selectClone =
         {
@@ -30,12 +40,35 @@ namespace GameJam.Player
             new InputAction("Select Clone 4", InputActionType.Button),
             new InputAction("Select Clone 5", InputActionType.Button)
         };
+        [Tooltip("Opens and closes the pause menu. Stays active while paused and cannot be rebound in game.")]
+        [SerializeField] private InputAction _pause = new InputAction("Pause", InputActionType.Button);
+        [Tooltip("Skips a cutscene such as the intro. Off except while one plays; not rebindable.")]
+        [SerializeField] private InputAction _skip = new InputAction("Skip", InputActionType.Button);
+
+        private readonly List<RebindTarget> _rebindTargets = new List<RebindTarget>();
+        private readonly List<RebindTarget> _selectTargets = new List<RebindTarget>();
 
         // Set in Update, cleared when consumed in FixedUpdate, so a press between two physics steps is never lost.
         private bool _interactQueued;
+        private bool _gameplayEnabled = true;
 
         /// <summary>Current movement direction, each axis in -1..1.</summary>
         public Vector2 MoveInput { get; private set; }
+
+        /// <summary>True while the map key is held down. Always false while paused.</summary>
+        public bool MapHeld { get; private set; }
+
+        /// <summary>Every key the player may rebind, in the order the settings menu lists them.</summary>
+        public IReadOnlyList<RebindTarget> RebindTargets => _rebindTargets;
+
+        /// <summary>The save clone key (R by default), for the HUD's key letter.</summary>
+        public RebindTarget CloneTarget { get; private set; }
+
+        /// <summary>The retry key (T by default), for the HUD's key letter.</summary>
+        public RebindTarget RetryTarget { get; private set; }
+
+        /// <summary>The mark run key (F by default), for the HUD's key letter.</summary>
+        public RebindTarget MarkRunTarget { get; private set; }
 
         /// <summary>Raised when the clone key is pressed: end the run, keep it as a clone, restart.</summary>
         public event Action CloneRequested;
@@ -49,42 +82,38 @@ namespace GameJam.Player
         /// <summary>Raised with the slot index (0 = clone 1) when a clone select key is pressed.</summary>
         public event Action<int> SelectCloneRequested;
 
+        /// <summary>Raised when the pause key is pressed, whether or not the game is paused.</summary>
+        public event Action PauseRequested;
+
+        /// <summary>Raised when any key or mouse button is pressed while skipping is on (see <see cref="SetSkipEnabled"/>).</summary>
+        public event Action SkipRequested;
+
         private void Awake()
         {
             AddDefaultBindings();
+            BuildRebindTargets();
         }
 
         private void OnEnable()
         {
-            _move.Enable();
-            _interact.Enable();
-            _clone.Enable();
-            _retry.Enable();
-            _markRun.Enable();
-            for (int i = 0; i < _selectClone.Length; i++)
-            {
-                _selectClone[i].Enable();
-            }
+            _pause.Enable();
+            SetGameplayActionsEnabled(_gameplayEnabled);
         }
 
         private void OnDisable()
         {
-            _move.Disable();
-            _interact.Disable();
-            _clone.Disable();
-            _retry.Disable();
-            _markRun.Disable();
-            for (int i = 0; i < _selectClone.Length; i++)
-            {
-                _selectClone[i].Disable();
-            }
+            _pause.Disable();
+            _skip.Disable();
+            SetGameplayActionsEnabled(false);
         }
 
         private void Update()
         {
-            MoveInput = Vector2.ClampMagnitude(_move.ReadValue<Vector2>(), 1f);
+            // 1. While the map is open the player looks, not moves: no walking and no interacting.
+            MapHeld = _map.IsPressed();
+            MoveInput = MapHeld ? Vector2.zero : Vector2.ClampMagnitude(_move.ReadValue<Vector2>(), 1f);
 
-            if (_interact.WasPressedThisFrame())
+            if (_interact.WasPressedThisFrame() && !MapHeld)
             {
                 _interactQueued = true;
             }
@@ -111,6 +140,17 @@ namespace GameJam.Player
                     SelectCloneRequested?.Invoke(i);
                 }
             }
+
+            // Pause before skip: an Esc that skips the intro must not also pause the game it just started.
+            if (_pause.WasPressedThisFrame())
+            {
+                PauseRequested?.Invoke();
+            }
+
+            if (_skip.WasPressedThisFrame())
+            {
+                SkipRequested?.Invoke();
+            }
         }
 
         /// <summary>Returns true once per interact press, then clears it. Call from FixedUpdate.</summary>
@@ -119,6 +159,110 @@ namespace GameJam.Player
             bool pressed = _interactQueued;
             _interactQueued = false;
             return pressed;
+        }
+
+        /// <summary>
+        /// Switches every gameplay key on or off; the pause key always stays on. Used while paused,
+        /// so keys pressed in the menu do nothing, and so the keys can be rebound (an action must be
+        /// off while it is rebound).
+        /// </summary>
+        public void SetGameplayEnabled(bool enabled)
+        {
+            _gameplayEnabled = enabled;
+            _interactQueued = false;
+            MoveInput = Vector2.zero;
+            MapHeld = false;
+            if (isActiveAndEnabled)
+            {
+                SetGameplayActionsEnabled(enabled);
+            }
+        }
+
+        /// <summary>Turns the skip action (any key or left click) on while a cutscene plays, and off after.</summary>
+        public void SetSkipEnabled(bool enabled)
+        {
+            SetActionEnabled(_skip, enabled);
+        }
+
+        /// <summary>The key that picks a clone slot (0 = clone 1), for the HUD's key badges.</summary>
+        public RebindTarget GetSelectTarget(int slot)
+        {
+            return _selectTargets[slot];
+        }
+
+        private void SetGameplayActionsEnabled(bool enabled)
+        {
+            SetActionEnabled(_move, enabled);
+            SetActionEnabled(_interact, enabled);
+            SetActionEnabled(_clone, enabled);
+            SetActionEnabled(_retry, enabled);
+            SetActionEnabled(_markRun, enabled);
+            SetActionEnabled(_map, enabled);
+            for (int i = 0; i < _selectClone.Length; i++)
+            {
+                SetActionEnabled(_selectClone[i], enabled);
+            }
+        }
+
+        private static void SetActionEnabled(InputAction action, bool enabled)
+        {
+            if (enabled)
+            {
+                action.Enable();
+            }
+            else
+            {
+                action.Disable();
+            }
+        }
+
+        /// <summary>
+        /// Lists the rebindable keys and applies any saved rebinds. Move offers only the parts of its
+        /// first composite (WASD); the arrow keys stay as a fixed second binding.
+        /// </summary>
+        private void BuildRebindTargets()
+        {
+            // 1. Movement directions, then the single-key actions, in menu order.
+            _rebindTargets.Add(new RebindTarget("MOVE UP", _move, FindCompositePart(_move, "Up")));
+            _rebindTargets.Add(new RebindTarget("MOVE DOWN", _move, FindCompositePart(_move, "Down")));
+            _rebindTargets.Add(new RebindTarget("MOVE LEFT", _move, FindCompositePart(_move, "Left")));
+            _rebindTargets.Add(new RebindTarget("MOVE RIGHT", _move, FindCompositePart(_move, "Right")));
+            _rebindTargets.Add(new RebindTarget("INTERACT", _interact, 0));
+            CloneTarget = new RebindTarget("SAVE CLONE", _clone, 0);
+            _rebindTargets.Add(CloneTarget);
+            RetryTarget = new RebindTarget("RETRY", _retry, 0);
+            _rebindTargets.Add(RetryTarget);
+            MarkRunTarget = new RebindTarget("MARK RUN", _markRun, 0);
+            _rebindTargets.Add(MarkRunTarget);
+            _rebindTargets.Add(new RebindTarget("MAP (HOLD)", _map, 0));
+            for (int i = 0; i < _selectClone.Length; i++)
+            {
+                RebindTarget select = new RebindTarget($"PICK CLONE {i + 1}", _selectClone[i], 0);
+                _selectTargets.Add(select);
+                _rebindTargets.Add(select);
+            }
+
+            // 2. Put back the keys the player chose last time.
+            for (int i = 0; i < _rebindTargets.Count; i++)
+            {
+                _rebindTargets[i].LoadSaved();
+            }
+        }
+
+        /// <summary>Index of the first binding that is the named part of a composite, for example "Up" in WASD.</summary>
+        private static int FindCompositePart(InputAction action, string part)
+        {
+            for (int i = 0; i < action.bindings.Count; i++)
+            {
+                InputBinding binding = action.bindings[i];
+                if (binding.isPartOfComposite && string.Equals(binding.name, part, StringComparison.OrdinalIgnoreCase))
+                {
+                    return i;
+                }
+            }
+
+            Debug.LogError($"PlayerInputReader: {action.name} has no composite part called {part}.");
+            return 0;
         }
 
         /// <summary>Gives every action without bindings its default keys, so the component works as soon as it is added.</summary>
@@ -165,6 +309,22 @@ namespace GameJam.Player
                 {
                     _selectClone[i].AddBinding($"<Keyboard>/{i + 1}");
                 }
+            }
+
+            if (_map.bindings.Count == 0)
+            {
+                _map.AddBinding("<Keyboard>/tab");
+            }
+
+            if (_skip.bindings.Count == 0)
+            {
+                _skip.AddBinding("<Keyboard>/anyKey");
+                _skip.AddBinding("<Mouse>/leftButton");
+            }
+
+            if (_pause.bindings.Count == 0)
+            {
+                _pause.AddBinding("<Keyboard>/escape");
             }
         }
     }

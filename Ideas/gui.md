@@ -3,7 +3,7 @@
 **Purpose:** The in-level HUD for every level. It shows the restart controls, every saved clone,
 which clone the player is controlling right now, and what state each clone is in, and lets the
 player pick a clone to re-record. It also defines the clone slot rules the HUD depends on (limit,
-controlled clone, switching, death).
+controlled clone, switching, death), the hold-Tab chamber map (see "Chamber map"), and the title screen and Esc pause menu (see "Menus").
 
 Placeholder art for now; the user will provide final icon and button art (see "Art").
 
@@ -33,7 +33,7 @@ Placeholder art for now; the user will provide final icon and button art (see "A
 
 | Button | Key | Label | Caption | Does |
 |---|---|---|---|---|
-| Save | R | key "R" plus a clone glyph | "SAVE CLONE N", or "SAVE N → PLAY M" when clone M is picked | Saves the run into the controlled clone, then restarts (see "Clone slot rules") |
+| Save | R | key "R" plus a clone glyph | "SAVE CLONE N", "SAVE CLONE N · MAX L" once the chamber's limit of L clones is reached, or "SAVE N → PLAY M" when clone M is picked | Saves the run into the controlled clone, then restarts (see "Clone slot rules") |
 | Retry | T | key "T" plus a loop arrow | "RETRY", or "RETRY → M" when clone M is picked | Throws the run away, then restarts |
 | Record | F | key "F" plus a record dot | "RECORD", or "SAVES ON DEATH" while marked | Marks (or unmarks) this run: if the player dies, the run is saved into the controlled clone instead of thrown away |
 
@@ -75,12 +75,18 @@ without code.
 | Controlled | The player is playing this clone this run | Framed row in the clone's colour, an arrow pointing at it, breathing glow |
 | Picked next | The player pressed its number; it becomes controlled at the next restart | Blinking outline |
 | Dead | Clone died this attempt | Short shake (about 0.4 s), then red with a skull mark; the clone's light also turns red |
+| Locked | The chamber's clone limit is reached (shown on the slot just past the limit) | Faint grey body with a padlock, no markers |
 
 A dead icon returns to normal when the next attempt starts.
 
 ## Clone slot rules (game logic)
 
-- **Limit:** at most 5 clones.
+- **Limit:** at most 5 clones. A chamber can set a lower limit (Tutorial1 allows 2); the HUD and the
+  number keys only offer that many.
+- **Locked start:** a chamber that introduces cloning starts with the clone controls locked: R, T
+  and 1-5 do nothing and the R/T buttons and clone column are hidden. When the chamber unlocks them
+  (Tutorial1: the first time the player falls into the pit) they pop in one after another (fade up,
+  grow with a slight overshoot). They stay unlocked for the rest of the chamber.
 - **Controlled clone:** the player always controls exactly one clone slot. The run is recorded
   into it, and that clone does not spawn. At the start it is the new slot (clone 1).
 - **Picking a clone:** pressing 1-5 (or clicking an icon) picks a saved clone, or the ghost new
@@ -88,13 +94,11 @@ A dead icon returns to normal when the next attempt starts.
   again cancels the pick; picking the clone already controlled does nothing.
 - **R:** saves the run into the controlled clone (a new clone, or over the old path), then:
   - if a clone is picked, control switches to it;
-  - else, after saving a new clone, control moves on to the next new slot, or stays on clone 5
-    once all 5 exist (so clone 5 keeps being re-recorded);
-  - else (re-recording an old clone) control stays on that clone, to keep refining it. Press the
-    next free number (for example 3 with two clones) to go back to making new clones; its ghost
-    icon appears when picked.
-- **T:** throws the run away and restarts, even if the run is marked. A picked clone still becomes
-  controlled.
+  - else control moves on to the next new clone, whether the run made a new clone or re-recorded
+    an old one. Once all 5 exist there is no new slot, so control stays on the clone just saved.
+  - To refine the same old clone again, press its number before pressing R.
+- **T:** throws the run away and restarts, even if the run is marked. Control stays on the same
+  clone (so T is how to retry a re-record), and a picked clone still becomes controlled.
 - **F:** marks the current run (press again to unmark). The mark clears on every restart.
 - **Player death:** the room freezes briefly, then restarts. A marked run is saved into the
   controlled clone exactly as R would (so its clone walks into the same hit next time and shields
@@ -111,8 +115,41 @@ A dead icon returns to normal when the next attempt starts.
 | T | Restart without saving |
 | F | Mark this run so dying saves it as a clone; again to unmark |
 | 1-5 | Pick that clone (or the new slot) to control from the next restart; again to cancel |
+| Tab (hold) | Show the chamber map; release to return |
+| Esc | Open or close the pause menu |
 
-All are rebindable inspector actions on `PlayerInputReader`.
+Movement (WASD), E, R, T, 1-5 and Tab can be rebound by the player in the pause menu's Settings; the
+HUD's key letters and badges follow the new keys. The arrow keys and Esc are fixed.
+
+## Chamber map
+
+The play camera sits close (3x pixel scale) and the character only sees a small pool of light, so
+the whole chamber is never on screen. Holding Tab swaps the view for a simplified map of the whole
+chamber, so the player can keep track of every clone.
+
+- **Shows:** the floor (dark blue-grey) and walls and ledges (pale cyan), generated from the
+  chamber's own tiles, plus markers for key features: holes/pits (black), buttons (yellow dots),
+  doors (red lines) and the exit (green).
+- **Characters:** the player is a white dot; each clone is a dot in its slot colour (the same colour
+  as its HUD icon and light), turning red when it dies.
+- **Live:** the game keeps running while the map is open and the dots move in real time. The
+  player's character stands still while Tab is held (that pause is part of the recorded run).
+- The HUD stays on top, so the clone icons sit beside the map. Pausing closes the map.
+- Not yet: door open/closed state, a legend, fog of war.
+
+## Menus
+
+- **Title screen** (`Title.unity`, the first scene): a placeholder "Game Name" logo with buttons
+  beneath it: Continue (only when a save exists), New Game, Quit.
+- **Continue:** the game remembers the last chamber started. Continue restarts that chamber fresh,
+  without its clones. New Game and Restart Game start over from the first chamber.
+- **Pause menu (Esc):** freezes the game and darkens the screen behind a centred panel: Resume,
+  Settings, Restart Game (back to the start of the first chamber), Quit Game. Esc again resumes.
+- **Settings:** one row per rebindable key. Click a key, then press the new one; Esc cancels.
+  Choosing a key that another action already uses swaps the two. Reset to defaults and Back.
+  Rebinds are saved between sessions.
+- Same placeholder style as the HUD; every menu button shares one button prefab, so final art
+  replaces them all at once.
 
 ## Art
 

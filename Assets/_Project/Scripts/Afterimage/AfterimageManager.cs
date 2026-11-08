@@ -27,7 +27,10 @@ namespace GameJam.Afterimage
         [SerializeField] private Transform _cloneParent;
 
         [Header("Slots")]
-        [Tooltip("Colour of each clone slot, used by its light and its HUD icon. The length is the clone limit.")]
+        [Tooltip("Most clones this chamber allows (Tutorial1 uses 2). Capped at the number of slot colours.")]
+        [Min(1)]
+        [SerializeField] private int _maxClones = 5;
+        [Tooltip("Colour of each clone slot, used by its light and its HUD icon. Five slots at most.")]
         [SerializeField] private Color[] _slotColours =
         {
             new Color(0.25f, 0.55f, 1f),  // 1 blue
@@ -41,8 +44,11 @@ namespace GameJam.Afterimage
         private readonly List<AfterimageReplayer> _clones = new List<AfterimageReplayer>();
         private readonly List<bool> _deadThisAttempt = new List<bool>();
 
-        /// <summary>Most clones the level can hold.</summary>
-        public int MaxClones => _slotColours.Length;
+        /// <summary>Most clones this chamber can hold.</summary>
+        public int MaxClones => Mathf.Min(_maxClones, _slotColours.Length);
+
+        /// <summary>Number of slot colours, the most clones any chamber can allow.</summary>
+        public int SlotCount => _slotColours.Length;
 
         /// <summary>Number of saved runs.</summary>
         public int CloneCount => _slots.Count;
@@ -55,6 +61,9 @@ namespace GameJam.Afterimage
 
         /// <summary>Slot the player picked to control from the next restart, or <see cref="NoSlot"/>.</summary>
         public int PendingSlot { get; private set; } = NoSlot;
+
+        /// <summary>This attempt's clones, indexed by slot; the controlled slot's entry is null.</summary>
+        public IReadOnlyList<AfterimageReplayer> Clones => _clones;
 
         /// <summary>Raised when a run ends, the pick changes or the clones respawn.</summary>
         public event Action Changed;
@@ -98,9 +107,9 @@ namespace GameJam.Afterimage
 
         /// <summary>
         /// Ends the current run. If <paramref name="keep"/> is true the run is saved into the controlled
-        /// slot. Then control moves to the picked slot if there is one; otherwise, after saving a new
-        /// clone, it moves on to the next new slot (or stays on the last slot once all are full).
-        /// Re-recording an existing slot keeps control on it.
+        /// slot. Then control moves to the picked slot if there is one; otherwise every save (a new
+        /// clone or a re-record) moves on to the next new slot, or stays put once all slots are full.
+        /// A discarded run (retry) keeps control where it is.
         /// </summary>
         public void EndRun(Recording run, bool keep)
         {
@@ -128,9 +137,9 @@ namespace GameJam.Afterimage
                 ControlledSlot = PendingSlot;
                 PendingSlot = NoSlot;
             }
-            else if (keep && wasNewSlot)
+            else if (keep && _slots.Count < MaxClones)
             {
-                ControlledSlot = Mathf.Min(_slots.Count, MaxClones - 1);
+                ControlledSlot = _slots.Count;
             }
 
             Changed?.Invoke();

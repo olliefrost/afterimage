@@ -39,6 +39,9 @@ namespace GameJam.Afterimage
         /// <inheritdoc />
         public bool IsDead { get; private set; }
 
+        /// <summary>The run this clone replays (set by Init), so the rewind can play it backwards.</summary>
+        public Recording Run => _recording;
+
         /// <summary>Raised once when the clone dies.</summary>
         public event Action<AfterimageReplayer> Died;
 
