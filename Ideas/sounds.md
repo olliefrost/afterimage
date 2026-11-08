@@ -5,6 +5,10 @@ SFX"): what the game should sound like, every sound it needs and the code event 
 where to get free jam-safe assets, and how to wire audio in without touching gameplay. Nothing is
 built yet: `Assets/_Project/Audio/` is empty and no script plays audio.
 
+> **Status after the jam:** this plan is implemented. Clips were generated with ElevenLabs rather
+> than taken from free libraries (see `CREDITS.md`), and the audio code is described under "Audio"
+> in `CLAUDE.md`. The text below is the original plan and is kept for reference.
+
 ## Tone
 
 - **World:** a deserted, overgrown relic lab. A low electrical room hum, distant drips, wind through

@@ -11,7 +11,7 @@
 ## Core mechanic
 
 - **Main time mechanic (what the player does with time):** Creates afterimages, each one replays its actions each time you reattempt. Up to 5 clones (Tutorial1 allows 2 and only unlocks cloning once the player is trapped in its pit), each with its own colour; the player always controls one clone (shown in the HUD) and can switch to an earlier clone to re-record its path while the others keep replaying (rules in `gui.md`)
-- **Moment-to-moment controls:** WASD/arrows move (screen-relative), E interact, R save the run into the controlled clone and restart, T restart without saving, 1-5 pick the clone to control from the next restart, hold Tab for the chamber map, Esc pause menu. The HUD's R/T buttons and clone icons can also be clicked. Gameplay keys can be rebound in the pause menu's Settings (menus in `gui.md`).
+- **Moment-to-moment controls:** WASD/arrows move (screen-relative), E interact, Space jump (Chamber 4 onward), R save the run into the controlled clone and restart, T restart without saving, F mark the run so dying saves it, 1-5 pick the clone to control from the next restart, hold Tab for the chamber map, Esc pause menu. The HUD's R/T buttons and clone icons can also be clicked. Gameplay keys can be rebound in the pause menu's Settings (menus in `gui.md`).
 - **What makes it interesting or tricky:** The camera stays close and the character only sees a small pool of light, so the player relies on the hold-Tab chamber map (walls, key features and a live dot per clone) to keep track of their clones. Coordinating the clones/afterimages to work together and solve the puzzle in the fewest clones possible, add a par later on. Maybe add a time limit? As the number of clones increases they get worse due to the dodgy tech?
 - **How we will test that it is fun early:** Playtest, keep modular so there's always a working version, later will get others to try
 
@@ -23,7 +23,7 @@
 
 ## Game loop and structure
 
-- **Start screen to first play:** title screen (placeholder logo, Continue when a save exists, New Game, Quit), then Tutorial1. Story intro idea: <awake in overgrown chamber (dungeon/cave?..), navigate through puzzle chamber, then onto another chamber (outside?)>
+- **Start screen to first play:** title screen (Afterimage logo, Continue when a save exists, New Game, Quit), then Tutorial1. Story intro idea: <awake in overgrown chamber (dungeon/cave?..), navigate through puzzle chamber, then onto another chamber (outside?)>
 - **Core loop (repeated actions):** Repeat sending out a new clone, all the previous clones replay on a new attempt. Switch to a previous clone (1-5, then R or T) to re-record its path while the rest keep replaying
 - **Levels, rounds or progression:** Start by polishing an initial level, then... Tutorial1 ("First Clone", `tutorial1.md`) is built and playable.
 - **End states and restart:** Escaping the chambers/map? Can replay a level attempting to use fewer clones or do it quicker
@@ -66,21 +66,20 @@
 - **Engine, language and version:** Unity 6 (6000.6.8f1), C#, URP 2D, Input System package
 - **Repo and branching approach:** `main` always runs; short-lived `<area>/<description>` branches merged by PR (details in `CLAUDE.md`)
 - **Key systems (input, time system, entities, UI):** one input reader; a shared tick clock that records the player each fixed step and replays clones from it; an actor interface so buttons, pits and exits react to player and clones alike; a level reset interface; uGUI HUD, title screen and Esc pause menu (layout and clone slot rules in `gui.md`, code in `CLAUDE.md`, Key systems)
-- **Build and export target:** Windows standalone (settings not confirmed yet)
+- **Build and export target:** Windows standalone
 
 ## Team and tasks
 
 - **Roles:** Programming/Implementation, Asset/Sound design, Planning/Ideas
-- **Task split by person:** TBD (likely rotate and work together on different tasks)
+- **Task split by person:** rotated, with everyone working on different tasks
 
 ## Timeline
 
-- Runs about midday Saturday to midday Sunday
-- **Concept locked and repo set up by:** Before the start
-- **Core mechanic playable by:** Early afternoon
-- **Feature complete by:** TBD
-- **Playtest and polish by:** TBD
-- **Submission buffer starts:** TBD
+- Ran from midday Saturday to midday Sunday (24 hours)
+
+## Outcome
+
+Shipped: five playable scenes (Tutorial1, Tutorial2, Chamber 3, Chamber 4 and the Ending) with the full afterimage mechanic, lasers and death, machines, jumping and ladders, a title screen, pause menu, key rebinding, music and sound effects. Not built: the Stretch list (co-op, NPC dialogue, easter eggs), enemies beyond lasers, outdoor levels, clone par and clone degradation.
 
 ## Risks
 
@@ -89,7 +88,4 @@
 
 ## Submission checklist
 
-- [ ] Build runs on a clean machine
-- [ ] Page and upload set up, with description
-- [ ] Screenshots or a short gameplay clip
-- [ ] Credits and asset licences listed
+- [x] Credits and asset licences listed (`CREDITS.md`)

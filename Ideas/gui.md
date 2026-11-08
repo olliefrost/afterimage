@@ -139,7 +139,7 @@ chamber, so the player can keep track of every clone.
 
 ## Menus
 
-- **Title screen** (`Title.unity`, the first scene): a placeholder "Game Name" logo with buttons
+- **Title screen** (`Title.unity`, the first scene): the "Afterimage" logo with buttons
   beneath it: Continue (only when a save exists), New Game, Quit.
 - **Continue:** the game remembers the last chamber started. Continue restarts that chamber fresh,
   without its clones. New Game and Restart Game start over from the first chamber.
