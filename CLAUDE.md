@@ -91,7 +91,7 @@ All our own game content lives under `Assets/_Project/`, kept apart from importe
 - `Ideas/<level>.md`: one file per level, lowercase, no spaces (`tutorial1.md`, `tutorial2.md`, `level1.md`). Each holds that level's purpose, mechanics taught, room layout, step-by-step flow, art and feedback notes, and open questions.
 - `Ideas/Inspiration/`: look-and-feel reference images, each listed in `inspiration.md` with its source and what to take from it. Image names are lowercase snake_case. Reference only: never import these into `Assets/`.
 - `Ideas/Sketches/`: hand-drawn level layouts (`tutorial1.png`).
-- Current files: `PROJECT_PLAN.md`, `tutorial1.md`, `tutorial2.md`, `chamber-3.md` (with `chamber_3_design.jpg`; designed, not built), `gui.md` (HUD layout, clone slot rules, title and pause menus), `Inspiration/`, `Sketches/` (add new level files here as they are written).
+- Current files: `PROJECT_PLAN.md`, `tutorial1.md`, `tutorial2.md`, `chamber-3.md` (with `chamber_3_design.jpg`; designed, not built), `gui.md` (HUD layout, clone slot rules, title and pause menus), `sounds.md` (music and SFX plan, not built), `Inspiration/`, `Sketches/` (add new level files here as they are written).
 - **Before building or changing a level,** read `Ideas/PROJECT_PLAN.md` and that level's file. Build what the level file describes. Open questions in a level file are not yours to decide: ask the user.
 - **Do not edit files in `Ideas/` without the user's say-so.** If the implementation has to differ from a level file, say so in your task summary and let the user update the doc.
 - If a level is mentioned in `Ideas/PROJECT_PLAN.md` but has no file yet, ask the user before inventing its design.
