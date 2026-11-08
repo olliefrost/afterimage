@@ -2,7 +2,8 @@
 // holding <State>/rotations and <State>/animations, e.g. Assets/Sprites/main_character) and choose
 // Create > GameJam > Character Sprite Set From Folder. It gives every PNG pixel-art import settings
 // (64 PPU, Point, uncompressed, pivot under the lowest foot of each folder) and builds a CharacterSpriteSet asset in that folder
-// for CharacterSpriteAnimator to use.
+// for CharacterSpriteAnimator to use. Animation folders are matched by name: Running (or the first other
+// folder), Jump (8 directions) and Climb (one north-west set, facing the wall).
 using System.IO;
 using System.Linq;
 using GameJam.Visuals;
@@ -39,7 +40,7 @@ namespace GameJam.EditorTools
         /// </summary>
         public static CharacterSpriteSet BuildFromFolder(string root)
         {
-            // 1. Find the rotations folder and the first animation (e.g. Running) beside it.
+            // 1. Find the rotations folder and the animation folders beside it.
             string rotations = Directory.GetDirectories(root, "rotations", SearchOption.AllDirectories)
                 .Select(Normalise).FirstOrDefault();
             if (rotations == null)
@@ -49,9 +50,13 @@ namespace GameJam.EditorTools
             }
 
             string animations = Normalise(Path.Combine(Path.GetDirectoryName(rotations), "animations"));
-            string run = Directory.Exists(animations)
-                ? Directory.GetDirectories(animations).Select(Normalise).FirstOrDefault()
-                : null;
+            string[] animationFolders = Directory.Exists(animations)
+                ? Directory.GetDirectories(animations).Select(Normalise).ToArray()
+                : new string[0];
+            string jump = Named(animationFolders, "Jump");
+            string climb = Named(animationFolders, "Climb");
+            string run = Named(animationFolders, "Running")
+                ?? animationFolders.FirstOrDefault(f => f != jump && f != climb);
 
             // 2. Give every PNG pixel-art import settings so sprites are crisp and stand on their feet.
             //    Idle and run images use different canvas sizes, so each folder is pivoted on the lowest
@@ -76,13 +81,14 @@ namespace GameJam.EditorTools
                 AssetDatabase.StopAssetEditing();
             }
 
-            // 3. Collect the idle sprite and run frames for each of the 8 directions.
+            // 3. Collect the idle sprite, run frames and jump frames for each of the 8 directions.
             var directions = new DirectionSprites[CharacterSpriteSet.DirectionCount];
             for (int i = 0; i < directions.Length; i++)
             {
                 string name = CharacterSpriteSet.DirectionNames[i];
                 directions[i].Idle = AssetDatabase.LoadAssetAtPath<Sprite>($"{rotations}/{name}.png");
                 directions[i].Run = LoadFrames(run == null ? null : $"{run}/{name}");
+                directions[i].Jump = LoadFrames(jump == null ? null : $"{jump}/{name}");
                 if (directions[i].Idle == null)
                 {
                     Debug.LogWarning($"Missing idle sprite for '{name}' in {rotations}.");
@@ -99,6 +105,7 @@ namespace GameJam.EditorTools
             }
 
             set.SetDirections(directions);
+            set.SetClimb(LoadFrames(climb == null ? null : $"{climb}/north-west"));
             EditorUtility.SetDirty(set);
             AssetDatabase.SaveAssets();
             return set;
@@ -156,6 +163,12 @@ namespace GameJam.EditorTools
             {
                 Object.DestroyImmediate(texture);
             }
+        }
+
+        /// <summary>The animation folder with this name (any case), or null.</summary>
+        private static string Named(string[] folders, string name)
+        {
+            return folders.FirstOrDefault(f => string.Equals(Path.GetFileName(f), name, System.StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>Loads frame_*.png sprites in name order, or an empty array if the folder is missing.</summary>

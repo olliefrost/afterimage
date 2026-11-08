@@ -190,6 +190,12 @@ namespace GameJam.Visuals
         /// <summary>Changes only the alpha of one tile's colour.</summary>
         private static void SetAlpha(Tilemap map, Vector3Int cell, float alpha)
         {
+            // While the scene unloads, OnDisable can run after the tilemap is already gone.
+            if (map == null)
+            {
+                return;
+            }
+
             Color colour = map.GetColor(cell);
             colour.a = alpha;
             map.SetColor(cell, colour);
