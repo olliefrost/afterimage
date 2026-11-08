@@ -85,8 +85,10 @@ Isometric, facing northwest, as in the sketch. Corners are referred to as:
 - **Power controls everything:** without power the plates, stairs and exit door do nothing. Power
   stays on only while fuel keeps arriving, so if Afterimage 1 lets go of the block, the room loses
   power and everything after it unravels.
-- **Plates, not buttons:** each raised button and plate pair works by standing on the plate; the
-  buttons are decoration.
+- **Plates and buttons:** standing on a ledge plate moves the stairs; the button on the wall above
+  each ledge plate is pressed with E (an afterimage can do it). The exit door opens once both
+  buttons have been pressed while the room is powered; each button has a cable to the door that
+  lights when it is pressed.
 - **Raised balcony:** the plates by the back wall and the exit door sit on a balcony one wall-block
   high, split into three bays by pillars. Its front edge is solid except where the raised stairs
   stand; the 4 plates flip up into 4 steps leading onto it, with rails so you only get on at the
@@ -98,7 +100,8 @@ Isometric, facing northwest, as in the sketch. Corners are referred to as:
   when the room is powered. Each plate has its own cable to what it moves (pedal → piston, plates →
   the stairs' stops), and a stop's floor marker lights up when the stairs will go there.
 - **Fuel:** a steady stream of crates, one about every 1.2 seconds.
-- **Exit door:** opens when the player walks up to it while the room is powered.
+- **Exit door:** opens once both ledge buttons are pressed while the room is powered, and closes
+  again if the power is lost. The buttons can only be pressed while the room is powered.
 - **Afterimage 4's timing:** it boards the stairs once they flip up; they only slide left when
   Afterimage 3 reaches the top right plate after climbing, which gives Afterimage 4 time to get on.
 
