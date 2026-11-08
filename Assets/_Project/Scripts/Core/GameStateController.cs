@@ -64,8 +64,13 @@ namespace GameJam.Core
         /// <summary>Raised whenever <see cref="State"/> changes.</summary>
         public event Action<GameState> StateChanged;
 
-        /// <summary>True once the player may save, retry and pick clones in this chamber.</summary>
-        public bool ClonesUnlocked { get; private set; }
+        /// <summary>
+        /// True once the player may save, retry and pick clones in this chamber. Read straight from the
+        /// serialized flag, so it is already right when other objects' OnEnable runs before this Awake.
+        /// </summary>
+        public bool ClonesUnlocked => _clonesStartUnlocked || _unlockedThisChamber;
+
+        private bool _unlockedThisChamber;
 
         /// <summary>Raised once, when the clone controls unlock part-way through a chamber.</summary>
         public event Action ClonesUnlockedNow;
@@ -75,11 +80,6 @@ namespace GameJam.Core
 
         /// <summary>Raised whenever <see cref="RunMarked"/> changes, for the HUD's record button.</summary>
         public event Action<bool> RunMarkedChanged;
-
-        private void Awake()
-        {
-            ClonesUnlocked = _clonesStartUnlocked;
-        }
 
         private void OnEnable()
         {
@@ -229,7 +229,7 @@ namespace GameJam.Core
                 return;
             }
 
-            ClonesUnlocked = true;
+            _unlockedThisChamber = true;
             ClonesUnlockedNow?.Invoke();
         }
 
