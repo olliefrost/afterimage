@@ -1,8 +1,10 @@
-// SettingsPanel: the key settings page inside the pause menu. On first open it spawns one
-// KeybindRow per rebindable key from PlayerInputReader, keeps the rows in step with KeyRebinder,
-// and has Reset to defaults and Back buttons. PauseMenu opens and closes it.
+// SettingsPanel: the settings page inside the pause menu. A Screen Shake button cycles
+// GameSettings' shake strength (Full, Low, Off). On first open it spawns one KeybindRow per
+// rebindable key from PlayerInputReader, keeps the rows in step with KeyRebinder, and has Reset to
+// defaults and Back buttons. PauseMenu opens and closes it.
 using System;
 using System.Collections.Generic;
+using GameJam.Core;
 using GameJam.Player;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +21,9 @@ namespace GameJam.UI
         [SerializeField] private Transform _rowParent;
         [SerializeField] private Button _resetButton;
         [SerializeField] private Button _backButton;
+        [Tooltip("Cycles the screen shake strength: Full, Low, Off.")]
+        [SerializeField] private Button _shakeButton;
+        [SerializeField] private Text _shakeLabel;
 
         private readonly List<KeybindRow> _rows = new List<KeybindRow>();
         private PlayerInputReader _input;
@@ -35,7 +40,10 @@ namespace GameJam.UI
             _rebinder.Changed += RefreshRows;
             _resetButton.onClick.AddListener(_rebinder.ResetAll);
             _backButton.onClick.AddListener(HandleBackClicked);
+            _shakeButton.onClick.AddListener(GameSettings.CycleShake);
+            GameSettings.Changed += RefreshShakeLabel;
             RefreshRows();
+            RefreshShakeLabel();
         }
 
         private void OnDisable()
@@ -43,6 +51,14 @@ namespace GameJam.UI
             _rebinder.Changed -= RefreshRows;
             _resetButton.onClick.RemoveListener(_rebinder.ResetAll);
             _backButton.onClick.RemoveListener(HandleBackClicked);
+            _shakeButton.onClick.RemoveListener(GameSettings.CycleShake);
+            GameSettings.Changed -= RefreshShakeLabel;
+        }
+
+        /// <summary>Shows the current screen shake strength on its button.</summary>
+        private void RefreshShakeLabel()
+        {
+            _shakeLabel.text = "SCREEN SHAKE: " + GameSettings.Shake.ToString().ToUpperInvariant();
         }
 
         /// <summary>Gives the panel the scene's input objects. PauseMenu calls this before the panel is first opened.</summary>

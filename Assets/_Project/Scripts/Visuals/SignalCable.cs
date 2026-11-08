@@ -1,6 +1,7 @@
-// SignalCable: a floor cable from a source (generator, plate) to what it drives. It glows and runs a
-// small pulse along its path while the source is on, and can light up extra sprites at its end
-// (such as a stair stop marker), so the player sees what powers what. Visual only.
+// SignalCable: a floor cable from a source (generator, plate) to what it drives. When the source
+// turns on, a bright charge front races along the cable from the source end; while on it glows and
+// runs a small pulse along its path; when it turns off it flickers out. It can light up extra
+// sprites at its end (such as a stair stop marker), so the player sees what powers what. Visual only.
 using GameJam.Core;
 using UnityEngine;
 
@@ -26,7 +27,23 @@ namespace GameJam.Visuals
         [Tooltip("Units per second the pulse travels while the cable is on.")]
         [SerializeField] private float _pulseSpeed = 2.5f;
 
+        [Header("Switching")]
+        [Tooltip("Seconds the charge front takes to run the whole cable when it turns on.")]
+        [SerializeField] private float _chargeTime = 0.3f;
+        [Tooltip("Colour of the charge front, brighter than the on colour.")]
+        [SerializeField] private Color _chargeColour = new Color(0.85f, 1f, 1f);
+        [Tooltip("Seconds the cable flickers before going dark when it turns off.")]
+        [SerializeField] private float _flickerTime = 0.25f;
+        [Tooltip("Flickers per second while turning off.")]
+        [SerializeField] private float _flickerRate = 14f;
+
         private ISignalSource _signal;
+        private float _switchElapsed = -1f;
+
+        // Reused so animating the cable does not allocate new key arrays.
+        private Gradient _gradient;
+        private GradientColorKey[] _colourKeys;
+        private GradientAlphaKey[] _alphaKeys;
         private LineRenderer _line;
         private Vector3[] _points;
         private float[] _lengths;
@@ -43,8 +60,12 @@ namespace GameJam.Visuals
             }
 
             _line = GetComponent<LineRenderer>();
+            _gradient = new Gradient();
+            _colourKeys = new GradientColorKey[5];
+            _alphaKeys = new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, 1f) };
             CachePath();
             Apply(false);
+            SetSolid(_offColour);
         }
 
         private void Update()
@@ -53,7 +74,10 @@ namespace GameJam.Visuals
             if (on != _wasOn)
             {
                 Apply(on);
+                _switchElapsed = 0f;
             }
+
+            AnimateSwitch(on);
 
             // The pulse loops along the cable while it is on, like Tutorial1's signal wire.
             if (on && _pulse != null && _totalLength > 0f)
@@ -63,12 +87,67 @@ namespace GameJam.Visuals
             }
         }
 
-        /// <summary>Recolours the cable and its end sprites, and shows the pulse only while on.</summary>
+        /// <summary>
+        /// Plays the switch animation after a change: a bright front running along the cable when it
+        /// turns on, a few flickers when it turns off, then the plain on or off colour.
+        /// </summary>
+        private void AnimateSwitch(bool on)
+        {
+            if (_switchElapsed < 0f)
+            {
+                return;
+            }
+
+            _switchElapsed += Time.deltaTime;
+            float duration = on ? _chargeTime : _flickerTime;
+            if (_switchElapsed >= duration)
+            {
+                _switchElapsed = -1f;
+                SetSolid(on ? _onColour : _offColour);
+                return;
+            }
+
+            float t = _switchElapsed / duration;
+            if (on)
+            {
+                SetChargeFront(t);
+            }
+            else
+            {
+                bool lit = Mathf.Repeat(_switchElapsed * _flickerRate, 1f) < 0.5f;
+                SetSolid(lit ? Color.Lerp(_offColour, _onColour, 1f - t) : _offColour);
+            }
+        }
+
+        /// <summary>Lit behind the front, a bright band at <paramref name="front"/> (0-1 along the cable), off ahead of it.</summary>
+        private void SetChargeFront(float front)
+        {
+            float edge = Mathf.Clamp(front, 0.02f, 0.97f);
+            _colourKeys[0] = new GradientColorKey(_onColour, 0f);
+            _colourKeys[1] = new GradientColorKey(_onColour, edge - 0.02f);
+            _colourKeys[2] = new GradientColorKey(_chargeColour, edge);
+            _colourKeys[3] = new GradientColorKey(_offColour, edge + 0.02f);
+            _colourKeys[4] = new GradientColorKey(_offColour, 1f);
+            _gradient.SetKeys(_colourKeys, _alphaKeys);
+            _line.colorGradient = _gradient;
+        }
+
+        /// <summary>Colours the whole cable one colour, reusing the same gradient.</summary>
+        private void SetSolid(Color colour)
+        {
+            for (int i = 0; i < _colourKeys.Length; i++)
+            {
+                _colourKeys[i] = new GradientColorKey(colour, i / (float)(_colourKeys.Length - 1));
+            }
+
+            _gradient.SetKeys(_colourKeys, _alphaKeys);
+            _line.colorGradient = _gradient;
+        }
+
+        /// <summary>Recolours the end sprites and shows the pulse only while on; the cable itself is animated by AnimateSwitch.</summary>
         private void Apply(bool on)
         {
             _wasOn = on;
-            _line.startColor = on ? _onColour : _offColour;
-            _line.endColor = on ? _onColour : _offColour;
             if (_pulse != null)
             {
                 _pulse.gameObject.SetActive(on);

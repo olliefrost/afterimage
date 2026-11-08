@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 7297189259327496816}
   - component: {fileID: 3722880358620815263}
   - component: {fileID: 3153634421849856264}
+  - component: {fileID: 8642378647069382656}
   m_Layer: 0
   m_Name: Clone
   m_TagString: Untagged
@@ -215,6 +216,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba9d8bf026dbe34cac5887211b773e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Actors.LadderClimber
+--- !u!114 &8642378647069382656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349804375299011067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05dfdd7f4a21d3044b1156990ab74c13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.CloneDeathFeedback
+  _replayer: {fileID: 5291575494339755315}
+  _sprite: {fileID: 5603025798857344726}
+  _glow: {fileID: 550566660558142230}
+  _duration: 0.35
+  _glitchAmount: 0.35
+  _glitchRate: 30
+  _glowBoost: 3
+  _shakeStrength: 0.05
+  _shakeDuration: 0.2
 --- !u!1 &3125175121937554461
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@
 // notices the new controls. Sits on the HUD root. Visual only: GameStateController already ignores
 // the clone keys while locked.
 using GameJam.Core;
+using GameJam.Visuals;
 using UnityEngine;
 
 namespace GameJam.UI
@@ -71,9 +72,7 @@ namespace GameJam.UI
                 finished &= t >= 1f;
 
                 // 1. Scale: grow from small, overshoot a little, settle at full size (a "back out" ease).
-                float u = t - 1f;
-                float eased = 1f + (_overshoot + 1f) * u * u * u + _overshoot * u * u;
-                float scale = Mathf.LerpUnclamped(_startScale, 1f, eased);
+                float scale = Mathf.LerpUnclamped(_startScale, 1f, Ease.BackOut(t, _overshoot));
 
                 // 2. Fade up over the first third of the pop.
                 Apply(i, Mathf.Clamp01(t * 3f), scale);

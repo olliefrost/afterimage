@@ -1,8 +1,9 @@
 // DialogueBox: a speech panel at the bottom centre of the screen (DialogueBox prefab). Show types a
-// line out letter by letter under a speaker name; Hide fades it away. IntroSequence uses it for the
-// guard's shout; it is generic so later speech can reuse it. Runs on real time so it never depends
-// on the game's time scale. Visual only.
+// line out letter by letter under a speaker name after the box pops up; Hide fades it away.
+// IntroSequence uses it for the guard's shout; it is generic so later speech can reuse it. Runs on
+// real time so it never depends on the game's time scale. Visual only.
 using System.Collections;
+using GameJam.Visuals;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,8 @@ namespace GameJam.UI
         [SerializeField] private float _lettersPerSecond = 28f;
         [Tooltip("Seconds to fade in and out.")]
         [SerializeField] private float _fadeTime = 0.2f;
+        [Tooltip("Scale the box pops up from as it fades in.")]
+        [SerializeField] private float _popStartScale = 0.85f;
 
         private Coroutine _routine;
 
@@ -75,16 +78,27 @@ namespace GameJam.UI
             IsTyping = false;
         }
 
+        /// <summary>Fades to <paramref name="target"/>; fading in also pops the box up from a little smaller.</summary>
         private IEnumerator FadeTo(float target)
         {
             float start = _group.alpha;
+            bool popping = target > start;
+            Transform box = _group.transform;
             for (float t = 0f; t < _fadeTime; t += Time.unscaledDeltaTime)
             {
-                _group.alpha = Mathf.Lerp(start, target, t / _fadeTime);
+                float k = t / _fadeTime;
+                _group.alpha = Mathf.Lerp(start, target, k);
+                if (popping)
+                {
+                    float scale = Mathf.LerpUnclamped(_popStartScale, 1f, Ease.BackOut(k));
+                    box.localScale = new Vector3(scale, scale, 1f);
+                }
+
                 yield return null;
             }
 
             _group.alpha = target;
+            box.localScale = Vector3.one;
         }
 
         private void StopRoutine()
