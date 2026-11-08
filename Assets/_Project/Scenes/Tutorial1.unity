@@ -9577,7 +9577,7 @@ MonoBehaviour:
   - {fileID: 173444901}
   - {fileID: 1627566052}
   _speaker: ???
-  _line: HEY! GET BACK HERE!
+  _line: Come back here!
   _openPause: 0.7
   _afterShoutPause: 0.25
   _sprintSpeed: 7
