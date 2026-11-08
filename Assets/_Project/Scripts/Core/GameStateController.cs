@@ -3,7 +3,8 @@
 // RewindEffect, resets the room, respawns the clones and restarts the tick clock. One per level
 // scene. The HUD buttons and clone icons call the same Request methods as the keys; PauseMenu
 // calls Pause and Resume.
-// On start it saves this chamber as the Continue point. In a chamber that teaches cloning, the
+// On start it saves this chamber as the Continue point; on completion it stops the player and asks
+// SceneFlow to wipe to the next chamber. In a chamber that teaches cloning, the
 // clone controls stay locked until something calls UnlockClones (see CloneUnlocker).
 // If a hazard kills the player, the room freezes for a moment so the hit reads, then restarts.
 // The death saves the run as a clone only if the player marked the run first (F), which is how
@@ -55,8 +56,10 @@ namespace GameJam.Core
         [SerializeField] private RewindEffect _rewind;
 
         [Header("Level complete")]
-        [Tooltip("Seconds to show the level complete screen before loading the next scene in Build Settings.")]
-        [SerializeField] private float _nextLevelDelay = 3f;
+        [Tooltip("Seconds the player stands still at the exit before the screen wipes to the next chamber.")]
+        [SerializeField] private float _exitDelay = 0.4f;
+        [Tooltip("Shown on the black between chambers.")]
+        [SerializeField] private string _completeCaption = "CHAMBER COMPLETED";
 
         /// <summary>Current state of the level.</summary>
         public GameState State { get; private set; } = GameState.Playing;
@@ -99,14 +102,28 @@ namespace GameJam.Core
             _player.Died -= HandlePlayerDied;
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
             SaveProgress.SaveChamber(SceneManager.GetActiveScene().buildIndex);
 
             // An intro claimed the start in Awake: the attempt begins when it calls FinishIntro.
             if (State == GameState.Intro)
             {
-                return;
+                yield break;
+            }
+
+            // Arrived behind a screen wipe: hold the chamber like an intro until it is visible, so
+            // nothing moves or is recorded in the dark.
+            if (SceneFlow.IsChangingScene)
+            {
+                BeginIntro();
+                while (SceneFlow.IsChangingScene)
+                {
+                    yield return null;
+                }
+
+                FinishIntro();
+                yield break;
             }
 
             _clock.Restart();
@@ -115,7 +132,8 @@ namespace GameJam.Core
 
         /// <summary>
         /// Holds the chamber in the Intro state: no clock, no recording, no gameplay keys. Called by
-        /// IntroSequence in Awake, before this script's Start would begin play.
+        /// IntroSequence in Awake, before this script's Start would begin play, and by Start while
+        /// the arrival wipe still covers the screen.
         /// </summary>
         public void BeginIntro()
         {
@@ -233,7 +251,10 @@ namespace GameJam.Core
             ClonesUnlockedNow?.Invoke();
         }
 
-        /// <summary>Ends the level: freezes play, shows the complete screen and moves on if a next scene exists.</summary>
+        /// <summary>
+        /// Ends the level: freezes play and stops the player, then wipes to the next chamber (or the
+        /// title after the last one) with the complete caption on the black.
+        /// </summary>
         public void CompleteLevel()
         {
             if (State != GameState.Playing)
@@ -242,8 +263,9 @@ namespace GameJam.Core
             }
 
             _clock.Stop();
+            _input.SetGameplayEnabled(false);
             SetState(GameState.LevelComplete);
-            StartCoroutine(LoadNextLevelAfterDelay());
+            StartCoroutine(LeaveChamberAfterDelay());
         }
 
         /// <summary>Starts a new attempt from the player's request, keeping the finished run as a clone if asked.</summary>
@@ -321,16 +343,11 @@ namespace GameJam.Core
             RunMarkedChanged?.Invoke(marked);
         }
 
-        /// <summary>Waits on the complete screen, then loads the next scene if there is one.</summary>
-        private IEnumerator LoadNextLevelAfterDelay()
+        /// <summary>Holds the finished chamber for a moment, then hands over to SceneFlow's wipe.</summary>
+        private IEnumerator LeaveChamberAfterDelay()
         {
-            yield return new WaitForSeconds(_nextLevelDelay);
-
-            int nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
-            if (nextIndex < SceneManager.sceneCountInBuildSettings)
-            {
-                SceneManager.LoadScene(nextIndex);
-            }
+            yield return new WaitForSeconds(_exitDelay);
+            SceneFlow.CompleteChamber(SceneManager.GetActiveScene().buildIndex, _completeCaption);
         }
 
         private void SetState(GameState state)

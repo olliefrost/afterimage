@@ -94,6 +94,13 @@ namespace GameJam.Story
             _playerBody.simulated = false;
             _player.Teleport(_path[0].position);
             _camera.Follow(_cameraFocus, true);
+
+            // Wait for the screen wipe from the title to clear, so the opening is seen and can't be skipped blind.
+            while (SceneFlow.IsChangingScene)
+            {
+                yield return null;
+            }
+
             _input.SetSkipEnabled(true);
             yield return new WaitForSeconds(_openPause);
 

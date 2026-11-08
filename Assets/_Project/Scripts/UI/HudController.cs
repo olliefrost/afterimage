@@ -1,4 +1,4 @@
-// HudController: the run buttons in the bottom right and the level complete panel.
+// HudController: the run buttons in the bottom right. Completing a chamber is shown by ScreenTransition.
 // The R (save) button is framed in the colour of the clone the player controls, its caption says
 // which clone the run is saved into (and which one is next if a switch is picked), and it pulses
 // after the player presses a hinted button until they make their first clone. The T (retry)
@@ -14,7 +14,7 @@ using UnityEngine.UI;
 
 namespace GameJam.UI
 {
-    /// <summary>Save, retry and record buttons with their captions, the save button's pulse, and the level complete panel.</summary>
+    /// <summary>Save, retry and record buttons with their captions, and the save button's pulse.</summary>
     public class HudController : MonoBehaviour
     {
         [Header("Game references")]
@@ -47,7 +47,6 @@ namespace GameJam.UI
         [SerializeField] private Image _recordGlyph;
         [Tooltip("Small text under F: whether dying will save this run.")]
         [SerializeField] private Text _recordCaption;
-        [SerializeField] private GameObject _completePanel;
 
         [Header("Pulse")]
         [SerializeField] private float _pulseSpeed = 6f;
@@ -76,7 +75,6 @@ namespace GameJam.UI
             _retryButton.onClick.AddListener(_game.RequestRetry);
             _recordButton.onClick.AddListener(_game.ToggleRunMark);
             _afterimages.Changed += HandleClonesChanged;
-            _game.StateChanged += HandleStateChanged;
             _game.RunMarkedChanged += HandleRunMarkedChanged;
             _rebinder.Changed += RefreshKeyLabels;
             for (int i = 0; i < _pulseTriggers.Length; i++)
@@ -87,7 +85,6 @@ namespace GameJam.UI
             HandleClonesChanged();
             HandleRunMarkedChanged(_game.RunMarked);
             RefreshKeyLabels();
-            _completePanel.SetActive(false);
         }
 
         private void OnDisable()
@@ -96,7 +93,6 @@ namespace GameJam.UI
             _retryButton.onClick.RemoveListener(_game.RequestRetry);
             _recordButton.onClick.RemoveListener(_game.ToggleRunMark);
             _afterimages.Changed -= HandleClonesChanged;
-            _game.StateChanged -= HandleStateChanged;
             _game.RunMarkedChanged -= HandleRunMarkedChanged;
             _rebinder.Changed -= RefreshKeyLabels;
             for (int i = 0; i < _pulseTriggers.Length; i++)
@@ -173,11 +169,6 @@ namespace GameJam.UI
             _cloneKeyLabel.text = _input.CloneTarget.KeyName.ToUpperInvariant();
             _retryKeyLabel.text = _input.RetryTarget.KeyName.ToUpperInvariant();
             _recordKeyLabel.text = _input.MarkRunTarget.KeyName.ToUpperInvariant();
-        }
-
-        private void HandleStateChanged(GameState state)
-        {
-            _completePanel.SetActive(state == GameState.LevelComplete);
         }
     }
 }
