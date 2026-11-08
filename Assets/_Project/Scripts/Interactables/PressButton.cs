@@ -1,6 +1,7 @@
 // PressButton: a floor/wall button any actor can press with interact. It latches on until the
 // next attempt and fires OnPressed (wired in the inspector, e.g. to SignalWire.Send).
-// The HUD also listens to Pressed to start pulsing the clone button.
+// The HUD also listens to Pressed to start pulsing the clone button. As an ISignalSource it also
+// feeds gates and cables (Chamber 3's door lock).
 using System;
 using GameJam.Core;
 using UnityEngine;
@@ -9,8 +10,12 @@ using UnityEngine.Events;
 namespace GameJam.Interactables
 {
     /// <summary>A one-shot button: the first interact presses it, and it stays pressed until the room resets.</summary>
-    public class PressButton : MonoBehaviour, IInteractable, IResettable
+    public class PressButton : MonoBehaviour, IInteractable, IResettable, ISignalSource
     {
+        [Header("Power (optional)")]
+        [Tooltip("If set (any ISignalSource, e.g. a PowerGenerator), the button can only be pressed while it is on.")]
+        [SerializeField] private MonoBehaviour _requiredPower;
+
         [Header("Visuals")]
         [SerializeField] private SpriteRenderer _renderer;
         [SerializeField] private Color _unpressedColor = new Color(0.9f, 0.15f, 0.15f);
@@ -21,9 +26,22 @@ namespace GameJam.Interactables
         [SerializeField] private UnityEvent _onPressed = new UnityEvent();
 
         private bool _isPressed;
+        private ISignalSource _power;
+
+        /// <summary>True once the button has been pressed this attempt (for gates and cables).</summary>
+        public bool IsOn => _isPressed;
 
         /// <summary>Raised from code when the button is pressed, with the actor that pressed it.</summary>
         public event Action<IActor> Pressed;
+
+        private void Awake()
+        {
+            _power = _requiredPower as ISignalSource;
+            if (_requiredPower != null && _power == null)
+            {
+                Debug.LogError($"{name}: Required Power must implement ISignalSource.", this);
+            }
+        }
 
         private void OnEnable()
         {
@@ -36,10 +54,10 @@ namespace GameJam.Interactables
             LevelReset.Unregister(this);
         }
 
-        /// <summary>Presses the button if it is not already down.</summary>
+        /// <summary>Presses the button if it is not already down (and, if it needs power, the power is on).</summary>
         public void Interact(IActor actor)
         {
-            if (_isPressed)
+            if (_isPressed || (_power != null && !_power.IsOn))
             {
                 return;
             }

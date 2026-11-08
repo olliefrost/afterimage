@@ -1,4 +1,5 @@
-// Door: blocks the way until Open() is called (usually by SignalWire.OnArrived). Opening removes
+// Door: blocks the way until Open() is called (usually by SignalWire.OnArrived, or a gate that can
+// also Close() it again). Opening removes
 // the blocking collider, recolours the door and turns on its "open" visuals (light spill or trail)
 // so the exit reads clearly. Closes again on every new attempt.
 using GameJam.Core;
@@ -37,6 +38,13 @@ namespace GameJam.Interactables
         public void Open()
         {
             _isOpen = true;
+            ApplyState();
+        }
+
+        /// <summary>Shuts the door again, e.g. when the power behind its lock fails.</summary>
+        public void Close()
+        {
+            _isOpen = false;
             ApplyState();
         }
 
