@@ -1,4 +1,4 @@
-// IntroSequence: the opening of a new game in Tutorial1 (Ideas/PROJECT_PLAN.md, Story > Intro).
+// IntroSequence: the opening of a new game in Tutorial1 (docs/story.md, Intro).
 // The camera looks at the open entrance door with bright light outside, an unseen guard shouts,
 // the character sprints in, the door's shutter slams down behind her and the camera glides to her. Then
 // GameStateController.FinishIntro starts the first attempt, so nothing here is recorded.

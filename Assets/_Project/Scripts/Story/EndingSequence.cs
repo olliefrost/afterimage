@@ -1,4 +1,4 @@
-// EndingSequence: the whole bad ending in the Ending scene (Ideas/ending.md). She sprints in through
+// EndingSequence: the whole bad ending in the Ending scene (docs/levels/05-ending.md). She sprints in through
 // the door (like IntroSequence), the camera zooms out, the guide lights come on towards the sister's
 // hologram and she says "Sis?". The player then walks her the long way to it, and stepping on it
 // springs the trap: the hologram glitches out, the lights cut, a spotlight bangs on and the cage

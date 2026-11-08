@@ -1,10 +1,10 @@
 # Ending ("Reunion")
 
-Built as `Assets/_Project/Scenes/Ending.unity`. It is the last scene in Build Settings and comes after Chamber 4 (Chamber 3 until Chamber 4 is merged).
+Built as `Assets/_Project/Scenes/Ending.unity`. It is the last scene in Build Settings and comes after Chamber 4.
 
 ## Purpose
 
-This is the bad-ending plot twist from `PROJECT_PLAN.md` (Lore > Why). All game long she has chased her sister through the lab. The last room is a trap: the sister was a projection, a cage drops on her, and the camera pulls back to show scientists who have been watching the whole experiment. There are no puzzles and no clones. It is a short, mostly scripted scene.
+This is the bad-ending plot twist from [the story](../story.md). All game long she has chased her sister through the lab. The last room is a trap: the sister was a projection, a cage drops on her, and the camera pulls back to show scientists who have been watching the whole experiment. There are no puzzles and no clones. It is a short, mostly scripted scene.
 
 ## Room
 
@@ -33,15 +33,15 @@ This is the bad-ending plot twist from `PROJECT_PLAN.md` (Lore > Why). All game 
 
 ## Art
 
-PixelLab, in the cheap modes (see `CREDITS.md`):
-- an iso cage, split into back and front halves so the bars draw behind and in front of her
+PixelLab, in the cheap modes (see [`CREDITS.md`](../../CREDITS.md)):
+- a large iso cage (one sprite)
 - the two-way mirror panel
 - lab-coat scientist figures, shown as black silhouettes
 - the floor projector
 
 The sister reuses the main character's sprite, tinted cyan as a hologram.
 
-## Open questions
+## Notes
 
-- Should the sister get her own character art?
-- Sound: a lamp clunk, the cage slam and a low drone for the reveal (see `sounds.md`).
+- The sister has no character art of her own; she is the player sprite tinted as a hologram.
+- Sound: a lamp clunk, the cage slam and the silence before the trap (see [audio](../audio.md)).

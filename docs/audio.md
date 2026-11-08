@@ -1,14 +1,8 @@
-# Sound design
+# Audio
 
-**Purpose:** The plan for all music and sound effects (GitHub issues #11 "Add music" and #12 "Add
-SFX"): what the game should sound like, every sound it needs and the code event that triggers it,
-where to get free jam-safe assets, and how to wire audio in without touching gameplay. Nothing is
-built yet: `Assets/_Project/Audio/` is empty and no script plays audio.
+The sound and music design for *Afterimage*: what the game should sound like, every sound it needs and the event that triggers it, and how audio is wired in without touching gameplay.
 
-> **Status after the jam:** this plan is implemented. Clips were generated with ElevenLabs rather
-> than taken from free libraries (see `CREDITS.md`), and the audio code is described under "Audio"
-> in `CLAUDE.md`. The text below is the original plan and is kept for reference.
-
+> **Status:** this plan is implemented. Sound effects and music were generated with ElevenLabs (see [`../CREDITS.md`](../CREDITS.md)) rather than taken from free libraries, and the code is described under "Audio" in [`../CLAUDE.md`](../CLAUDE.md). The tables below are the original plan and are kept as reference. Differences: there is no Audio Mixer (sounds go through pooled sources, with clones played quieter), and later chambers added their own sounds (lasers, generator, conveyor, platforms and so on).
 ## Tone
 
 - **World:** a deserted, overgrown relic lab. A low electrical room hum, distant drips, wind through
@@ -22,9 +16,9 @@ built yet: `Assets/_Project/Audio/` is empty and no script plays audio.
 - **Mix:** quiet and sparse. The camera is close and vision is a small pool of light, so sound tells
   the player about things off-screen (a door opening, a clone pressing a button).
 
-## Mixer
+## Mixer (not built)
 
-One `Audio/Main.mixer`:
+The plan was one `Audio/Main.mixer`:
 
 ```
 Master
@@ -109,7 +103,7 @@ Clones group. With 5 clones this can get busy (see open questions).
 
 ### Later chambers and enemies (Should have)
 
-Not needed until those features exist. From `chamber-3.md` and the general level ideas:
+Not needed until those features exist. From [Chamber 3](levels/03-chamber3.md) and the general level ideas:
 laser charge-up, fire and burn; enemy alert and attack; power generator start-up (a big "room
 powers on" moment with lights and machinery kicking in); conveyor belt loop; fuel burning in the
 laser; hydraulic block push and hiss-back; hovering stair plates flip and slide; pressure plate
@@ -131,31 +125,9 @@ down/up; damage/death for the player.
 - **Rewind:** briefly pitch the music down (tape-slow) during `RewindEffect`, back up on the flash.
   Cheap and ties the music to the time theme.
 
-## Where to get free assets
-
-Every file used gets a row in `CREDITS.md` (name, author, link, licence) when it is added. Prefer
-CC0 so there is nothing to forget. Never use audio ripped from other games (Portal 2 is inspiration
-only).
-
-| Source | Licence | Good for |
-|---|---|---|
-| [Kenney](https://kenney.nl/assets?q=audio) (Sci-fi, Impact, Interface, UI Audio packs) | CC0 | UI clicks, impacts, sci-fi blips. Best first stop |
-| [Freesound](https://freesound.org) | Per sound: filter to CC0 or CC-BY, skip CC-BY-NC | Specific foley: shutters, machinery hum, drips, electrical crackle |
-| [OpenGameArt](https://opengameart.org) | Per asset (CC0, CC-BY, GPL); check each | SFX packs and loopable game music |
-| [Sonniss GDC Game Audio Bundles](https://sonniss.com/gameaudiogdc) | Royalty-free, no attribution needed | High quality industrial, sci-fi and ambience libraries (large downloads) |
-| [Pixabay sound effects](https://pixabay.com/sound-effects/) and [music](https://pixabay.com/music/) | Pixabay Content Licence | Ambience loops, stings, ambient music |
-| [incompetech (Kevin MacLeod)](https://incompetech.com/music/royalty-free/) | CC-BY (credit required) | Dark ambient and tension music |
-| [FreePD](https://freepd.com) | Public domain | Music |
-| [jsfxr](https://sfxr.me), [ChipTone](https://sfbgames.itch.io/chiptone), Bfxr | Generated output is ours | Quick blips, zaps, UI and glitch sounds |
-| [Audacity](https://www.audacityteam.org) | Free tool | Trim, normalise, reverse (rewind), pitch-shift, make seamless loops |
-
-Tips: search Freesound for "roller shutter", "electrical hum", "tape rewind", "servo", "metal
-clunk", "glitch". Layer two cheap sounds (a click plus a thud) rather than hunting for one perfect
-sound.
-
 ## Implementation
 
-To build later; nothing below exists yet.
+The design for the audio code. See CLAUDE.md for what was actually built.
 
 - **Folder and namespace:** `Scripts/Audio/`, `GameJam.Audio`. Clips in `Audio/SFX`, `Audio/Music`,
   `Audio/Ambience`, named `sfx_<thing>_<variant>`, `mus_<name>`, `amb_<name>`.
@@ -186,19 +158,3 @@ Rules that fit our systems:
   `IntroSequence` steps directly.
 - **Import settings:** short SFX mono, Decompress On Load, ADPCM; music and long ambience Streaming,
   Vorbis around 70% quality.
-
-## Build order
-
-1. Footsteps, button press, door open/close, save/retry/rewind, level complete.
-2. `mus_chamber` loop and `mus_title`.
-3. Wire pulse, pit fall, clones unlocked sting, menu clicks, dialogue ticks, intro slam.
-4. Ambience (hum, drips, wind) and lamp buzz.
-5. Later chamber and enemy sounds once those features exist.
-
-## Open questions
-
-- Add a volume slider (Music / SFX) to Settings now, or after the level is done?
-- One music track for every chamber, or one per chamber?
-- Should clone footsteps be audible at all, or only the things clones press?
-- Is the guard's line voiced (a recorded shout) or text only with a sound under it?
-- Who on the team owns finding and editing sounds?

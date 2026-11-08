@@ -1,4 +1,4 @@
-# Tutorial Room 1: "First Clone"
+# Tutorial 1: "First Clone"
 
 **Purpose:** Introduce the core loop (cloning and cooperating with your past self) with no text-heavy tutorial, using level design and visual cues only.
 
@@ -10,7 +10,9 @@
 
 ## Room layout
 
-Isometric chamber, as in `Sketches/tutorial1.png` (scene: `Assets/_Project/Scenes/Tutorial1.unity`).
+Isometric chamber, as in the sketch below (scene: `Assets/_Project/Scenes/Tutorial1.unity`).
+
+![Sketch of Tutorial 1](../images/tutorial1-sketch.png)
 
 - **Spawn area:** Centre-right, close to the back-right wall, mostly empty and only faintly lit, so the player's attention is pushed toward the hint.
 - **Door:** Set into the back-right wall towards its right end, left in shadow so it doesn't read as the obvious route. A short corridor behind it leads to the level exit.
@@ -57,9 +59,9 @@ Isometric chamber, as in `Sketches/tutorial1.png` (scene: `Assets/_Project/Scene
 - **Pit:** one-way drop. Pressing the clone key is the only way out.
 - **Hint:** a brighter, warmer area from a ceiling breach, not a trail of dots.
 - **Deep pit:** from outside the inside is hidden in shadow, so the player is lured in without seeing the button. Once they fall in, the ground in front turns see-through so they can still see themselves. A clone in the pit stays hidden.
-- **Limited vision:** the room is near black and the character carries a soft light, so the whole level is never visible at once. Lit cues (breach pool, relic terminals, the open door) still show from a distance. Everything outside the room is black. The play camera is close (3x pixel scale), and holding Tab shows the chamber map (see `gui.md`).
+- **Limited vision:** the room is near black and the character carries a soft light, so the whole level is never visible at once. Lit cues (breach pool, relic terminals, the open door) still show from a distance. Everything outside the room is black. The play camera is close (3x pixel scale), and holding Tab shows the chamber map (see [`ui.md`](../ui.md)).
 
-## Open questions
+## Resolved and open
 
-- Is there any failsafe hint if the player doesn't find the hole after a while?
-- Does the story intro in `PROJECT_PLAN.md` (door to the outside slams shut behind the character) play at the start of this level, or before it?
+- The story intro (the door slams shut behind her) plays at the start of this level, on New Game and Restart Game only. See [the story](../story.md).
+- Not built: a failsafe hint if the player never finds the hole.

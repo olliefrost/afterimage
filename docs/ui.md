@@ -5,7 +5,7 @@ which clone the player is controlling right now, and what state each clone is in
 player pick a clone to re-record. It also defines the clone slot rules the HUD depends on (limit,
 controlled clone, switching, death), the hold-Tab chamber map (see "Chamber map"), and the title screen and Esc pause menu (see "Menus").
 
-Placeholder art for now; the user will provide final icon and button art (see "Art").
+The HUD, menus and dialogue box use PixelLab art (see "Art").
 
 ## Screen layout
 
@@ -26,7 +26,6 @@ Placeholder art for now; the user will provide final icon and button art (see "A
   picked it (its number key), not while they are re-recording an older clone.
 - **Run buttons:** bottom right. R (save) is the large button; T (retry) is a smaller button to
   its left, and F (record) the same size to the left of T.
-- **Level complete panel:** centred, unchanged.
 - Nothing else on screen. The game view stays as clear as possible.
 
 ## Restart buttons
@@ -118,7 +117,7 @@ A dead icon returns to normal when the next attempt starts.
 | Tab (hold) | Show the chamber map; release to return |
 | Esc | Open or close the pause menu |
 
-Movement (WASD), E, R, T, 1-5 and Tab can be rebound by the player in the pause menu's Settings; the
+Movement (WASD), E, Space (Chamber 4 onward), R, T, F, 1-5 and Tab can be rebound by the player in the pause menu's Settings; the
 HUD's key letters and badges follow the new keys. The arrow keys and Esc are fixed.
 
 ## Chamber map
@@ -148,20 +147,15 @@ chamber, so the player can keep track of every clone.
 - **Settings:** one row per rebindable key. Click a key, then press the new one; Esc cancels.
   Choosing a key that another action already uses swaps the two. Reset to defaults and Back.
   Rebinds are saved between sessions.
-- Same placeholder style as the HUD; every menu button shares one button prefab, so final art
-  replaces them all at once.
+- Every menu button shares one button prefab, so new art replaces them all at once.
 
 ## Art
 
-- Placeholders are generated in-engine and named `placeholder_ui_*`; final art replaces them file
-  by file as `spr_ui_<thing>_<state>` (for example `spr_ui_cloneicon_dead`, `spr_ui_button_r`).
-- Placeholder style: dark translucent panels with thin cyan-grey borders, like a cracked relic
-  display; icons tinted from one white sprite so a single asset serves all five colours.
+- Panels, menu buttons, HUD buttons, the key badge and the dialogue box are PixelLab sprites named `spr_ui_<thing>_<state>`. Icons and glyphs (the clone icon, skull, padlock) are still in-engine `placeholder_ui_*` sprites, tinted from one white sprite so a single asset serves all five colours.
+- Style: dark translucent panels with thin cyan-grey borders, like a cracked relic display. Text uses the Relic Terminal pixel font.
 - Pixel scale matches the game (Point filter); buttons draw at 2x and clone icons at 3x on 1080p.
-- Needed from the user: clone icon (white, tintable), dead overlay (skull), picked outline,
-  controlled pointer and row frame, key badge, R button, T button, F button with record dot.
 
-## Open questions
+## Not built
 
-- Should the R button or the icons show the clone count against a par once a par exists?
-- Does a clone that died still count towards a level's clone par?
+- A clone par per chamber, and showing the clone count against it on the R button or icons.
+- Door open/closed state, a legend and fog of war on the chamber map.

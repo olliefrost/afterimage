@@ -1,6 +1,6 @@
-# Tutorial Room 2: "Taking the Hit"
+# Tutorial 2: "Taking the Hit"
 
-**Purpose:** Reinforce the afterimage mechanic from Chamber 1, and introduce afterimages as physical objects that can absorb danger, including one afterimage protecting another.
+**Purpose:** Reinforce the afterimage mechanic from Tutorial 1, and introduce afterimages as physical objects that can absorb danger, including one afterimage protecting another.
 
 **Mechanics taught:**
 - Afterimages can block a laser for you
@@ -10,7 +10,7 @@
 
 ## Room layout
 
-- **Entrance:** Leads in from the Chamber 1 door.
+- **Entrance:** Leads in from the Tutorial 1 door.
 - **Corridor 1:** Thin corridor reached by a right turn after the entrance.
 - **Laser 1:** At the end of Corridor 1, aimed back down it. Timed so the player can't make it down the corridor in one pass without an afterimage.
 - **Left turn:** At the end of Corridor 1, by Laser 1. The only way onward.
@@ -20,7 +20,7 @@
 
 ## Step-by-step flow
 
-1. **Enter.** The player walks in from Chamber 1.
+1. **Enter.** The player walks in from Tutorial 1.
 2. **Turn right.** The player enters Corridor 1.
 3. **Hit the first laser.** Walking down the corridor, the player meets Laser 1 and can't get past it in one pass.
 4. **Use an afterimage.** The player's afterimage walks the corridor first and takes the shot, letting the player get through and take the left turn.
@@ -54,9 +54,9 @@
 - The laser's timing should be readable so the player understands that one pass isn't enough.
 - An afterimage taking the hit and being destroyed needs to be clearly visible, since it carries the main lesson.
 
-## Open questions
+## Decisions
 
-- What happens when the player is hit by a laser: death and reset, or knockback?
-- Where does the player return to when using an afterimage: the Chamber 2 entrance?
-- Is the laser on a fixed timer, and does an afterimage absorbing a shot reset that timer?
-- Can the player see Laser 2 from Corridor 1, or is it only revealed after the left turn?
+- **Laser hit on the player:** a death. The run is saved as a clone only if it was marked with F; otherwise it is thrown away like T.
+- **Restart point:** every attempt starts at this chamber's entrance.
+- **Laser timing:** a fixed tick cycle from each attempt's tick 0 (charge 80, beam 10, cooldown 30 ticks, at 50 ticks per second). Hits never change the schedule.
+- **Laser 2** stays dark until the left turn.

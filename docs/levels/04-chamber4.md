@@ -8,7 +8,7 @@
 - **Jumping** (new in this chamber; no earlier chamber has it) between platforms that rise one after another
 - **Climbing** a ladder to a ledge
 
-![Sketch of Chamber 4](Sketches/chamber4.jpg)
+![Sketch of Chamber 4](../images/chamber4-sketch.jpg)
 
 ## Camera
 
@@ -64,8 +64,8 @@ The button is far enough from the scanning chamber that one person can't press i
 |---|---|
 | Scanning chamber door open after the signal arrives | 5 s (250 ticks) |
 | Time in the scanner to complete a scan | 1 s (50 ticks) |
-| Delay between each platform rising | tune |
-| How long each platform stays up | tune |
+| Delay between each platform rising | 50 ticks |
+| How long each platform stays up | 100 ticks |
 | Jump | about 1.5 cells in the facing direction |
 
 ## Controls
@@ -81,7 +81,7 @@ The button is far enough from the scanning chamber that one person can't press i
 - **Guard lasers:** clearly on or off, with a cable from the plate that lights while the plate is held.
 - **Animations:** the player and the clones need climbing and jumping animations.
 
-## Open questions
+## Decisions
 
-- What happens to someone standing in the scanning chamber doorway when the door closes (killed, or pushed out)?
-- How many rising platforms are there, and how high is the top ledge?
+- **Scanning chamber door:** anyone standing in its doorway when it closes is killed.
+- **Rising platforms:** five one-row platforms, every other row, rising in 0.6 steps from 1.5 to 3.9 cells high. The 2-cell jump reaches the next one.

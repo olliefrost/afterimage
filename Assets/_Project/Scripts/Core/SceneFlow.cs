@@ -1,7 +1,7 @@
 // SceneFlow: the one place that moves between the title screen and the chambers, and quits the
 // game. A new game also flags the first chamber's intro to play (IntroSequence consumes it).
 // TitleMenu, PauseMenu and GameStateController (on a chamber exit) call it. Scene order follows
-// Build Settings: the title is first, then the chambers in the order of Ideas/PROJECT_PLAN.md.
+// Build Settings: the title is first, then the chambers in the order of docs/game-design.md.
 // Every scene change goes through the scene's ScreenTransition (if it has one): the screen is wiped
 // to black, the scene loads, and the new scene's transition starts black and wipes off.
 using UnityEngine;

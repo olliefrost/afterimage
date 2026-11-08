@@ -8,7 +8,7 @@
 - Afterimages can ride moving platforms (the hovering stair plates)
 - Afterimages can set up the path for later afterimages, not just for you
 
-![Whiteboard sketch of Chamber 3](chamber_3_design.jpg)
+![Whiteboard sketch of Chamber 3](../images/chamber3-sketch.jpg)
 
 ## Camera
 
@@ -23,7 +23,7 @@ Isometric, facing northwest, as in the sketch. Corners are referred to as:
 
 ## Room layout
 
-- **Entrance:** Corridor from the Chamber 2 door, coming into the bottom of the room near corner 1.
+- **Entrance:** Corridor from the Tutorial 2 door, coming into the bottom of the room near corner 1.
 - **Power generator:** In the front-right corner, at the end of the conveyor belt. Needs a fuel source to run. When it's powered, the room becomes powered.
 - **Conveyor belt:** Runs along the right-hand wall, behind a low guard, and carries fuel down into the power generator. Keeping it against the wall leaves the middle of the room open.
 - **Laser wall:** A laser turret beside the belt fires across it and burns the fuel before it reaches the generator.
@@ -38,7 +38,7 @@ Isometric, facing northwest, as in the sketch. Corners are referred to as:
 
 ## Step-by-step flow
 
-1. **Enter.** The player walks in from Chamber 2 into a huge room.
+1. **Enter.** The player walks in from Tutorial 2 into a huge room.
 2. **Spot the problem.** Fuel travels along the conveyor belt towards the power generator but gets burnt by the laser wall.
 3. **Block the lasers (Afterimage 1).** Push the hydraulic block into the laser field and hold it there. This run becomes Afterimage 1, which keeps holding the block so it stays in the lasers' way.
 4. **Power the room.** With the lasers blocked, fuel reaches the generator and the room gets powered.
@@ -107,7 +107,3 @@ Isometric, facing northwest, as in the sketch. Corners are referred to as:
   again if the power is lost. The buttons can only be pressed while the room is powered.
 - **Afterimage 4's timing:** it boards the stairs once they flip up; they only slide left when
   Afterimage 3 reaches the top right plate after climbing, which gives Afterimage 4 time to get on.
-
-## Open questions
-
-- What should the fuel and the generator look like in the final art?

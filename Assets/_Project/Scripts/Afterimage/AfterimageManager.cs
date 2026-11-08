@@ -2,7 +2,7 @@
 // slot the player is controlling (recording into) this run, which slot they picked to control
 // next, and the clone objects that replay the other slots. GameStateController calls EndRun,
 // SelectSlot and RespawnClones; the HUD reads the slot state and listens to Changed and CloneDied.
-// Slot rules are described in Ideas/gui.md.
+// Slot rules are described in docs/ui.md.
 using System;
 using System.Collections.Generic;
 using GameJam.Core;

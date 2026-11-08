@@ -1,5 +1,5 @@
 // AudioClipImporter: editor-only. When a new audio file is first imported under Assets/_Project/Audio/,
-// it gets the project's import settings from Ideas/sounds.md so nobody sets them by hand: music and
+// it gets the project's import settings from docs/audio.md so nobody sets them by hand: music and
 // long ambience stream as Vorbis, everything else (including stings) is a mono clip decompressed on load. It only
 // touches first imports, so later inspector tweaks stay.
 using UnityEditor;

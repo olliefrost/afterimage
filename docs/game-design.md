@@ -1,92 +1,84 @@
-# PROJECT_PLAN.md
+# Game design
+
+The overall design of *Afterimage*. Per-level designs are in [`levels/`](levels/), the story is in [`story.md`](story.md).
 
 ## Concept
 
-- **One-line pitch:** Isometric game using after images of self to navigate around enemies and solve puzzles across a variety of rooms.
-- **How the game uses the theme of time:** Past versions of self used to help complete rooms by defeating/distracting enemies, acquiring information, activating interactables and manipulating objects.
-- **Genre and perspective:** True isometric (2:1), HD pixel art (64x32 px floor tiles, 64 pixels per unit)
-- **Player goal and win/lose condition:** Solve the puzzles, complete the levels
-- **Target platform and engine:** PC, Unity
+| | |
+| --- | --- |
+| **Pitch** | An isometric puzzle game where you record your own actions and cooperate with the afterimages of your past selves to clear a deserted laboratory. |
+| **Theme** | *Time*. Past versions of you complete rooms by blocking danger, holding down plates, pressing buttons and manipulating objects. |
+| **Perspective** | True isometric (2:1), HD pixel art with 64x32 px floor tiles and 64 pixels per unit. |
+| **Goal** | Solve each chamber's puzzle and reach its exit. |
+| **Platform and engine** | PC (Windows), Unity 6 with URP 2D. |
 
 ## Core mechanic
 
-- **Main time mechanic (what the player does with time):** Creates afterimages, each one replays its actions each time you reattempt. Up to 5 clones (Tutorial1 allows 2 and only unlocks cloning once the player is trapped in its pit), each with its own colour; the player always controls one clone (shown in the HUD) and can switch to an earlier clone to re-record its path while the others keep replaying (rules in `gui.md`)
-- **Moment-to-moment controls:** WASD/arrows move (screen-relative), E interact, Space jump (Chamber 4 onward), R save the run into the controlled clone and restart, T restart without saving, F mark the run so dying saves it, 1-5 pick the clone to control from the next restart, hold Tab for the chamber map, Esc pause menu. The HUD's R/T buttons and clone icons can also be clicked. Gameplay keys can be rebound in the pause menu's Settings (menus in `gui.md`).
-- **What makes it interesting or tricky:** The camera stays close and the character only sees a small pool of light, so the player relies on the hold-Tab chamber map (walls, key features and a live dot per clone) to keep track of their clones. Coordinating the clones/afterimages to work together and solve the puzzle in the fewest clones possible, add a par later on. Maybe add a time limit? As the number of clones increases they get worse due to the dodgy tech?
-- **How we will test that it is fun early:** Playtest, keep modular so there's always a working version, later will get others to try
+- **Afterimages.** Save a run and an afterimage (clone) replays it, tick for tick, on every later attempt. Up to 5 clones, each with its own colour. Tutorial 1 allows 2, and cloning only unlocks once the player is trapped in its pit.
+- **The controlled clone.** The player always controls exactly one clone slot, shown in the HUD. They can switch to an earlier clone to re-record its path while the others keep replaying. Full rules are in [`ui.md`](ui.md).
+- **Danger.** Lasers kill whoever they hit first. A clone that dies stops replaying, so a clone can be sent ahead to absorb a shot. Marking a run with F makes dying save it as a clone.
+- **Seeing the room.** The camera stays close and the character only sees a small pool of light, so the player relies on the hold-Tab chamber map (walls, key features and a live dot per clone) to track their clones.
 
-## Scope
+### Controls
 
-- **Must have (playable end to end):** At least one full working level with interesting puzzles, working afterimage mechanics
-- **Should have:** Enemies, inside/outside variations
-- **Stretch goals:** (Coop? Would this work?), lore, easter eggs, NPCs with text speech
+| Action | Key |
+| --- | --- |
+| Move (screen-relative) | WASD or arrow keys |
+| Interact | E |
+| Jump (Chamber 4 onward) | Space |
+| Save the run into the controlled clone and restart | R |
+| Retry without saving | T |
+| Mark the run so dying saves it | F |
+| Pick the clone to control from the next restart | 1-5 |
+| Chamber map | Hold Tab |
+| Pause menu | Esc |
+
+The HUD's R, T and F buttons and clone icons can also be clicked. Gameplay keys can be rebound in the pause menu's Settings.
 
 ## Game loop and structure
 
-- **Start screen to first play:** title screen (Afterimage logo, Continue when a save exists, New Game, Quit), then Tutorial1. The story intro (see Story below) shows her breaking back into the facility, then she works through the puzzle chambers toward her sister.
-- **Core loop (repeated actions):** Repeat sending out a new clone, all the previous clones replay on a new attempt. Switch to a previous clone (1-5, then R or T) to re-record its path while the rest keep replaying
-- **Levels, rounds or progression:** Start by polishing an initial level, then... Tutorial1 ("First Clone", `tutorial1.md`) is built and playable.
-- **End states and restart:** Escaping the chambers/map? Can replay a level attempting to use fewer clones or do it quicker
+1. The title screen offers Continue (only when a save exists), New Game and Quit.
+2. New Game plays the intro (she breaks into the facility) and starts Tutorial 1.
+3. In each chamber the player repeats: record a run, save it as a clone, and try again with every earlier clone replaying, until the exit is reached.
+4. Chambers play in order, then the ending. Finishing the game clears the Continue save.
+
+| # | Chamber | Idea | Clones needed |
+| --- | --- | --- | --- |
+| 1 | [Tutorial 1, "First Clone"](levels/01-tutorial1.md) | Buttons, doors and your first clone | 1 |
+| 2 | [Tutorial 2, "Taking the Hit"](levels/02-tutorial2.md) | Charging lasers and sacrificing clones | 2 |
+| 3 | [Chamber 3, "All Hands"](levels/03-chamber3.md) | A power room where each clone has a job | 4 |
+| 4 | [Chamber 4, "Leap of Faith"](levels/04-chamber4.md) | Timed windows, jumping and ladders | 3 |
+| 5 | [Ending, "Reunion"](levels/05-ending.md) | The trap | none |
+
+### Level design toolkit
+
+- Buttons and pressure plates (a button latches, a plate works only while held)
+- Lasers that charge, fire and cool down on a fixed tick timer
+- Doors, with a specific door that signals the next level
+- Wires that visibly carry signals between interactables
 
 ## Art and audio
 
-- **Visual style and palette:** Post-technology/deserted world, overgrown, relic/half broken tech, Portal 2 inspired
-- **Asset list (sprites, UI, backgrounds):** UI: tintable clone icon, dead (skull) overlay, selected outline, key badge, R and T buttons (see `gui.md`). Rest TBD
-- **Sound effects and music:** planned in `sounds.md` (tone, full SFX and music list with code hooks, implementation)
-- **Asset sources and licences:** free sources for audio listed in `sounds.md`; every external asset is recorded in `CREDITS.md`
-- **Inspiration (not copying but general style):** Portal 2 (world and puzzle chamber concept), classic isometric room games (view)
-- **Placeholder art:** generated in-engine (`placeholder_iso_*` in `Assets/_Project/Art/Placeholders/`) at the final scale, so real art can replace it file by file
+- **Style:** post-technology, deserted and overgrown, half-broken relic tech, in the spirit of Portal 2. See [`inspiration.md`](inspiration.md).
+- **Art:** PixelLab pixel art (true 2:1 iso, muted palette), with a pixel font and UI built from PixelLab sprites. A few `placeholder_*` sprites made in-engine remain for icons and glyphs.
+- **Audio:** sound effects and music generated with ElevenLabs, plus a synthesised credits track. The plan and implementation notes are in [`audio.md`](audio.md).
+- **Credits and licences:** [`../CREDITS.md`](../CREDITS.md).
+- **UI:** the HUD, menus and clone slot rules are in [`ui.md`](ui.md).
 
-## Lore
+## Technology
 
-- Backstory - The player and her sister were test subjects in the lab as children. The experiments gave the player her time technology: the arm implant that lets her record her actions and replay them as afterimages (clones). She escaped. The sister did not.
-- What - Rugged female character, escaped lab rat sort of look, arm implant (ark esque), the visible sign of what the testing did to her
-- Where - Modern/dungeon fusion, evil lab, now deserted and overgrown
-- Why - She breaks back into the facility to find and rescue her sister, who is still trapped deep inside. Turns out she was walking into the lab's trap: the sister is a projection, a cage drops, and scientists watch the whole experiment from behind glass (see `ending.md`).
-- When - post technology world, potentially this is all an illusion created by the lab?
-
-## Story
-- Intro - Camera starts from inside, sees open door to outside world (all you can see is bright lights). Text box of somebody yelling "hey, get back here!" or something similar, then character sprints in, and door slams shut behind. Camera then centred on character from now on. **Built in Tutorial1:** entrance door in the back-left wall, line "HEY! GET BACK HERE!" from "???", plays on New Game and Restart Game only, any key skips (details in `tutorial1.md`, step 0).
-- 
-  
-## General level design
-
-- Buttons/pressure plates
-- Lasers that take a while to charge up and then fire at some frequency
-- Specific door that signals next level
-
-## Detailed character description
-
-- Long black hair, somewhat scruffy, white, shadow of hair obscures facial features
-- Dark greyish tank top, baggy almost construction worker like trousers, but in a muted colour.
-- Shoulder/upper arm implant, central diamond-ish shaped main part, geometric lines veining out around, if this isn't obvious enough with the low res, just a general glowing bit with some occasional particle effect.
-
-
-## Tech
-
-- **Engine, language and version:** Unity 6 (6000.6.8f1), C#, URP 2D, Input System package
-- **Repo and branching approach:** `main` always runs; short-lived `<area>/<description>` branches merged by PR (details in `CLAUDE.md`)
-- **Key systems (input, time system, entities, UI):** one input reader; a shared tick clock that records the player each fixed step and replays clones from it; an actor interface so buttons, pits and exits react to player and clones alike; a level reset interface; uGUI HUD, title screen and Esc pause menu (layout and clone slot rules in `gui.md`, code in `CLAUDE.md`, Key systems)
-- **Build and export target:** Windows standalone
-
-## Team and tasks
-
-- **Roles:** Programming/Implementation, Asset/Sound design, Planning/Ideas
-- **Task split by person:** rotated, with everyone working on different tasks
-
-## Timeline
-
-- Ran from midday Saturday to midday Sunday (24 hours)
+- Unity 6 (`6000.6.8f1`), C#, URP 2D, Input System package, uGUI.
+- A shared fixed-step tick clock records the player each tick and replays clones from it.
+- One input reader, an actor interface so buttons, pits and exits react to the player and clones alike, and a level reset interface.
+- Code architecture and conventions are in [`../CLAUDE.md`](../CLAUDE.md).
 
 ## Outcome
 
-Shipped: five playable scenes (Tutorial1, Tutorial2, Chamber 3, Chamber 4 and the Ending) with the full afterimage mechanic, lasers and death, machines, jumping and ladders, a title screen, pause menu, key rebinding, music and sound effects. Not built: the Stretch list (co-op, NPC dialogue, easter eggs), enemies beyond lasers, outdoor levels, clone par and clone degradation.
+Made in 24 hours (midday Saturday to midday Sunday) by a team of three.
 
-## Risks
+**Shipped:** five playable scenes (Tutorial 1, Tutorial 2, Chamber 3, Chamber 4 and the Ending) with the full afterimage mechanic, lasers and death, machines, jumping and ladders, a title screen, pause menu, key rebinding, music and sound effects.
 
-- **Biggest technical risk and fallback:** Scope creep with interesting features before core mechanics get implemented. Need to ensure a new playable version fairly often in between each new feature / expansion
-- **Biggest scope risk and what we cut first:** Extra bits like Coop, detailed lore, etc. come last after polished functioning puzzle levels with cloning mechanic
-
-## Submission checklist
-
-- [x] Credits and asset licences listed (`CREDITS.md`)
+**Not built:**
+- Co-op, NPC dialogue and easter eggs (the Stretch list)
+- Enemies beyond lasers, and outdoor levels
+- A clone par (fewest clones per chamber), a time limit, and clones degrading as their number grows
