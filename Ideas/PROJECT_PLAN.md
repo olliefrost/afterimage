@@ -23,7 +23,7 @@
 
 ## Game loop and structure
 
-- **Start screen to first play:** title screen (Afterimage logo, Continue when a save exists, New Game, Quit), then Tutorial1. Story intro idea: <awake in overgrown chamber (dungeon/cave?..), navigate through puzzle chamber, then onto another chamber (outside?)>
+- **Start screen to first play:** title screen (Afterimage logo, Continue when a save exists, New Game, Quit), then Tutorial1. The story intro (see Story below) shows her breaking back into the facility, then she works through the puzzle chambers toward her sister.
 - **Core loop (repeated actions):** Repeat sending out a new clone, all the previous clones replay on a new attempt. Switch to a previous clone (1-5, then R or T) to re-record its path while the rest keep replaying
 - **Levels, rounds or progression:** Start by polishing an initial level, then... Tutorial1 ("First Clone", `tutorial1.md`) is built and playable.
 - **End states and restart:** Escaping the chambers/map? Can replay a level attempting to use fewer clones or do it quicker
@@ -39,9 +39,10 @@
 
 ## Lore
 
-- What - Rugged female character, escaped lab rat sort of look, arm implant (ark esque)
-- Where - Modern/dungeon fusion, evil lab
-- Why - Rescuing sibling from deep within the lab. Evil parents owns the evil corp and experiments on you/sibling. Turns out they were just walking into their own cage/pan out at the end with scientists watching you.
+- Backstory - The player and her sister were test subjects in the lab as children. The experiments gave the player her time technology: the arm implant that lets her record her actions and replay them as afterimages (clones). She escaped. The sister did not.
+- What - Rugged female character, escaped lab rat sort of look, arm implant (ark esque), the visible sign of what the testing did to her
+- Where - Modern/dungeon fusion, evil lab, now deserted and overgrown
+- Why - She breaks back into the facility to find and rescue her sister, who is still trapped deep inside. Turns out she was walking into the lab's trap: the sister is a projection, a cage drops, and scientists watch the whole experiment from behind glass (see `ending.md`).
 - When - post technology world, potentially this is all an illusion created by the lab?
 
 ## Story

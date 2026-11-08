@@ -4,6 +4,8 @@
 
 A 2D, true isometric (2:1) HD pixel-art puzzle game for University of Bristol gamejam with the theme 'Time'. The player records afterimages (clones) of themselves. On every new attempt each earlier clone replays its recorded actions, and the player coordinates the clones to clear rooms: distract or defeat enemies, activate interactables, move objects and collect information.
 
+**Story:** the player and her sister were test subjects in the lab as children; the experiments gave her the time technology (the arm implant) that records afterimages. She escaped, and now breaks back in to rescue her sister, who is still trapped inside (full lore in `Ideas/PROJECT_PLAN.md`).
+
 **Setting and tone:** post-technology, deserted and overgrown, with half-broken relic tech. Puzzle chambers in the spirit of Portal 2. Inspiration only; never copy assets.
 
 **Engine:** Unity (2D), C#, PC target.

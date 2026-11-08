@@ -23,7 +23,7 @@ Isometric chamber, as in `Sketches/tutorial1.png` (scene: `Assets/_Project/Scene
 
 ## Step-by-step flow
 
-0. **Intro (New Game and Restart Game only).** The camera looks at the open entrance door with bright light outside. A text box at the bottom shows an unseen guard ("???") shouting "HEY! GET BACK HERE!". The character sprints in, the door's shutter slams down behind her with a short camera shake, and the camera glides to her. Then the player has control. Any key or click skips the intro; Continue and retries never play it.
+0. **Intro (New Game and Restart Game only).** She is breaking back into the facility to find her sister. The camera looks at the open entrance door with bright light outside. A text box at the bottom shows an unseen guard ("???") shouting "HEY! GET BACK HERE!". The character sprints in, the door's shutter slams down behind her with a short camera shake, and the camera glides to her. Then the player has control. Any key or click skips the intro; Continue and retries never play it.
 1. **Spawn.** The player enters the room and sees the shadowed door and the hole with its hint. The door isn't an obvious exit.
 2. **Investigate.** The player is drawn to the brighter area and walks into the hole.
 3. **Reveal.** The player lands at the bottom of the pit next to a lone button and can't get out. Until this moment the clone controls (R, T, 1-5) and the clone part of the HUD are hidden and do nothing; landing in the pit for the first time unlocks them, and the R and T buttons and the clone column pop onto the HUD. Pressing E presses the button, and the R clone button starts pulsing to suggest it's worth using.

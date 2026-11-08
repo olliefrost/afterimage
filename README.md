@@ -20,7 +20,9 @@
 
 ## About
 
-You wake in a deserted, overgrown laboratory full of half-broken relic tech, and you are trying to reach someone deeper inside. An implant in your arm records everything you do. Save a run and an **afterimage** of you replays it on every new attempt, so one person can end up in several places at once.
+As children, you and your sister were test subjects in a secret laboratory. The experiments left you with a strange gift: an implant in your arm that records everything you do and lets you replay it as an **afterimage** of yourself. You escaped. Your sister did not. Now you break back into the deserted, overgrown facility, full of half-broken relic tech, to find her.
+
+Save a run and an afterimage of you replays it on every new attempt, so one person can end up in several places at once.
 
 Each chamber is a puzzle built around that idea: hold a plate down with one clone while another walks through a door, send a clone ahead to absorb a laser shot, or feed a generator before your own run begins. Five chambers take you from learning the basics to a final scene you probably should not trust.
 
