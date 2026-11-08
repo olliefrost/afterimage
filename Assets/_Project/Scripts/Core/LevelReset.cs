@@ -25,12 +25,26 @@ namespace GameJam.Core
             Resettables.Remove(resettable);
         }
 
+        /// <summary>
+        /// True only while <see cref="ResetAll"/> runs. Feedback effects (shakes, punches, later sounds)
+        /// check it so a door closing or a plate releasing because of the reset stays quiet.
+        /// </summary>
+        public static bool IsResetting { get; private set; }
+
         /// <summary>Returns every registered object to its starting state.</summary>
         public static void ResetAll()
         {
-            for (int i = 0; i < Resettables.Count; i++)
+            IsResetting = true;
+            try
             {
-                Resettables[i].ResetState();
+                for (int i = 0; i < Resettables.Count; i++)
+                {
+                    Resettables[i].ResetState();
+                }
+            }
+            finally
+            {
+                IsResetting = false;
             }
         }
     }
