@@ -1424,6 +1424,10 @@ MonoBehaviour:
   _endOffColour: {r: 1, g: 1, b: 1, a: 0.15}
   _endOnColour: {r: 0.4, g: 0.9, b: 1, a: 0.8}
   _pulseSpeed: 2.5
+  _chargeTime: 0.3
+  _chargeColour: {r: 0.85, g: 1, b: 1, a: 1}
+  _flickerTime: 0.25
+  _flickerRate: 14
 --- !u!120 &157417286
 LineRenderer:
   serializedVersion: 3
@@ -1778,6 +1782,8 @@ MonoBehaviour:
   _offset: {x: 0, y: 0.5}
   _snapDistance: 3
   _glideTime: 0.6
+  _shakeFrequency: 28
+  _shakeFalloff: 4
 --- !u!114 &172000552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2076,6 +2082,7 @@ GameObject:
   - component: {fileID: 214461995}
   - component: {fileID: 214461994}
   - component: {fileID: 214461993}
+  - component: {fileID: 214461996}
   m_Layer: 0
   m_Name: HydraulicPedal
   m_TagString: Untagged
@@ -2119,10 +2126,34 @@ MonoBehaviour:
   _activeColor: {r: 0.6, g: 1, b: 0.7, a: 1}
   _onActivated:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 214461996}
+        m_TargetAssemblyTypeName: GameJam.Visuals.PunchScale, Assembly-CSharp
+        m_MethodName: Punch
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onReleased:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 214461996}
+        m_TargetAssemblyTypeName: GameJam.Visuals.PunchScale, Assembly-CSharp
+        m_MethodName: PunchWithStrength
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: -0.6
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &214461994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2186,6 +2217,23 @@ PolygonCollider2D:
       - {x: 0, y: 0.25}
       - {x: -0.5, y: 0}
   m_UseDelaunayMesh: 1
+--- !u!114 &214461996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214461991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64b1d0f9ce4f7a94a9af0184896bb37b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.PunchScale
+  _target: {fileID: 1107121555}
+  _amount: {x: 0.1, y: -0.25}
+  _duration: 0.25
+  _wobbles: 2
+  _unscaledTime: 0
 --- !u!1 &216270208
 GameObject:
   m_ObjectHideFlags: 0
@@ -2647,6 +2695,8 @@ GameObject:
   - component: {fileID: 223182348}
   - component: {fileID: 223182350}
   - component: {fileID: 223182351}
+  - component: {fileID: 223182353}
+  - component: {fileID: 223182352}
   m_Layer: 0
   m_Name: PowerGenerator
   m_TagString: Untagged
@@ -2670,7 +2720,31 @@ MonoBehaviour:
   _poweredTicksPerFuel: 150
   _onPowered:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 223182353}
+        m_TargetAssemblyTypeName: GameJam.Visuals.ShakeOnEvent, Assembly-CSharp
+        m_MethodName: Shake
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 223182352}
+        m_TargetAssemblyTypeName: GameJam.Visuals.PunchScale, Assembly-CSharp
+        m_MethodName: Punch
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onUnpowered:
     m_PersistentCalls:
       m_Calls: []
@@ -2708,6 +2782,8 @@ MonoBehaviour:
   - {fileID: 589953004}
   _unpoweredFraction: 0.2
   _fadeSeconds: 0.6
+  _surge: 0.6
+  _stutterRate: 12
 --- !u!60 &223182351
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2759,6 +2835,38 @@ PolygonCollider2D:
       - {x: 0, y: 0.5}
       - {x: -1, y: 0}
   m_UseDelaunayMesh: 1
+--- !u!114 &223182352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223182347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64b1d0f9ce4f7a94a9af0184896bb37b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.PunchScale
+  _target: {fileID: 1740772613}
+  _amount: {x: 0.06, y: 0.08}
+  _duration: 0.4
+  _wobbles: 2
+  _unscaledTime: 0
+--- !u!114 &223182353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223182347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff0614529f2aa94285845f9a0073706, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.ShakeOnEvent
+  _strength: 0.08
+  _duration: 0.45
+  _positional: 1
 --- !u!1 &226597036
 GameObject:
   m_ObjectHideFlags: 0
@@ -2988,6 +3096,10 @@ MonoBehaviour:
   _endOffColour: {r: 1, g: 1, b: 1, a: 0.15}
   _endOnColour: {r: 0.4, g: 0.9, b: 1, a: 0.8}
   _pulseSpeed: 2.5
+  _chargeTime: 0.3
+  _chargeColour: {r: 0.85, g: 1, b: 1, a: 1}
+  _flickerTime: 0.25
+  _flickerRate: 14
 --- !u!120 &259190480
 LineRenderer:
   serializedVersion: 3
@@ -7187,6 +7299,8 @@ MonoBehaviour:
   - {fileID: 357134149}
   _unpoweredFraction: 0
   _fadeSeconds: 0.6
+  _surge: 0.6
+  _stutterRate: 12
 --- !u!1 &456820856
 GameObject:
   m_ObjectHideFlags: 0
@@ -12235,6 +12349,10 @@ MonoBehaviour:
   _endOffColour: {r: 1, g: 1, b: 1, a: 0.15}
   _endOnColour: {r: 0.4, g: 0.9, b: 1, a: 0.8}
   _pulseSpeed: 2.5
+  _chargeTime: 0.3
+  _chargeColour: {r: 0.85, g: 1, b: 1, a: 1}
+  _flickerTime: 0.25
+  _flickerRate: 14
 --- !u!120 &798367866
 LineRenderer:
   serializedVersion: 3
@@ -12410,6 +12528,10 @@ MonoBehaviour:
   _endOffColour: {r: 1, g: 1, b: 1, a: 0.15}
   _endOnColour: {r: 0.4, g: 0.9, b: 1, a: 0.8}
   _pulseSpeed: 2.5
+  _chargeTime: 0.3
+  _chargeColour: {r: 0.85, g: 1, b: 1, a: 1}
+  _flickerTime: 0.25
+  _flickerRate: 14
 --- !u!120 &810799073
 LineRenderer:
   serializedVersion: 3
@@ -12629,6 +12751,7 @@ GameObject:
   - component: {fileID: 852518151}
   - component: {fileID: 852518150}
   - component: {fileID: 852518148}
+  - component: {fileID: 852518152}
   m_Layer: 0
   m_Name: SlideMiddlePlate_TopLeft
   m_TagString: Untagged
@@ -12656,10 +12779,34 @@ MonoBehaviour:
   _activeColor: {r: 0.6, g: 1, b: 0.7, a: 1}
   _onActivated:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 852518152}
+        m_TargetAssemblyTypeName: GameJam.Visuals.PunchScale, Assembly-CSharp
+        m_MethodName: Punch
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onReleased:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 852518152}
+        m_TargetAssemblyTypeName: GameJam.Visuals.PunchScale, Assembly-CSharp
+        m_MethodName: PunchWithStrength
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: -0.6
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &852518149
 Transform:
   m_ObjectHideFlags: 0
@@ -12739,6 +12886,23 @@ PolygonCollider2D:
       - {x: 0, y: 0.25}
       - {x: -0.5, y: 0}
   m_UseDelaunayMesh: 1
+--- !u!114 &852518152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852518147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64b1d0f9ce4f7a94a9af0184896bb37b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.PunchScale
+  _target: {fileID: 1541587779}
+  _amount: {x: 0.1, y: -0.25}
+  _duration: 0.25
+  _wobbles: 2
+  _unscaledTime: 0
 --- !u!1 &866569338
 GameObject:
   m_ObjectHideFlags: 0
@@ -12793,6 +12957,10 @@ MonoBehaviour:
   _endOffColour: {r: 1, g: 1, b: 1, a: 0.15}
   _endOnColour: {r: 0.4, g: 0.9, b: 1, a: 0.8}
   _pulseSpeed: 2.5
+  _chargeTime: 0.3
+  _chargeColour: {r: 0.85, g: 1, b: 1, a: 1}
+  _flickerTime: 0.25
+  _flickerRate: 14
 --- !u!120 &866569341
 LineRenderer:
   serializedVersion: 3
@@ -13854,6 +14022,7 @@ GameObject:
   - component: {fileID: 1037349834}
   - component: {fileID: 1037349833}
   - component: {fileID: 1037349835}
+  - component: {fileID: 1037349836}
   m_Layer: 0
   m_Name: SlideLeftPlate_TopRight
   m_TagString: Untagged
@@ -13960,10 +14129,51 @@ MonoBehaviour:
   _activeColor: {r: 0.6, g: 1, b: 0.7, a: 1}
   _onActivated:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1037349836}
+        m_TargetAssemblyTypeName: GameJam.Visuals.PunchScale, Assembly-CSharp
+        m_MethodName: Punch
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onReleased:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1037349836}
+        m_TargetAssemblyTypeName: GameJam.Visuals.PunchScale, Assembly-CSharp
+        m_MethodName: PunchWithStrength
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: -0.6
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1037349836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1037349831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64b1d0f9ce4f7a94a9af0184896bb37b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.PunchScale
+  _target: {fileID: 1222926567}
+  _amount: {x: 0.1, y: -0.25}
+  _duration: 0.25
+  _wobbles: 2
+  _unscaledTime: 0
 --- !u!1 &1052740229
 GameObject:
   m_ObjectHideFlags: 0
@@ -15682,6 +15892,10 @@ MonoBehaviour:
   _endOffColour: {r: 1, g: 1, b: 1, a: 0.15}
   _endOnColour: {r: 0.4, g: 0.9, b: 1, a: 0.8}
   _pulseSpeed: 2.5
+  _chargeTime: 0.3
+  _chargeColour: {r: 0.85, g: 1, b: 1, a: 1}
+  _flickerTime: 0.25
+  _flickerRate: 14
 --- !u!120 &1287168921
 LineRenderer:
   serializedVersion: 3
@@ -15816,6 +16030,8 @@ GameObject:
   - component: {fileID: 1305143313}
   - component: {fileID: 1305143314}
   - component: {fileID: 1305143312}
+  - component: {fileID: 1305143316}
+  - component: {fileID: 1305143315}
   m_Layer: 0
   m_Name: HoverStairs
   m_TagString: Untagged
@@ -15932,6 +16148,53 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1305143315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305143311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff0614529f2aa94285845f9a0073706, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.ShakeOnEvent
+  _strength: 0.04
+  _duration: 0.18
+  _positional: 1
+--- !u!114 &1305143316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305143311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fed7e77415613cc49a011cfe188da183, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.ThumpOnStop
+  _watched: {fileID: 22483266}
+  _clock: {fileID: 2080991561}
+  _stillSpeed: 0.05
+  _stillTime: 0.06
+  _jumpDistance: 0.5
+  _onStopped:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1305143315}
+        m_TargetAssemblyTypeName: GameJam.Visuals.ShakeOnEvent, Assembly-CSharp
+        m_MethodName: Shake
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1310041058
 GameObject:
   m_ObjectHideFlags: 0
@@ -17791,6 +18054,10 @@ MonoBehaviour:
   _endOffColour: {r: 1, g: 1, b: 1, a: 0.15}
   _endOnColour: {r: 0.4, g: 0.9, b: 1, a: 0.8}
   _pulseSpeed: 2.5
+  _chargeTime: 0.3
+  _chargeColour: {r: 0.85, g: 1, b: 1, a: 1}
+  _flickerTime: 0.25
+  _flickerRate: 14
 --- !u!120 &1423311030
 LineRenderer:
   serializedVersion: 3
@@ -18310,6 +18577,10 @@ MonoBehaviour:
   _endOffColour: {r: 1, g: 1, b: 1, a: 0.15}
   _endOnColour: {r: 0.4, g: 0.9, b: 1, a: 0.8}
   _pulseSpeed: 2.5
+  _chargeTime: 0.3
+  _chargeColour: {r: 0.85, g: 1, b: 1, a: 1}
+  _flickerTime: 0.25
+  _flickerRate: 14
 --- !u!120 &1468346884
 LineRenderer:
   serializedVersion: 3
@@ -18446,6 +18717,7 @@ GameObject:
   - component: {fileID: 1498996129}
   - component: {fileID: 1498996128}
   - component: {fileID: 1498996130}
+  - component: {fileID: 1498996131}
   m_Layer: 0
   m_Name: RaisePlate_FrontLeft
   m_TagString: Untagged
@@ -18552,10 +18824,51 @@ MonoBehaviour:
   _activeColor: {r: 0.6, g: 1, b: 0.7, a: 1}
   _onActivated:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1498996131}
+        m_TargetAssemblyTypeName: GameJam.Visuals.PunchScale, Assembly-CSharp
+        m_MethodName: Punch
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onReleased:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1498996131}
+        m_TargetAssemblyTypeName: GameJam.Visuals.PunchScale, Assembly-CSharp
+        m_MethodName: PunchWithStrength
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: -0.6
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1498996131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498996126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64b1d0f9ce4f7a94a9af0184896bb37b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.PunchScale
+  _target: {fileID: 372121643}
+  _amount: {x: 0.1, y: -0.25}
+  _duration: 0.25
+  _wobbles: 2
+  _unscaledTime: 0
 --- !u!1 &1504724249
 GameObject:
   m_ObjectHideFlags: 0
@@ -21221,6 +21534,10 @@ MonoBehaviour:
   _endOffColour: {r: 1, g: 1, b: 1, a: 0.15}
   _endOnColour: {r: 0.4, g: 0.9, b: 1, a: 0.8}
   _pulseSpeed: 2.5
+  _chargeTime: 0.3
+  _chargeColour: {r: 0.85, g: 1, b: 1, a: 1}
+  _flickerTime: 0.25
+  _flickerRate: 14
 --- !u!120 &1825243831
 LineRenderer:
   serializedVersion: 3
@@ -22855,6 +23172,10 @@ MonoBehaviour:
   _endOffColour: {r: 1, g: 1, b: 1, a: 0.15}
   _endOnColour: {r: 0.4, g: 0.9, b: 1, a: 0.8}
   _pulseSpeed: 2.5
+  _chargeTime: 0.3
+  _chargeColour: {r: 0.85, g: 1, b: 1, a: 1}
+  _flickerTime: 0.25
+  _flickerRate: 14
 --- !u!120 &1968989693
 LineRenderer:
   serializedVersion: 3
@@ -23678,6 +23999,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2086616707}
   - component: {fileID: 2086616708}
+  - component: {fileID: 2086616711}
+  - component: {fileID: 2086616710}
+  - component: {fileID: 2086616709}
   m_Layer: 0
   m_Name: Block
   m_TagString: Untagged
@@ -23760,6 +24084,82 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 1
   m_BlendShapeWeights: []
+--- !u!114 &2086616709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086616706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64b1d0f9ce4f7a94a9af0184896bb37b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.PunchScale
+  _target: {fileID: 0}
+  _amount: {x: 0.08, y: -0.08}
+  _duration: 0.25
+  _wobbles: 2
+  _unscaledTime: 0
+--- !u!114 &2086616710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086616706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ff0614529f2aa94285845f9a0073706, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.ShakeOnEvent
+  _strength: 0.04
+  _duration: 0.15
+  _positional: 1
+--- !u!114 &2086616711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086616706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fed7e77415613cc49a011cfe188da183, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Visuals.ThumpOnStop
+  _watched: {fileID: 0}
+  _clock: {fileID: 2080991561}
+  _stillSpeed: 0.05
+  _stillTime: 0.06
+  _jumpDistance: 0.5
+  _onStopped:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2086616710}
+        m_TargetAssemblyTypeName: GameJam.Visuals.ShakeOnEvent, Assembly-CSharp
+        m_MethodName: Shake
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2086616709}
+        m_TargetAssemblyTypeName: GameJam.Visuals.PunchScale, Assembly-CSharp
+        m_MethodName: Punch
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2094467511
 GameObject:
   m_ObjectHideFlags: 0
@@ -24010,6 +24410,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUD
       objectReference: {fileID: 0}
+    - target: {fileID: 3007547856768168518, guid: c4516bc42c8140441b0942080dde60f1, type: 3}
+      propertyPath: _game
+      value: 
+      objectReference: {fileID: 2080991563}
+    - target: {fileID: 3007547856768168518, guid: c4516bc42c8140441b0942080dde60f1, type: 3}
+      propertyPath: _afterimages
+      value: 
+      objectReference: {fileID: 2080991562}
     - target: {fileID: 5219738577503899583, guid: c4516bc42c8140441b0942080dde60f1, type: 3}
       propertyPath: _game
       value: 
@@ -24199,6 +24607,18 @@ PrefabInstance:
       propertyPath: _clock
       value: 
       objectReference: {fileID: 2080991561}
+    - target: {fileID: 2895865533707419532, guid: 343654197688a0641a734323a5d40d96, type: 3}
+      propertyPath: _clock
+      value: 
+      objectReference: {fileID: 2080991561}
+    - target: {fileID: 2895865533707419532, guid: 343654197688a0641a734323a5d40d96, type: 3}
+      propertyPath: _input
+      value: 
+      objectReference: {fileID: 2080991564}
+    - target: {fileID: 2895865533707419532, guid: 343654197688a0641a734323a5d40d96, type: 3}
+      propertyPath: _rebinder
+      value: 
+      objectReference: {fileID: 2080991566}
     - target: {fileID: 6041139356397592413, guid: 343654197688a0641a734323a5d40d96, type: 3}
       propertyPath: m_Name
       value: Player

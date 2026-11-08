@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3771088353052132579}
   - component: {fileID: 7361252946080219919}
   - component: {fileID: 1180744003658758297}
+  - component: {fileID: 1125857646171843794}
   m_Layer: 5
   m_Name: MenuButton
   m_TagString: Untagged
@@ -144,6 +145,22 @@ MonoBehaviour:
   m_LayoutPriority: 1
   m_MaxWidth: -1
   m_MaxHeight: -1
+--- !u!114 &1125857646171843794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7241819350519848981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db7f337e4280e14f88eb2c3c671f7ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.UI.ButtonJuice
+  _hoverScale: 1.05
+  _pressedScale: 0.94
+  _sharpness: 18
+  _releasePop: 0.06
 --- !u!1 &8766814714267680521
 GameObject:
   m_ObjectHideFlags: 0
