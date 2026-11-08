@@ -42,6 +42,9 @@ namespace GameJam.UI
         [Tooltip("Reference pixels scrolled per second.")]
         [SerializeField] private float _scrollSpeed = 70f;
         [SerializeField] private float _fastMultiplier = 4f;
+        [Tooltip("Optional music that starts with the closing sequence (mus_credits).")]
+        [SerializeField] private AudioClip _music;
+        [SerializeField, Range(0f, 1f)] private float _musicVolume = 0.5f;
 
         private bool _skip;
         private bool _playing;
@@ -67,6 +70,11 @@ namespace GameJam.UI
         {
             _playing = true;
             _skip = false;
+
+            if (_music != null)
+            {
+                AudioManager.PlayMusic(_music, _musicVolume);
+            }
 
             // 1. Fade the scene to black.
             for (float t = 0f; t < _fadeTime && !_skip; t += Time.unscaledDeltaTime)

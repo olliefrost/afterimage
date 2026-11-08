@@ -10106,6 +10106,8 @@ MonoBehaviour:
     THEME: TIME'
   _scrollSpeed: 70
   _fastMultiplier: 4
+  _music: {fileID: 8300000, guid: 133984e241455d948ad3f477c8ceca87, type: 3}
+  _musicVolume: 0.5
 --- !u!114 &1568129156
 MonoBehaviour:
   m_ObjectHideFlags: 0
