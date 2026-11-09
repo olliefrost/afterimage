@@ -25,5 +25,4 @@ Design documents for *Afterimage*, an isometric pixel-art puzzle game made in 24
 ## Elsewhere
 
 - [`../CLAUDE.md`](../CLAUDE.md): code architecture, conventions and known issues
-- [`../CREDITS.md`](../CREDITS.md): asset sources and licences
 - [`images/`](images/): the original level sketches

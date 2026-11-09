@@ -56,7 +56,7 @@ The button is far enough from the scanning chamber that one person can't press i
 | 3 | Gets scanned, jumps up the rising platforms and presses the top button | Exit door open |
 | Final you | Crosses the bridge to the exit | Chamber complete |
 
-**Total afterimages required:** 3 (the clone limit is 4).
+**Total afterimages required:** 3 (the clone limit is 5).
 
 ## Timings (tunable in playtests)
 

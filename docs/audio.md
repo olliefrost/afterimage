@@ -2,7 +2,7 @@
 
 The sound and music design for *Afterimage*: what the game should sound like, every sound it needs and the event that triggers it, and how audio is wired in without touching gameplay.
 
-> **Status:** this plan is implemented. Sound effects and music were generated with ElevenLabs (see [`../CREDITS.md`](../CREDITS.md)) rather than taken from free libraries, and the code is described under "Audio" in [`../CLAUDE.md`](../CLAUDE.md). The tables below are the original plan and are kept as reference. Differences: there is no Audio Mixer (sounds go through pooled sources, with clones played quieter), and later chambers added their own sounds (lasers, generator, conveyor, platforms and so on).
+> **Status:** this plan is implemented. Sound effects and music were generated with ElevenLabs rather than taken from free libraries, and the code is described under "Audio" in [`../CLAUDE.md`](../CLAUDE.md). The tables below are the original plan and are kept as reference. Differences: there is no Audio Mixer (sounds go through pooled sources, with clones played quieter), and later chambers added their own sounds (lasers, generator, conveyor, platforms and so on).
 ## Tone
 
 - **World:** a deserted, overgrown relic lab. A low electrical room hum, distant drips, wind through

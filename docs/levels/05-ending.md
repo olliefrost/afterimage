@@ -33,7 +33,7 @@ This is the bad-ending plot twist from [the story](../story.md). All game long s
 
 ## Art
 
-PixelLab, in the cheap modes (see [`CREDITS.md`](../../CREDITS.md)):
+PixelLab, in the cheap modes:
 - a large iso cage (one sprite)
 - the two-way mirror panel
 - lab-coat scientist figures, shown as black silhouettes

@@ -62,7 +62,6 @@ The HUD's R, T and F buttons and clone icons can also be clicked. Gameplay keys 
 - **Style:** post-technology, deserted and overgrown, half-broken relic tech, in the spirit of Portal 2. See [`inspiration.md`](inspiration.md).
 - **Art:** PixelLab pixel art (true 2:1 iso, muted palette), with a pixel font and UI built from PixelLab sprites. A few `placeholder_*` sprites made in-engine remain for icons and glyphs.
 - **Audio:** sound effects and music generated with ElevenLabs, plus a synthesised credits track. The plan and implementation notes are in [`audio.md`](audio.md).
-- **Credits and licences:** [`../CREDITS.md`](../CREDITS.md).
 - **UI:** the HUD, menus and clone slot rules are in [`ui.md`](ui.md).
 
 ## Technology
