@@ -46,17 +46,16 @@ Requires **Unity 6** (`6000.6.8f1`).
 ## Project layout
 
 - `Assets/_Project/Scenes/`: the six scenes (Title, Tutorial1, Tutorial2, Chamber3, Chamber4, Ending)
-- `Assets/_Project/Scripts/`: gameplay code, grouped by feature (`Afterimage`, `Core`, `Player`, `Interactables`, `Hazards`, `Machines`, `UI`, `Visuals`, `Audio`, `Story`, `Editor`)
+- `Assets/_Project/Scripts/`: gameplay code, grouped by feature (`Actors`, `Afterimage`, `Core`, `Player`, `Interactables`, `Hazards`, `Machines`, `UI`, `Visuals`, `Audio`, `Story`, `Editor`)
 - `Assets/_Project/Art/`, `Audio/`, `Prefabs/`, `Data/`: content
 - [`docs/`](docs/README.md): design documents (game design, story, UI, audio and one file per level) and the original sketches
 - [`CLAUDE.md`](CLAUDE.md): a deeper tour of the architecture and conventions
-- [`CREDITS.md`](CREDITS.md): asset sources and tools
 - [`LICENSE`](LICENSE): MIT licence for the code
 
 ## Credits
 
-Built by a team of three for the Bristol Game Jam. The pixel art was generated with [PixelLab](https://pixellab.ai) and the sound effects and music with [ElevenLabs](https://elevenlabs.io) (plus a synthesised credits track). Code was written with the help of Claude Code. See [`CREDITS.md`](CREDITS.md) for details and licences.
+Built by a team of three for the Bristol Game Jam. The pixel art was generated with [PixelLab](https://pixellab.ai) and the sound effects and music with [ElevenLabs](https://elevenlabs.io) (plus a synthesised credits track). Code was written with the help of Claude Code.
 
 ## Licence
 
-The source code is released under the [MIT Licence](LICENSE). The art and audio were generated with third-party tools and are used under those tools' terms (see [`CREDITS.md`](CREDITS.md)).
+The source code is released under the [MIT Licence](LICENSE). The art and audio were generated with third-party tools and are used under those tools' terms.
