@@ -46,7 +46,7 @@ Repo root:
 
 - `docs/` design documents (not Unity assets, see below)
 - `Assets/_Project/` all our own game content
-- `CLAUDE.md`
+- `CLAUDE.md`, `README.md`, `CONTRIBUTING.md` (contributor setup, branch, commit and Unity rules; keep it in step with this file)
 
 All our own game content lives under `Assets/_Project/`, kept apart from imported packages. Subfolders:
 

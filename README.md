@@ -50,6 +50,7 @@ Requires **Unity 6** (`6000.6.8f1`).
 - `Assets/_Project/Art/`, `Audio/`, `Prefabs/`, `Data/`: content
 - [`docs/`](docs/README.md): design documents (game design, story, UI, audio and one file per level) and the original sketches
 - [`CLAUDE.md`](CLAUDE.md): a deeper tour of the architecture and conventions
+- [`CONTRIBUTING.md`](CONTRIBUTING.md): how to set up, branch, commit and report bugs
 - [`LICENSE`](LICENSE): MIT licence for the code
 
 ## Credits
